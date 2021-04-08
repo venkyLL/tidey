@@ -7,7 +7,7 @@ class mainTile extends StatelessWidget {
     return Container(
       height: 250,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      color: Colors.red,
+      color: Colors.green,
       child: Center(
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text("                "),
