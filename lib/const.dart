@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+String globalLatitude;
+String globalLongitude;
+
 const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
