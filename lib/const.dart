@@ -1,10 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 String globalLatitude;
 String globalLongitude;
 
+const prodServerURL = 'https://shoebox.veloxe.com/';
+const localServerURL = 'http://192.168.1.250:5000/';
+const serverURL = localServerURL;
+const apiURL = serverURL + 'api/';
+//  http://api.worldweatheronline.com/premium/v1/marine.ashx?key=51503debb4b34526a33181926211204&q=26.7747,-77.3296&format=json&tide=yes&tp=3
+const weatherServerURL = 'https://api.worldweatheronline.com/premium/v1/';
+const weatherAPIKey = 'key=51503debb4b34526a33181926211204';
+const marineWeatherService = weatherServerURL + "marine.ashx";
 const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);

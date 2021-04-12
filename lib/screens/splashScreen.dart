@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tidey/const.dart';
-import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/screens/tideScreen.dart';
+import 'package:tidey/services/locationServices.dart';
+import 'package:tidey/services/marineWeather.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -19,7 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void getMyLocation() async {
     Location location = Location();
-    await location.getCurrentLocation();
+    // await location.getCurrentLocation();
+    WeatherService weatherService = WeatherService();
+
+    // GetMyQs myQservice = GetMyQs();
+    await weatherService.getMarineData();
     Navigator.pushReplacementNamed(context, TideScreen.id);
   }
 

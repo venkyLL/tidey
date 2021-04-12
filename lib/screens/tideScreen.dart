@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tidey/components/mainTile.dart';
+import 'package:tidey/components/subTile.dart';
 import 'package:tidey/const.dart';
-import 'package:tidey/Screens/subTile.dart';
-import 'package:tidey/Screens/mainTile.dart';
 
 class TideScreen extends StatelessWidget {
   static const String id = 'TideScreen';
