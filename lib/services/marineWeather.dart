@@ -6,18 +6,19 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:tidey/const.dart';
 
-Person personFromJson(String str) => Person.fromJson(json.decode(str));
+MarineWeather marineWeatherFromJson(String str) =>
+    MarineWeather.fromJson(json.decode(str));
 
-String personToJson(Person data) => json.encode(data.toJson());
+String marineWeatherToJson(MarineWeather data) => json.encode(data.toJson());
 
-class Person {
-  Person({
+class MarineWeather {
+  MarineWeather({
     this.data,
   });
 
   Data data;
 
-  factory Person.fromJson(Map<String, dynamic> json) => Person(
+  factory MarineWeather.fromJson(Map<String, dynamic> json) => MarineWeather(
         data: Data.fromJson(json["data"]),
       );
 
@@ -29,7 +30,7 @@ class Person {
 class Data {
   Data({
     this.request,
-    // this.weather,
+    this.weather,
   });
 
   List<Request> request;
@@ -38,8 +39,8 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         request:
             List<Request>.from(json["request"].map((x) => Request.fromJson(x))),
-        //    weather:
-        //    List<Weather>.from(json["weather"].map((x) => Weather.fromJson(x))),
+        weather:
+            List<Weather>.from(json["weather"].map((x) => Weather.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -318,10 +319,43 @@ class Hourly {
       };
 }
 
-enum SwellDir16Point { SSE, S }
+enum SwellDir16Point {
+  N,
+  NNE,
+  NE,
+  ENE,
+  E,
+  ESE,
+  SE,
+  SSE,
+  S,
+  SSW,
+  SW,
+  WSW,
+  W,
+  WNW,
+  NW,
+  NNW,
+}
 
-final swellDir16PointValues =
-    EnumValues({"S": SwellDir16Point.S, "SSE": SwellDir16Point.SSE});
+final swellDir16PointValues = EnumValues({
+  "N": SwellDir16Point.N,
+  "NNE": SwellDir16Point.NNE,
+  "NE": SwellDir16Point.NE,
+  "ENE": SwellDir16Point.ENE,
+  "E": SwellDir16Point.E,
+  "ESE": SwellDir16Point.ESE,
+  "SE": SwellDir16Point.SE,
+  "SSE": SwellDir16Point.SSE,
+  "S": SwellDir16Point.S,
+  "SSW": SwellDir16Point.SSW,
+  "SW": SwellDir16Point.SW,
+  "WSW": SwellDir16Point.WSW,
+  "W": SwellDir16Point.W,
+  "WNW": SwellDir16Point.WNW,
+  "NW": SwellDir16Point.NW,
+  "NNW": SwellDir16Point.NNW
+});
 
 class WeatherDescElement {
   WeatherDescElement({
@@ -403,41 +437,6 @@ class EnumValues<T> {
   }
 }
 
-List<NearbyLocations> nearbyLocationsFromJson(String str) =>
-    List<NearbyLocations>.from(
-        json.decode(str).map((x) => NearbyLocations.fromJson(x)));
-
-String nearbyLocationsToJson(List<NearbyLocations> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-class NearbyLocations {
-  NearbyLocations({
-    this.name,
-    this.locationId,
-    this.longitude,
-    this.latitude,
-  });
-
-  String name;
-  String locationId;
-  String longitude;
-  String latitude;
-
-  factory NearbyLocations.fromJson(Map<String, dynamic> json) =>
-      NearbyLocations(
-        name: json["Name"],
-        locationId: json["LocationID"],
-        longitude: json["Longitude"],
-        latitude: json["Latitude"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "Name": name,
-        "LocationID": locationId,
-        "Longitude": longitude,
-        "Latitude": latitude,
-      };
-}
 //  http://api.worldweatheronline.com/premium/v1/marine.ashx?key=51503debb4b34526a33181926211204&q=26.7747,-77.3296&format=json&tide=yes&tp=3
 //const weatherServerURL
 
@@ -461,30 +460,28 @@ class WeatherService {
       print("Response found");
       print(response.data);
 
-      Map weatherMap = response.data;
-      Data weatherData = Data();
-      print("Hello Map");
-      print(weatherMap['data']['weather'][0]['date']);
-      var x = weatherMap['data']['weather'][0]['tides'];
+//      Map weatherMap = response.data;
+//      print(weatherMap['data']['weather'][0]['date']);
+//      var x = weatherMap['data']['weather'][0]['tides'][0]['tide_data'][0]
+//      ['tideTime'];
+      //   MarineWeather weatherData = MarineWeather();
+      MarineWeather weatherData = MarineWeather.fromJson(response.data);
+      // weatherData = MarineWeather.fromJson(weatherMap);
 
-      print("Done x is $x");
+      print("Hello Map");
+
 //   //   final locations = (response.data)
 //          .cast<Map<String, dynamic>>()
 //          .map((e) => Weather.fromJson(e));
+      //  MarineWeather marineWeatherFromJson(String str) => MarineWeather.fromJson(json.decode(weatherMap));
 
-      weatherData = Data.fromJson(weatherMap);
-      //    print(locations);
-      //   currentUserGlobal = UserInfo.fromJson(userMap);
-//      final weather = (response.data as List)
-//          .cast<Map<String, dynamic>>()
-//          .map((e) => NearbyLocations.fromJson(e))
-//          .toList();
-//      print("Locations are $locations");
-//      final nearbyLocations = (response.data as List)
-//          .cast<Map<String, dynamic>>()
-//          .map((e) => nearbyLocationsFromJson(e))
-//          .toList();
-//           final nearbyLocations = nearbyLocationsFromJson(response.data);
+      print("Map complete");
+      print(weatherData.data.weather[0].tides[0].tideData[0].tideTime);
+      for (var myTide in weatherData.data.weather[0].tides[0].tideData) {
+        print("About to print");
+        print(myTide.toJson());
+      }
+
       return;
     } catch (e) {
       print("error found");
@@ -492,38 +489,3 @@ class WeatherService {
     }
   }
 }
-
-//class GetNearbyService {
-//  Future<List<NearbyLocations>> getNearbyLocationsFromServer() async {
-//    try {
-//      Response response =
-//          await Dio().get(apiURL + 'getNearbyLocations', queryParameters: {
-//        'UserToken': deviceID,
-//        'Latitude': latGlobal,
-//        'Longitude': longGlobal,
-//        'SearchRadius': '50',
-//      });
-//
-//      // Map nearbyLocationsMap = response.data;
-//      print("Response found");
-//      print(response.data);
-//      //  final locations = (response.data as List);
-//
-//      final locations = (response.data as List)
-//          .cast<Map<String, dynamic>>()
-//          .map((e) => NearbyLocations.fromJson(e))
-//          .toList();
-//      print("Locations are $locations");
-////      final nearbyLocations = (response.data as List)
-////          .cast<Map<String, dynamic>>()
-////          .map((e) => nearbyLocationsFromJson(e))
-////          .toList();
-//      //     final nearbyLocations = nearbyLocationsFromJson(response.data);
-//      return (locations);
-//    } catch (e) {
-//      return (null);
-//      print("error found");
-//      print(e);
-//    }
-//  }
-// }
