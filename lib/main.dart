@@ -3,6 +3,8 @@ import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
 
 void main() {
+//  double globalLatitude;
+//  double globalLongitude;
   runApp(MyApp());
 }
 

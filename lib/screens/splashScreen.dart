@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void getMyLocation() async {
     Location location = Location();
-    // await location.getCurrentLocation();
+    await location.getCurrentLocation();
     WeatherService weatherService = WeatherService();
 
     // GetMyQs myQservice = GetMyQs();

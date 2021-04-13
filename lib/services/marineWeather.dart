@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:tidey/const.dart';
 
 // To parse this JSON data, do
 //
@@ -441,16 +442,18 @@ class EnumValues<T> {
 //const weatherServerURL
 
 class WeatherService {
-  // lat = '26.7747',-77.3296
-  // Future<List<NearbyLocations>
-  //
+  String latLong = '26.7747,-77.3296';
   getMarineData() async {
-    print("Hello Weather");
+    print("Hello Weather, $globalLatitude, $globalLongitude");
+    if ((globalLatitude != null) && (globalLongitude != null)) {
+      latLong = '$globalLatitude, $globalLongitude';
+    }
+
     try {
       Response response =
           await Dio().get(weatherServerURL + 'marine.ashx', queryParameters: {
         'key': '51503debb4b34526a33181926211204',
-        'q': '26.7747,-77.3296',
+        'q': latLong,
         'format': 'json',
         'tide': 'yes',
         'tp': '3'
