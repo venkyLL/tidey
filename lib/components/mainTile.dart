@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tidey/const.dart';
+import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 
 class mainTile extends StatelessWidget {
   @override
