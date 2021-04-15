@@ -1,5 +1,5 @@
-import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 
 class zeClock extends StatelessWidget {
   @override
@@ -36,8 +36,8 @@ class zeClock extends StatelessWidget {
         '12',
       ],
       isLive: true,
-      width: 500.0,
-      height: 500.0,
+      width: 250.0,
+      height: 250.0,
       decoration: const BoxDecoration(),
       child: Text(''),
     );

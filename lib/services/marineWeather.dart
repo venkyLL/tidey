@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:tidey/const.dart';
 
 // To parse this JSON data, do
 //
@@ -468,7 +467,7 @@ class WeatherService {
 //      var x = weatherMap['data']['weather'][0]['tides'][0]['tide_data'][0]
 //      ['tideTime'];
       //   MarineWeather weatherData = MarineWeather();
-      MarineWeather weatherData = MarineWeather.fromJson(response.data);
+      weatherData = MarineWeather.fromJson(response.data);
       // weatherData = MarineWeather.fromJson(weatherMap);
 
       print("Hello Map");

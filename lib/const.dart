@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tidey/services/marineWeather.dart';
 
 String globalLatitude;
 String globalLongitude;
+MarineWeather weatherData = MarineWeather();
 
 const prodServerURL = 'https://shoebox.veloxe.com/';
 const localServerURL = 'http://192.168.1.250:5000/';
@@ -21,7 +23,10 @@ const kClockTextStyle = TextStyle(
   fontSize: 45,
   color: kPrimaryTextColor,
 );
-
+const kMoonTextStyle = TextStyle(
+  fontSize: 20,
+  color: Colors.white,
+);
 const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
   color: kPrimaryTextColor,

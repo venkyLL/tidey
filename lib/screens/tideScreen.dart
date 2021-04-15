@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tidey/components/mainTile.dart';
-import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/components/subTile.dart';
+import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/screens/moonScreen.dart';
 
 class TideScreen extends StatelessWidget {
   static const String id = 'TideScreen';
@@ -14,7 +14,8 @@ class TideScreen extends StatelessWidget {
       appBar:
           // AppBar(title: Text(globalLatitude == null ? "bob" : globalLatitude)),
           AppBar(
-        title: Text(globalLatitude == null ? "bob" : globalLatitude),
+        title: Text(globalLatitude == null ? "Tide" : globalLatitude),
+        centerTitle: true,
         leading: GestureDetector(
           onTap: () {/* Write listener code here */},
           child: Icon(
@@ -22,20 +23,22 @@ class TideScreen extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
+//          Padding(
+//              padding: EdgeInsets.only(right: 20.0),
+//              child: GestureDetector(
+//                onTap: () {},
+//                child: Icon(
+//                  Icons.search,
+//                  size: 26.0,
+//                ),
+//              )),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {},
-                child: Icon(
-                  Icons.search,
-                  size: 26.0,
-                ),
-              )),
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Icon(Icons.more_vert),
+                onTap: () {
+                  Navigator.pushNamed(context, MoonScreen.id);
+                },
+                child: Icon(Icons.chevron_right),
               )),
         ],
       ),
