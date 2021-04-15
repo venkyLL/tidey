@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-String globalLatitude = 'notSet';
-String globalLongitude = 'notSet';
+String globalLatitude;
+String globalLongitude;
 
 const prodServerURL = 'https://shoebox.veloxe.com/';
 const localServerURL = 'http://192.168.1.250:5000/';

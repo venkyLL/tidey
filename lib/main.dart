@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tidey/screens/moonScreen.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
 
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(title: 'Tidey', initialRoute: SplashScreen.id, routes: {
       SplashScreen.id: (context) => SplashScreen(),
       TideScreen.id: (context) => TideScreen(),
+      MoonScreen.id: (context) => MoonScreen(),
     });
   }
 }
