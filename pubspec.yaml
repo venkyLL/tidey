@@ -31,6 +31,8 @@ dependencies:
   geolocator:
   dio:
   connectivity:
+  flutter_analog_clock: ^0.1.1
+  syncfusion_flutter_gauges: ^19.1.56
 
 dev_dependencies:
   flutter_test:
