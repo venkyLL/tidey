@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/components/mainTile.dart';
+import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/components/subTile.dart';
 import 'package:tidey/const.dart';
 
@@ -17,7 +18,7 @@ class TideScreen extends StatelessWidget {
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              mainTile(),
+              zeClock(),
               mySubTile(kMySubTileData),
             ]),
       ),
