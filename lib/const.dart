@@ -4,7 +4,16 @@ import 'package:tidey/services/marineWeather.dart';
 String globalLatitude;
 String globalLongitude;
 MarineWeather weatherData = MarineWeather();
-
+var hourFmt = {
+  '0': 'Midnight',
+  '300': "3AM",
+  "600": "6AM",
+  '900': "9AM",
+  "1200": "Noon",
+  "1500": "3PM",
+  "1800": "6PM",
+  "2100": "9PM"
+};
 const prodServerURL = 'https://shoebox.veloxe.com/';
 const localServerURL = 'http://192.168.1.250:5000/';
 const serverURL = localServerURL;

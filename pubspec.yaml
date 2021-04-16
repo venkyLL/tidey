@@ -33,6 +33,9 @@ dependencies:
   connectivity:
   flutter_analog_clock: ^0.1.1
   syncfusion_flutter_gauges: ^19.1.56
+  syncfusion_flutter_datagrid: ^19.1.56-beta
+
+  weather_icons:
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/forecast.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class MoonScreen extends StatefulWidget {
   static const String id = 'MoonScreen';
@@ -72,34 +73,50 @@ class _MoonScreenState extends State<MoonScreen> {
               'Illumination ${weatherData.data.weather[0].astronomy[0].moonIllumination}%',
               style: kMoonTextStyle,
             ),
-            SizedBox(height: 20),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    " Moon Rise:  ${weatherData.data.weather[0].astronomy[0].moonrise}",
-                    style: kMoonTextStyle)),
-            SizedBox(height: 10),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    " Moon Set:   ${weatherData.data.weather[0].astronomy[0].moonset}",
-                    style: kMoonTextStyle)),
-            SizedBox(height: 10),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    " Sun Rise:   ${weatherData.data.weather[0].astronomy[0].sunrise}",
-                    style: kMoonTextStyle)),
-            SizedBox(height: 10),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    " Sun Set:    ${weatherData.data.weather[0].astronomy[0].sunset}",
-                    style: kMoonTextStyle)),
-            SizedBox(height: 10),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(" Next Full Moon: tbd", style: kMoonTextStyle)),
+            SizedBox(
+              height: 10,
+            ),
+            Row(children: <Widget>[
+              BoxedIcon((WeatherIcons.moonrise), color: Colors.white),
+              Text(
+                ' Moon Rise:  ${weatherData.data.weather[0].astronomy[0].moonrise}',
+                style: kMoonTextStyle,
+              ),
+            ]),
+
+            Row(children: <Widget>[
+              BoxedIcon((WeatherIcons.moonset), color: Colors.white),
+              Text(
+                ' Moon Set:  ${weatherData.data.weather[0].astronomy[0].moonset}',
+                style: kMoonTextStyle,
+              )
+            ]),
+
+            Row(children: <Widget>[
+              BoxedIcon((WeatherIcons.sunrise), color: Colors.white),
+              Text(
+                ' Sun Rise:  ${weatherData.data.weather[0].astronomy[0].sunrise}',
+                style: kMoonTextStyle,
+              )
+            ]),
+
+            Row(children: <Widget>[
+              BoxedIcon((WeatherIcons.sunset), color: Colors.white),
+              Text(
+                ' Sun Rise:  ${weatherData.data.weather[0].astronomy[0].sunset}',
+                style: kMoonTextStyle,
+              )
+            ]),
+
+//            Row(children: <Widget>[
+//              BoxedIcon((WeatherIcons.moon_alt_full), color: Colors.white),
+//              Text(
+//                ' Next Full Moon:  tbd',
+//                style: kMoonTextStyle,
+//              )
+//            ]),
+
+            //
           ],
         ),
       ),

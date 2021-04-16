@@ -229,7 +229,7 @@ class Hourly {
   String swellHeightM;
   String swellHeightFt;
   String swellDir;
-  SwellDir16Point swellDir16Point;
+  String swellDir16Point;
   String swellPeriodSecs;
   String waterTempC;
   String waterTempF;
@@ -270,7 +270,7 @@ class Hourly {
         swellHeightM: json["swellHeight_m"],
         swellHeightFt: json["swellHeight_ft"],
         swellDir: json["swellDir"],
-        swellDir16Point: swellDir16PointValues.map[json["swellDir16Point"]],
+        swellDir16Point: json["swellDir16Point"],
         swellPeriodSecs: json["swellPeriod_secs"],
         waterTempC: json["waterTemp_C"],
         waterTempF: json["waterTemp_F"],
@@ -278,7 +278,7 @@ class Hourly {
       );
 
   Map<String, dynamic> toJson() => {
-        "time": time,
+        "time": hourFmt[time],
         "tempC": tempC,
         "tempF": tempF,
         "windspeedMiles": windspeedMiles,
@@ -311,7 +311,7 @@ class Hourly {
         "swellHeight_m": swellHeightM,
         "swellHeight_ft": swellHeightFt,
         "swellDir": swellDir,
-        "swellDir16Point": swellDir16PointValues.reverse[swellDir16Point],
+        "swellDir16Point": swellDir16Point,
         "swellPeriod_secs": swellPeriodSecs,
         "waterTemp_C": waterTempC,
         "waterTemp_F": waterTempF,
