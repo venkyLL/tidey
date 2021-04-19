@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -25,51 +26,105 @@ class _ForecastScreenState extends State<ForecastScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Today\'s Weather'),
+        // title: const Text('Today\'s Weather'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body:
 //      Column  (
 //        children: [
-          SfDataGrid(
-        source: hourlyDataSource,
-        columnWidthMode: ColumnWidthMode.fill,
-        columns: <GridColumn>[
-          GridTextColumn(
-              columnName: 'ID',
-              label: Container(
-                  padding: EdgeInsets.all(2.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Hour',
-                  ))),
-          GridTextColumn(
-              columnName: 'name',
-              label: Container(
-                  padding: EdgeInsets.all(2.0),
-                  alignment: Alignment.center,
-                  child: Text('Condition'))),
-          GridTextColumn(
-              label: Container(
-                  padding: EdgeInsets.all(2.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Temp',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-          GridTextColumn(
-              columnName: 'salary',
-              label: Container(
-                  padding: EdgeInsets.all(2.0),
-                  alignment: Alignment.center,
-                  child: Text('Wind'))),
-          GridTextColumn(
-              columnName: 'salary',
-              label: Container(
-                  padding: EdgeInsets.all(2.0),
-                  alignment: Alignment.center,
-                  child: Text('Waves'))),
-        ],
+          Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/blueTexture.jpg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.8), BlendMode.dstATop),
+          ),
+        ),
+        constraints: BoxConstraints.expand(),
+        child: Column(
+          children: [
+            SizedBox(height: 50),
+            zeClock(),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: SfDataGrid(
+                source: hourlyDataSource,
+                columnWidthMode: ColumnWidthMode.fill,
+                columns: <GridColumn>[
+                  GridTextColumn(
+                      columnName: 'Hour',
+                      label: Container(
+                          padding: EdgeInsets.all(2.0),
+                          alignment: Alignment.center,
+                          color: kTitleBoxColor,
+                          child: Text(
+                            'Hour',
+                          ))),
+                  GridTextColumn(
+                      columnName: 'Condition',
+                      label: Container(
+                          color: kTitleBoxColor,
+                          padding: EdgeInsets.all(2.0),
+                          alignment: Alignment.center,
+                          child: Text('Condition'))),
+                  GridTextColumn(
+                      columnName: 'Temp',
+                      label: Container(
+                          color: kTitleBoxColor,
+                          padding: EdgeInsets.all(2.0),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Temp',
+                            overflow: TextOverflow.ellipsis,
+                          ))),
+                  GridTextColumn(
+                      columnName: 'Wind',
+                      label: Container(
+                          color: kTitleBoxColor,
+                          padding: EdgeInsets.all(2.0),
+                          alignment: Alignment.center,
+                          child: Text('Wind'))),
+                  GridTextColumn(
+                      columnName: 'Wave',
+                      label: Container(
+                          color: kTitleBoxColor,
+                          padding: EdgeInsets.all(2.0),
+                          alignment: Alignment.center,
+                          child: Text('Waves'))),
+                ],
+                stackedHeaderRows: <StackedHeaderRow>[
+                  StackedHeaderRow(cells: [
+                    StackedHeaderCell(
+                        columnNames: [
+                          'Hour',
+                          'Condition',
+                          'Temp',
+                          'Wind',
+                          'Wave'
+                        ],
+                        child: Container(
+                            color: kTitleBoxColor,
+                            child: Center(
+                                child: Text('Today\'s Weather',
+                                    style: kTableTitleTextStyle)))),
+//                    StackedHeaderCell(
+//                        columnNames: ['productId', 'product'],
+//                        child: Container(
+//                            color: const Color(0xFFF1F1F1),
+//                            child: Center(child: Text('Product Details'))))
+                  ])
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
 //          SizedBox(
 //            height: 20,
@@ -147,7 +202,8 @@ class HourlyDataSource extends DataGridSource {
 
   DataGridRowAdapter buildRow(DataGridRow row) {
     print("Creating a row");
-    return DataGridRowAdapter(cells: [
+
+    return DataGridRowAdapter(color: Colors.transparent, cells: [
       Container(
         padding: EdgeInsets.all(2.0),
         alignment: Alignment.center,
@@ -158,6 +214,7 @@ class HourlyDataSource extends DataGridSource {
       ),
       Container(
         padding: EdgeInsets.all(2.0),
+        color: Colors.transparent,
         child: row.getCells()[1].value,
       ),
       Container(

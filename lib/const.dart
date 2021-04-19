@@ -130,10 +130,20 @@ const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 const kPrimaryColor = Colors.indigo;
-
+const kTitleBoxColor = Color(0xFFF1F1F1);
 const kClockTextStyle = TextStyle(
   fontSize: 45,
-  color: kPrimaryTextColor,
+  color: Colors.white,
+);
+const kTitleTextStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+);
+const kTableTitleTextStyle = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
 );
 const kMoonTextStyle = TextStyle(
   fontSize: 20,
@@ -141,7 +151,21 @@ const kMoonTextStyle = TextStyle(
 );
 const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
-  color: kPrimaryTextColor,
+  color: Colors.white,
+);
+const kTableTextStyle = TextStyle(
+  fontSize: 20,
+  color: Colors.white,
+);
+const kTableTextStyleRed = TextStyle(
+  fontSize: 20,
+  color: Colors.red,
+  fontWeight: FontWeight.bold,
+);
+const kTableTextStyleGreen = TextStyle(
+  fontSize: 20,
+  color: Colors.green,
+  fontWeight: FontWeight.bold,
 );
 
 const kClockTrailerTextStyle = TextStyle(

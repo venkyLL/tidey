@@ -402,20 +402,20 @@ class TideDatum {
   String tideTime;
   String tideHeightMt;
   String tideDateTime;
-  TideType tideType;
+  String tideType;
 
   factory TideDatum.fromJson(Map<String, dynamic> json) => TideDatum(
-        tideTime: json["tideTime"],
-        tideHeightMt: json["tideHeight_mt"],
-        tideDateTime: json["tideDateTime"],
-        tideType: tideTypeValues.map[json["tide_type"]],
+      tideTime: json["tideTime"],
+      tideHeightMt: json["tideHeight_mt"],
+      tideDateTime: json["tideDateTime"],
+      tideType: json["tide_type"] //tideTypeValues.map[json["tide_type"]],
       );
 
   Map<String, dynamic> toJson() => {
         "tideTime": tideTime,
         "tideHeight_mt": tideHeightMt,
         "tideDateTime": tideDateTime,
-        "tide_type": tideTypeValues.reverse[tideType],
+        "tide_type": tideType, //tideTypeValues.reverse[tideType],
       };
 }
 

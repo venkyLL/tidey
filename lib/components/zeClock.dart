@@ -6,7 +6,7 @@ class zeClock extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterAnalogClock(
       dateTime: DateTime.now(),
-      dialPlateColor: Colors.amber,
+      dialPlateColor: Colors.white60,
       hourHandColor: Colors.black,
       minuteHandColor: Colors.black,
       secondHandColor: Colors.black,

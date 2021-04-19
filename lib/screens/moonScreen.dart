@@ -65,7 +65,7 @@ class _MoonScreenState extends State<MoonScreen> {
         ],
       ),
       backgroundColor: Colors.black,
-      body: SafeArea(
+      body: Container(
         child: Column(
           children: [
             Center(child: Image.asset(moonPhaseImageName)),

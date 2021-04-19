@@ -11,16 +11,17 @@ class mySubTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Container(
-            width: double.infinity,
-            child: Text("Upcoming Low and High Tides:"),
-          ),
-        ),
+        //       Padding(
+//          padding: const EdgeInsets.only(left: 20.0),
+//          child: Container(
+        //           width: double.infinity,
+        //      child:
+        Text("Tides", style: kTitleTextStyle),
+//          ),
+//        ),
         Container(
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            color: Colors.black12,
+            //color: Colors.black12,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
