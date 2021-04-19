@@ -12,16 +12,16 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 //import 'sample_view.dart';
 
 /// Renders the gauge clock sample.
-class ClockExample extends StatefulWidget {
+class zeClockSync extends StatefulWidget {
   /// Creates the gauge clock sample.
 //  const ClockExample(Key key) : super(key: key);
 
   @override
-  _ClockExampleState createState() => _ClockExampleState();
+  _zeClockSyncState createState() => _zeClockSyncState();
 }
 
-class _ClockExampleState extends State<ClockExample> {
-  _ClockExampleState();
+class _zeClockSyncState extends State<zeClockSync> {
+  _zeClockSyncState();
 //  late Timer timer;
   Timer timer;
 
@@ -35,11 +35,7 @@ class _ClockExampleState extends State<ClockExample> {
   void _updateData(Timer timer) {
     DateTime _previous_value = _value;
     setState(() {
-//      _value =
-//          (_previousValue >= 0 && _previousValue < 12) ? _value + 0.2 : 0.2;
       _value = DateTime.now();
-      var mySecond = _value.second;
-      print("my time = $mySecond");
     });
   }
 
@@ -84,23 +80,22 @@ class _ClockExampleState extends State<ClockExample> {
                 length: 0.06, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
             majorTickStyle: MajorTickStyle(
                 length: 0.1, lengthUnit: GaugeSizeUnit.factor, thickness: 1.5),
-            axisLabelStyle: GaugeTextStyle(fontSize: 12),
+            axisLabelStyle: GaugeTextStyle(fontSize: 12, color: Colors.white),
             axisLineStyle: AxisLineStyle(
                 thickness: 0.1,
                 thicknessUnit: GaugeSizeUnit.factor,
-                color: Colors.black26),
+                color: Colors.white24),
             pointers: <GaugePointer>[
               NeedlePointer(
                   needleLength: 0.6,
                   lengthUnit: GaugeSizeUnit.factor,
                   needleStartWidth: 1,
                   needleEndWidth: 2,
-                  value: (_value.hour > 12
-                          ? _value.hour / 24.0 * 12.0
-                          : _value.hour == 0
-                              ? 12.0
-                              : _value.hour) +
-                      _value.minute / 60.0,
+                  value: _value.hour > 12
+                      ? _value.hour / 24.0 * 12.0 + _value.minute / 60.0
+                      : _value.hour == 0 && _value.minute == 0
+                          ? 12.0
+                          : _value.hour + _value.minute / 60.0,
                   needleColor: _needleColor,
                   knobStyle: KnobStyle(knobRadius: 0)),
               NeedlePointer(
@@ -108,7 +103,8 @@ class _ClockExampleState extends State<ClockExample> {
                   lengthUnit: GaugeSizeUnit.factor,
                   needleStartWidth: 0.5,
                   needleEndWidth: 1.5,
-                  value: _value.minute / 60.0 * 12.0,
+                  value: _value.minute / 60.0 * 12.0 +
+                      (_value.second / 60.0 * 0.2),
                   knobStyle: KnobStyle(
                       color: const Color(0xFF00A8B5),
                       sizeUnit: GaugeSizeUnit.factor,
@@ -139,7 +135,7 @@ class _ClockExampleState extends State<ClockExample> {
 
 //  double _value = 0;
   DateTime _value = DateTime.now();
-  final Color _needleColor = const Color(0xFF355C7D);
+  final Color _needleColor = const Color(0xFFFFFFFF);
 }
 
 // RadialAxis(
