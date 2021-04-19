@@ -7,6 +7,7 @@ import 'package:tidey/screens/tideScreen.dart';
 void main() {
 //  double globalLatitude;
 //  double globalLongitude;
+//imageCache.clear()
   runApp(MyApp());
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/components/moonRow.dart';
-import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/moonScreen.dart';
@@ -72,6 +71,7 @@ class TideScreen extends StatelessWidget {
         ));
   }
 }
+
 // hello
 class buildMyTideTable extends StatelessWidget {
   @override
