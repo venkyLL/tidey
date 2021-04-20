@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
@@ -14,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getMyLocation();
   }
 
@@ -29,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.amber,
       body: Center(

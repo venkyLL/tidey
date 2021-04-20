@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 /// Gauge imports
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/const.dart';
 
 /// Local imports
 //import 'sample_view.dart';
@@ -48,7 +49,8 @@ class _zeClockSyncState extends State<zeClockSync> {
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    final double _containerSize = math.min(_size.width, _size.height);
+    final double _containerSize =
+        math.min(_size.width * .9, SizeConfig.safeBlockVertical * 50);
     return Center(
       child: Container(
         height: _containerSize,

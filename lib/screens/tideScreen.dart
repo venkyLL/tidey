@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tidey/components/moonRow.dart';
+import 'package:tidey/components/moonTable.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/moonScreen.dart';
@@ -61,10 +61,10 @@ class TideScreen extends StatelessWidget {
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: SizeConfig.safeBlockVertical * 2),
                 zeClockSync(),
 //                ClockExample(),
-                SizedBox(height: 20),
+                SizedBox(height: SizeConfig.safeBlockVertical * 2),
                 // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),
                 TimerWidget(),
               ]),
@@ -77,56 +77,57 @@ class buildMyTideTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Text("Tides", style: kTableTitleTextStyle),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 65, right: 65),
-            child: Table(
-//            columnWidths: {
-//          0: FractionColumnWidth(.32),
-//          1: FractionColumnWidth(.33),
-//          2: FractionColumnWidth(.30),
-//          //   3: FractionColumnWidth(.05),
-//        } ,
-                children: [
-                  tideTableRow(
-                      day: 'Today',
-                      time: weatherData
-                          .data.weather[0].tides[0].tideData[0].tideTime,
-                      level: (double.parse(weatherData
-                          .data.weather[0].tides[0].tideData[0].tideHeightMt)),
-                      direction: weatherData
-                          .data.weather[0].tides[0].tideData[0].tideType),
-                  tideTableRow(
-                      day: 'Today',
-                      time: weatherData
-                          .data.weather[0].tides[0].tideData[1].tideTime,
-                      level: (double.parse(weatherData
-                          .data.weather[0].tides[0].tideData[1].tideHeightMt)),
-                      direction: weatherData
-                          .data.weather[0].tides[0].tideData[1].tideType),
-                  tideTableRow(
-                      day: 'Tomorrow',
-                      time: weatherData
-                          .data.weather[0].tides[0].tideData[2].tideTime,
-                      level: (double.parse(weatherData
-                          .data.weather[0].tides[0].tideData[2].tideHeightMt)),
-                      direction: weatherData
-                          .data.weather[0].tides[0].tideData[2].tideType),
-                  tideTableRow(
-                      day: 'Tomorrow',
-                      time: weatherData
-                          .data.weather[0].tides[0].tideData[3].tideTime,
-                      level: (double.parse(weatherData
-                          .data.weather[0].tides[0].tideData[3].tideHeightMt)),
-                      direction: weatherData
-                          .data.weather[0].tides[0].tideData[3].tideType),
-                ]),
+      // color: Colors.blue,
+      height: SizeConfig.safeBlockVertical * 45,
+
+      child: Container(
+        height: SizeConfig.safeBlockVertical * 45,
+        width: SizeConfig.safeBlockHorizontal * 80,
+        child: Column(
+          children: [
+            Text("Tides", style: kTableTitleTextStyle),
+            SizedBox(height: 10),
+//          Padding(
+//            padding: const EdgeInsets.only(left: , right: 65),
+//            child:
+            Table(children: [
+              tideTableRow(
+                  day: 'Today',
+                  time:
+                      weatherData.data.weather[0].tides[0].tideData[0].tideTime,
+                  level: (double.parse(weatherData
+                      .data.weather[0].tides[0].tideData[0].tideHeightMt)),
+                  direction: weatherData
+                      .data.weather[0].tides[0].tideData[0].tideType),
+              tideTableRow(
+                  day: 'Today',
+                  time:
+                      weatherData.data.weather[0].tides[0].tideData[1].tideTime,
+                  level: (double.parse(weatherData
+                      .data.weather[0].tides[0].tideData[1].tideHeightMt)),
+                  direction: weatherData
+                      .data.weather[0].tides[0].tideData[1].tideType),
+              tideTableRow(
+                  day: 'Tomorrow',
+                  time:
+                      weatherData.data.weather[0].tides[0].tideData[2].tideTime,
+                  level: (double.parse(weatherData
+                      .data.weather[0].tides[0].tideData[2].tideHeightMt)),
+                  direction: weatherData
+                      .data.weather[0].tides[0].tideData[2].tideType),
+              tideTableRow(
+                  day: 'Tomorrow',
+                  time:
+                      weatherData.data.weather[0].tides[0].tideData[3].tideTime,
+                  level: (double.parse(weatherData
+                      .data.weather[0].tides[0].tideData[3].tideHeightMt)),
+                  direction: weatherData
+                      .data.weather[0].tides[0].tideData[3].tideType),
+            ]),
             // mySubTile(kMySubTileData),
-          ),
-        ],
+            //         ),
+          ],
+        ),
       ),
     );
   }
@@ -137,12 +138,20 @@ TableRow tideTableRow(
   print("Direction is $day,$time, $level,$direction");
   // static htInFeet = double.parse(level)/3.28084;
   final String pos = level > 2.0 ? "+" : "-";
+  const fontScale = 5;
   return TableRow(
     children: [
-      Text(day + counter.toString(), style: kTableTextStyle),
+      Text(day,
+          style: TextStyle(
+            fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+            color: Colors.white,
+          )),
       Text(
         time,
-        style: kTableTextStyle,
+        style: TextStyle(
+          fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+          color: Colors.white,
+        ),
         textAlign: TextAlign.right,
       ),
       direction == "LOW"
@@ -154,9 +163,17 @@ TableRow tideTableRow(
                   TextSpan(
                     text:
                         ("    " + (level * 3.28084).toStringAsFixed(2)) + 'ft ',
-                    style: kTableTextStyle,
+                    style: TextStyle(
+                      fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+                      color: Colors.white,
+                    ),
                   ),
-                  TextSpan(text: 'L', style: kTableTextStyleRed),
+                  TextSpan(
+                      text: 'L',
+                      style: TextStyle(
+                        fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+                        color: Colors.red,
+                      )),
                 ],
               ),
             )
@@ -168,9 +185,17 @@ TableRow tideTableRow(
                   TextSpan(
                     text:
                         ("    " + (level * 3.28084).toStringAsFixed(2)) + 'ft ',
-                    style: kTableTextStyle,
+                    style: TextStyle(
+                      fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+                      color: Colors.white,
+                    ),
                   ),
-                  TextSpan(text: 'H', style: kTableTextStyleGreen),
+                  TextSpan(
+                      text: 'H',
+                      style: TextStyle(
+                        fontSize: SizeConfig.safeBlockHorizontal * fontScale,
+                        color: Colors.green,
+                      )),
                 ],
               ),
             ),
@@ -181,9 +206,26 @@ TableRow tideTableRow(
 class Swapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return counter == 0
-        ? buildMyTideTable()
-        : MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg");
+    switch (counter) {
+      case 0:
+        return buildMyTideTable();
+        break;
+      case 1:
+        return SunTable();
+        break;
+      case 2:
+        return MoonTable();
+        break;
+
+      default:
+        {
+          print("Error");
+        }
+        break;
+    }
+//    return counter == 0
+//        ? buildMyTideTable()
+//        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
   }
 }
 
@@ -193,7 +235,8 @@ class TimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TimerBuilder.periodic(Duration(seconds: 5), builder: (context) {
-      counter == 0 ? counter = 1 : counter = 0;
+      counter = (counter + 1) % 3;
+      // counter == 0 ? counter = 1 : counter = 0;
       return Swapper();
     });
   }
