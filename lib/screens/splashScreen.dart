@@ -32,6 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    print("Width = " +
+        SizeConfig.screenWidth.toString() +
+        "Length " +
+        SizeConfig.screenHeight.toString());
     return Scaffold(
       backgroundColor: Colors.amber,
       body: Center(

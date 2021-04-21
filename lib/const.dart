@@ -6,7 +6,7 @@ String globalLatitude;
 String globalLongitude;
 MarineWeather weatherData = MarineWeather();
 const hourFmt = {
-  '0': 'Midnight',
+  '0': '12:00',
   '300': "3AM",
   "600": "6AM",
   '900': "9AM",
@@ -130,7 +130,7 @@ const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 const kPrimaryColor = Colors.indigo;
-const kTitleBoxColor = Color(0xFFF1F1F1);
+const kTitleBoxColor = Color(0xFFBEC2CB);
 const kClockTextStyle = TextStyle(
   fontSize: 45,
   color: Colors.white,
@@ -143,7 +143,7 @@ const kTitleTextStyle = TextStyle(
 const kTableTitleTextStyle = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
-  color: Colors.white,
+  color: Colors.black,
 );
 const kMoonTextStyle = TextStyle(
   fontSize: 20,
@@ -153,10 +153,8 @@ const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
   color: Colors.white,
 );
-const kTableTextStyle = TextStyle(
-  fontSize: 20,
-  color: Colors.white,
-);
+const kTableTextStyle =
+    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
 const kTableTextStyleRed = TextStyle(
   fontSize: 20,
   color: Colors.red,

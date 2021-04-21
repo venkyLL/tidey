@@ -50,7 +50,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
     final double _containerSize =
-        math.min(_size.width * .9, SizeConfig.safeBlockVertical * 50);
+        math.min(_size.width * .8, SizeConfig.safeBlockHorizontal * 40);
     return Center(
       child: Container(
         height: _containerSize,
@@ -78,6 +78,8 @@ class _zeClockSyncState extends State<zeClockSync> {
             offsetUnit: GaugeSizeUnit.factor,
             minorTicksPerInterval: 4,
             tickOffset: 0.03,
+            backgroundImage:
+                const AssetImage('assets/images/darkThemeGaugeNoCircle.png'),
             minorTickStyle: MinorTickStyle(
                 length: 0.06, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
             majorTickStyle: MajorTickStyle(

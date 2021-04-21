@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/moonTable.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/moonScreen.dart';
+import 'package:tidey/screens/weatherToday.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class TideScreen extends StatelessWidget {
@@ -47,28 +49,113 @@ class TideScreen extends StatelessWidget {
                 )),
           ],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/blueTexture.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.8), BlendMode.dstATop),
+        body: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return PortraitMode();
+            } else {
+              return LandScapeMode();
+            }
+          },
+        ));
+  }
+}
+
+class LandScapeMode extends StatefulWidget {
+  @override
+  _LandScapeModeState createState() => _LandScapeModeState();
+}
+
+class _LandScapeModeState extends State<LandScapeMode> {
+  HourlyDataSource hourlyDataSource;
+  @override
+  void initState() {
+    hourlyDataSource =
+        HourlyDataSource(hourlyData: weatherData.data.weather[0].hourly);
+    print("Number of hourly records is " +
+        weatherData.data.weather[0].hourly.length.toString());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/bgBlue2.JPG'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.8), BlendMode.dstATop),
+        ),
+      ),
+      constraints: BoxConstraints.expand(),
+      child: Row(
+        children: [
+          Column(
+            children: [
+              SizedBox(
+                height: 80,
+              ),
+              CompassGauge(),
+              SizedBox(
+                height: 20,
+              ),
+              CompassGauge(),
+            ],
+          ),
+          zeClockSync(),
+          Container(
+            width: SizeConfig.safeBlockHorizontal * 28,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 85),
+                Expanded(
+                  child: WeatherTodayTable(hourlyDataSource: hourlyDataSource),
+                ),
+              ],
             ),
           ),
-          constraints: BoxConstraints.expand(),
-          child: Column(
+//          Container(
+//            width: SizeConfig.safeBlockHorizontal * 35,
+//            height: SizeConfig.safeBlockVertical * 80,
+//            child: Column(
+//              children: [
+//                SizedBox( height: 20),
+//              WeatherTodayTable(hourlyDataSource: hourlyDataSource),
+//              ],
+//            ),
+//          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PortraitMode extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/blueTexture.jpg'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.8), BlendMode.dstATop),
+        ),
+      ),
+      constraints: BoxConstraints.expand(),
+      child: Column(
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(height: SizeConfig.safeBlockVertical * 2),
-                zeClockSync(),
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(height: SizeConfig.safeBlockVertical * 2),
+            zeClockSync(),
 //                ClockExample(),
-                SizedBox(height: SizeConfig.safeBlockVertical * 2),
-                // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),
-                TimerWidget(),
-              ]),
-        ));
+            SizedBox(height: SizeConfig.safeBlockVertical * 2),
+            // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),
+            TimerWidget(),
+          ]),
+    );
   }
 }
 
