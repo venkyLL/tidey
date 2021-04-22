@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tidey/components/compass.dart';
+import 'package:flutter/src/rendering/box.dart';
+import 'package:marquee/marquee.dart';
+import 'package:tidey/components/directionAndSpeedGauge.dart';
+import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/moonTable.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
@@ -88,47 +91,122 @@ class _LandScapeModeState extends State<LandScapeMode> {
         ),
       ),
       constraints: BoxConstraints.expand(),
-      child: Row(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 80,
-              ),
-              CompassGauge(),
-              SizedBox(
-                height: 20,
-              ),
-              CompassGauge(),
-            ],
-          ),
-          zeClockSync(),
-          Container(
-            width: SizeConfig.safeBlockHorizontal * 28,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
+      child: maingGaugeView(),
+    );
+  }
+}
+
+class maingGaugeView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Column(
               children: [
-                SizedBox(height: 85),
-                Expanded(
-                  child: WeatherTodayTable(hourlyDataSource: hourlyDataSource),
+                //  CompassGauge(),
+                //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+
+                ImageGauge(
+                  imageName: "gaugeWater.png",
+                  textLabel: "Water 87 \u2109",
+                  textColor: Colors.black,
                 ),
               ],
             ),
-          ),
+            Column(
+              children: [
+                SizedBox(
+                  height: 140,
+                ),
+                zeClockSync(),
+              ],
+            ),
+            Column(
+              children: [
+//                  SizedBox(
+//                    height: 10,
+//                  ),
+                DirectionAndSpeedGauge(),
+                //  ImageGauge(imageName: "gaugeSunset.png", textLabel: "8:15PM"),
+//                ImageGauge(
+//                    imageName: "gaugeStars.png",
+//                    textLabel: "Waxing Crescent\nRise: 12:PM\nSet: 03:00AM",
+//                    textPosition: 40,
+//                    textBackgroundColor: Colors.transparent,
+//                    fontSize: 20),
+              ],
 //          Container(
-//            width: SizeConfig.safeBlockHorizontal * 35,
-//            height: SizeConfig.safeBlockVertical * 80,
+//            width: SizeConfig.safeBlockHorizontal * 28,
 //            child: Column(
+//              // mainAxisAlignment: MainAxisAlignment.center,
 //              children: [
-//                SizedBox( height: 20),
-//              WeatherTodayTable(hourlyDataSource: hourlyDataSource),
+//                SizedBox(height: 85),
+//                Expanded(
+//                  child: WeatherTodayTable(hourlyDataSource: hourlyDataSource),
+//                ),
 //              ],
 //            ),
 //          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+        Container(
+          width: 1000,
+          height: 120,
+          color: Colors.transparent,
+          // color: Colors.green,
+          child: ListView(
+            padding: EdgeInsets.only(top: 50.0),
+            children: [
+              // _buildMarquee(),
+              _buildComplexMarquee(),
+            ].map(_wrapWithStuff).toList(),
+          ),
+        ),
+      ],
     );
   }
+}
+
+Widget _buildMarquee() {
+  return Marquee(
+    text: 'There once was a boy who told this story about a boy: "',
+  );
+}
+
+Widget _buildComplexMarquee() {
+  return Marquee(
+    text:
+        'The weather outside is frightful. Let it snow, Let it Snow, Let it Snow',
+    style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 40,
+        //    backgroundColor: Colors.white30,
+        color: Colors.grey), // Color(0xFFBEC2CB)),
+    scrollAxis: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    blankSpace: 20.0,
+    velocity: 100.0,
+    pauseAfterRound: Duration(seconds: 1),
+    showFadingOnlyWhenScrolling: true,
+    fadingEdgeStartFraction: 0.1,
+    fadingEdgeEndFraction: 0.1,
+    numberOfRounds: 3,
+    startPadding: 10.0,
+    accelerationDuration: Duration(seconds: 1),
+    accelerationCurve: Curves.linear,
+    decelerationDuration: Duration(milliseconds: 500),
+    decelerationCurve: Curves.easeOut,
+  );
+}
+
+Widget _wrapWithStuff(Widget child) {
+  return Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Container(height: 120.0, color: Colors.transparent, child: child),
+  );
 }
 
 class PortraitMode extends StatelessWidget {
