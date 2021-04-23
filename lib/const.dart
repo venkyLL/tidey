@@ -236,6 +236,8 @@ class ScreenSize {
   static double safeBlockHorizontal;
   static double safeBlockVertical;
   static double marqueeHeight;
+  static Offset clockTopLeft;
+  static Offset clockBottomRight;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -262,6 +264,8 @@ class ScreenSize {
 
     gauge1TopLeft = Offset(0, gaugeTop);
     gauge1BottomRight = Offset(gaugeSize, gaugeTop + gaugeSize);
+    clockTopLeft = Offset(gaugeSize, clockTop);
+    clockBottomRight = Offset(gaugeSize + clockSize, clockTop + clockSize);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
     print("GaugeTop = ${gaugeTop}");
@@ -277,7 +281,9 @@ class ScreenSize {
     print("Clock Size = ${clockSize}");
     print("Box below gauge = ${gaugeBottom}");
 
-    print("TopLeft , ${gauge1TopLeft.dx} ${gauge1TopLeft.dy}");
-    print("TopRight , ${gauge1BottomRight.dx} ${gauge1BottomRight.dy}");
+    print("Gauge TopLeft , ${gauge1TopLeft.dx} ${gauge1TopLeft.dy}");
+    print("Gauge TopRight , ${gauge1BottomRight.dx} ${gauge1BottomRight.dy}");
+    print("Clock TopLeft , ${clockTopLeft.dx} ${clockTopLeft.dy}");
+    print("Clock TopRight , ${clockBottomRight.dx} ${clockBottomRight.dy}");
   }
 }
