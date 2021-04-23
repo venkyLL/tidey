@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Gauge imports
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 /// Locals imports
 class TempGauge extends StatefulWidget {
@@ -23,74 +24,148 @@ class _TempGaugeState extends State<TempGauge> {
 
   /// Return the gauge pointer ease animation gauge
   SfRadialGauge _buildRadialEaseExample() {
+    const isCardView = false;
     return SfRadialGauge(
-      backgroundColor: Colors.white,
+      animationDuration: 3500,
+      enableLoadingAnimation: true,
+      //  backgroundColor: Colors.white,
       axes: <RadialAxis>[
         RadialAxis(
-            startAngle: 0,
-            endAngle: 360,
-            showLabels: false,
-            showTicks: false,
-            radiusFactor: 0.9,
-            axisLineStyle: AxisLineStyle(
-                thicknessUnit: GaugeSizeUnit.factor, thickness: 0.1)),
-        RadialAxis(
-            startAngle: 170,
-            endAngle: 170,
-            showTicks: false,
-            labelFormat: '{value}M',
-            onLabelCreated: _handleLabelCreated,
-            showAxisLine: false,
-            radiusFactor: 0.9,
+            backgroundImage:
+                const AssetImage('assets/images/blueWithBorder.png'),
+            startAngle: 130,
+            endAngle: 50,
             minimum: 0,
-            maximum: 15,
-            axisLabelStyle: GaugeTextStyle(
-                fontSize: 12, color: Colors.pink, fontWeight: FontWeight.w500),
-            labelOffset: 25,
-            interval: _interval,
-            canRotateLabels: true,
+            maximum: 110,
+            //  interval: isCardView ? 20 : _interval,
+            minorTicksPerInterval: 9,
+            showAxisLine: false,
+            labelsPosition: ElementsPosition.outside,
+            labelOffset: 15,
+            interval: 10,
+            radiusFactor: 0.9,
+            //labelOffset: 8,
+            ranges: <GaugeRange>[
+              GaugeRange(
+                  startValue: -10,
+                  endValue: 32,
+                  startWidth: 0.265,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  endWidth: 0.265,
+                  color: const Color.fromRGBO(34, 144, 199, 0.75)),
+              GaugeRange(
+                  startValue: 32,
+                  endValue: 55,
+                  startWidth: 0.265,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  endWidth: 0.265,
+                  color: const Color.fromRGBO(34, 195, 199, 0.75)),
+              GaugeRange(
+                  startValue: 55,
+                  endValue: 70,
+                  startWidth: 0.265,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  endWidth: 0.265,
+                  color: const Color.fromRGBO(123, 199, 34, 0.75)),
+              GaugeRange(
+                  startValue: 70,
+                  endValue: 85,
+                  startWidth: 0.265,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  endWidth: 0.265,
+                  color: const Color.fromRGBO(238, 193, 34, 0.75)),
+              GaugeRange(
+                  startValue: 85,
+                  endValue: 110,
+                  startWidth: 0.265,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  endWidth: 0.265,
+                  color: const Color.fromRGBO(238, 79, 34, 0.65)),
+            ],
             annotations: <GaugeAnnotation>[
               GaugeAnnotation(
-                  positionFactor: 1,
-                  axisValue: 0,
+                  angle: 90,
+                  positionFactor: 0.1,
                   widget: Container(
-                      height: 45,
-                      width: 45,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: ExactAssetImage('images/shotput.png'),
-                          fit: BoxFit.fitHeight,
-                        ),
-                      ))),
+                    child: BoxedIcon((WeatherIcons.day_cloudy),
+                        size: 50, color: Colors.blue),
+                  )),
+//                      const Text('Temp.°F',
+//                          style: TextStyle(
+//                              color: Color(0xff000000), fontSize: 16)))),
               GaugeAnnotation(
+                  angle: 90,
+                  positionFactor: 0.8,
                   widget: Container(
-                color: Colors.yellow,
-                child: const Text('Distance', style: TextStyle(fontSize: 20)),
-              ))
+                    child: const Text(
+                      'Hi Lo Temp',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ))
             ],
             pointers: <GaugePointer>[
-              RangePointer(
-                value: 11.5,
-                width: 0.1,
-                color: const Color(0xFFFFCC33),
-                enableAnimation: true,
-                sizeUnit: GaugeSizeUnit.factor,
-                animationType: AnimationType.ease,
-                gradient: const SweepGradient(
-                    colors: <Color>[Color(0xFFE484), Color(0xFFFFCC33)],
-                    stops: <double>[0.25, 0.75]),
+//              RangePointer(
+//                value: 68,
+//                width: 18,
+//                pointerOffset: 25,
+//                cornerStyle: CornerStyle.bothCurve,
+//                color: const Color(0xFFF67280),
+//                gradient: const SweepGradient(
+//                    colors: <Color>[Color(0xFFFF7676), Color(0xFFF54EA2)],
+//                    stops: <double>[0.25, 0.75]),
+//              ),
+//              MarkerPointer(
+//                value: 68,
+//                color: Colors.black,
+//                markerType: MarkerType.circle,
+//                markerOffset: 25,
+//              )
+              MarkerPointer(
+                color: Colors.red,
+                value: 88,
+                markerHeight: 20,
+                markerWidth: 20,
+                markerType: MarkerType.triangle,
+                markerOffset: 40,
               ),
               MarkerPointer(
-                value: 11.5,
-                markerType: MarkerType.image,
-                enableAnimation: true,
-                animationType: AnimationType.ease,
-                imageUrl: 'images/ball_progressbar.png',
-                markerHeight: 40,
-                markerOffset: 4,
-                markerWidth: 40,
+                color: Colors.blue,
+                value: 68,
+                markerHeight: 20,
+                markerWidth: 20,
+                markerType: MarkerType.triangle,
+                markerOffset: 40,
               )
-            ])
+//              NeedlePointer(
+//                value: 68.5,
+//                needleLength: 0.6,
+//                lengthUnit: GaugeSizeUnit.factor,
+//                needleStartWidth: isCardView ? 0 : 1,
+//                needleEndWidth: isCardView ? 5 : 8,
+//                animationType: AnimationType.easeOutBack,
+//                enableAnimation: true,
+//                animationDuration: 1200,
+//                knobStyle: KnobStyle(
+//                    knobRadius: isCardView ? 0.06 : 0.09,
+//                    sizeUnit: GaugeSizeUnit.factor,
+//                    borderColor: const Color(0xFFF8B195),
+//                    color: Colors.white,
+//                    borderWidth: isCardView ? 0.035 : 0.05),
+//                tailStyle: TailStyle(
+//                    color: const Color(0xFFF8B195),
+//                    width: isCardView ? 4 : 8,
+//                    lengthUnit: GaugeSizeUnit.factor,
+//                    length: isCardView ? 0.15 : 0.2),
+//                needleColor: const Color(0xFFF8B195),
+//              )
+            ],
+            axisLabelStyle: GaugeTextStyle(fontSize: 20),
+            majorTickStyle: MajorTickStyle(
+                length: 0.25, lengthUnit: GaugeSizeUnit.factor, thickness: 2),
+            minorTickStyle: MinorTickStyle(
+                length: 0.13, lengthUnit: GaugeSizeUnit.factor, thickness: 1))
+        //),
       ],
     );
   }

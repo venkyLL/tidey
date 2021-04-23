@@ -142,8 +142,8 @@ class _CompassGaugeState extends State<CompassGauge> {
 
     return Container(
       child: _widget,
-      height: SizeConfig.safeBlockHorizontal * 30,
-      width: SizeConfig.safeBlockHorizontal * 30,
+      height: ScreenSize.safeBlockHorizontal * 30,
+      width: ScreenSize.safeBlockHorizontal * 30,
     );
   }
 

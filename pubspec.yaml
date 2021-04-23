@@ -35,6 +35,7 @@ dependencies:
   syncfusion_flutter_gauges: ^19.1.56
   syncfusion_flutter_datagrid:
   timer_builder:
+  dart_date: ^1.1.0
   marquee:
 
 

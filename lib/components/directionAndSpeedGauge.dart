@@ -16,13 +16,16 @@ class DirectionAndSpeedGauge extends StatelessWidget {
   final String gaugeUnit;
   final String gaugeDirection;
   final double gaugeValue;
+  final double gaugeMax;
+  final double gaugeInterval;
 
-  DirectionAndSpeedGauge({
-    this.gaugeType = "Wind",
-    this.gaugeUnit = "mph",
-    this.gaugeDirection = "SSE",
-    this.gaugeValue = 20,
-  });
+  DirectionAndSpeedGauge(
+      {this.gaugeType = "Wind",
+      this.gaugeUnit = "mph",
+      this.gaugeDirection = "SSE",
+      this.gaugeValue = 20,
+      this.gaugeMax = 45,
+      this.gaugeInterval = 5});
 
   final dirMap = {
     "N": 0.0,
@@ -61,10 +64,10 @@ class DirectionAndSpeedGauge extends StatelessWidget {
 //              startAngle: 32,
 //              endAngle: 212,
             minimum: 0,
-            maximum: 45,
+            maximum: gaugeMax,
             labelsPosition: ElementsPosition.outside,
             labelOffset: 15,
-            interval: 5,
+            interval: gaugeInterval,
             radiusFactor: 0.9,
             //  showFirstLabel: false,
             axisLabelStyle: GaugeTextStyle(fontSize: 20),
@@ -116,6 +119,7 @@ class DirectionAndSpeedGauge extends StatelessWidget {
                   widget: Container(
                     child: Text(
                       "\n" + gaugeType + "\n " + gaugeUnit,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

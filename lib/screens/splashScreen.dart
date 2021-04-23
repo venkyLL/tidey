@@ -3,6 +3,7 @@ import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
+import 'package:tidey/services/tideServices.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -26,16 +27,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // GetMyQs myQservice = GetMyQs();
     await weatherService.getMarineData();
+    mySineWaveData msw = mySineWaveData();
+    await msw.computeTidesForPainting();
     Navigator.pushReplacementNamed(context, TideScreen.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    ScreenSize().init(context);
     print("Width = " +
-        SizeConfig.screenWidth.toString() +
+        ScreenSize.screenWidth.toString() +
         "Length " +
-        SizeConfig.screenHeight.toString());
+        ScreenSize.screenHeight.toString());
     return Scaffold(
       backgroundColor: Colors.amber,
       body: Center(

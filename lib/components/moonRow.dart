@@ -14,7 +14,7 @@ class MoonRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.blue,
-      height: SizeConfig.safeBlockVertical * 45,
+      height: ScreenSize.safeBlockVertical * 45,
       child: Column(
         children: [
           SizedBox(
@@ -90,7 +90,7 @@ class SunRise extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.blue,
-      height: SizeConfig.safeBlockVertical * 45,
+      height: ScreenSize.safeBlockVertical * 45,
       child: Column(
         children: [
           SizedBox(

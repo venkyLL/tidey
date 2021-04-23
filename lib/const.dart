@@ -4,6 +4,26 @@ import 'package:weather_icons/weather_icons.dart';
 
 String globalLatitude;
 String globalLongitude;
+
+// Print debugger
+bool globalMarineWeatherPrintDone = false;
+
+const metersToFeet = 3.28084;
+
+//globals for the sinewave function y = A sin (omega * t + alpha) + C
+double globalA;
+double globalC;
+double globalOmega;
+double globalAlpha;
+
+//
+double globalNextHighTidePointerValue = 10;
+double globalNextLowTidePointerValue = 6;
+double globalNextHighTideHeightInFeet = 99999;
+double globalNextLowTideHeightInFeet = 999999;
+
+int globalNumberOfDaysOfWeatherData = 1;
+
 MarineWeather weatherData = MarineWeather();
 const hourFmt = {
   '0': '12:00',
@@ -198,13 +218,19 @@ const kMySubTileData = [
   },
 ];
 
-class SizeConfig {
+class ScreenSize {
   static MediaQueryData _mediaQueryData;
   static double screenWidth;
   static double screenHeight;
   static double blockSizeHorizontal;
   static double blockSizeVertical;
-
+  static double clockSize;
+  static double gaugeSize;
+  static double clockTop;
+  static double gaugeTop;
+  static double gaugeBottom;
+  static Offset gauge1TopLeft;
+  static Offset gauge1BottomRight;
   static double _safeAreaHorizontal;
   static double _safeAreaVertical;
   static double safeBlockHorizontal;
@@ -223,5 +249,30 @@ class SizeConfig {
         _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
+    gaugeSize = safeBlockHorizontal * 30;
+    clockSize = safeBlockHorizontal * 40;
+    clockTop = ((safeBlockVertical * 100) - clockSize) / 2;
+
+    gaugeTop = ((safeBlockVertical * 100) - gaugeSize) / 4;
+
+    gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
+    print("Total height = ${safeBlockVertical * 100}");
+    print("Total wideth = ${safeBlockHorizontal * 100}");
+    print("GaugeTop = ${gaugeTop}");
+    print("Gauge Size = ${gaugeSize}");
+    print("ClockTop = ${clockTop}");
+    print("Clock Size = ${clockSize}");
+    print("Box below gauge = ${gaugeBottom}");
+    print("Total height = ${safeBlockVertical * 100}");
+    gauge1TopLeft = Offset(0, gaugeTop);
+    gauge1BottomRight = Offset(gaugeSize, gaugeTop + gaugeSize);
+    print("GaugeTop = ${gaugeTop}");
+    print("Gauge Size = ${gaugeSize}");
+    print("ClockTop = ${clockTop}");
+    print("Clock Size = ${clockSize}");
+    print("Box below gauge = ${gaugeBottom}");
+
+    print("TopLeft , ${gauge1TopLeft.dx} ${gauge1TopLeft.dy}");
+    print("TopRight , ${gauge1BottomRight.dx} ${gauge1BottomRight.dy}");
   }
 }

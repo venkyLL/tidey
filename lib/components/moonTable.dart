@@ -14,10 +14,10 @@ class _MoonTableState extends State<MoonTable> {
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.blue,
-      height: SizeConfig.safeBlockVertical * 45,
+      height: ScreenSize.safeBlockVertical * 45,
       child: Container(
-        height: SizeConfig.safeBlockVertical * 45,
-        width: SizeConfig.safeBlockHorizontal * 90,
+        height: ScreenSize.safeBlockVertical * 45,
+        width: ScreenSize.safeBlockHorizontal * 90,
         child: Column(
           children: [
             Text(weatherData.data.weather[0].astronomy[0].moonPhase,
@@ -26,8 +26,8 @@ class _MoonTableState extends State<MoonTable> {
             Row(
               children: [
                 Container(
-                    width: SizeConfig.safeBlockHorizontal * 35,
-                    height: SizeConfig.safeBlockHorizontal * 35,
+                    width: ScreenSize.safeBlockHorizontal * 35,
+                    height: ScreenSize.safeBlockHorizontal * 35,
                     child: Image.asset(
                       "assets/images/fullMoon2.png",
 //            width: MediaQuery.of(context).size.width / 2.5,
@@ -35,8 +35,8 @@ class _MoonTableState extends State<MoonTable> {
                     )),
                 Container(
                     // color: Colors.black,
-                    width: SizeConfig.safeBlockHorizontal * 55,
-                    height: SizeConfig.safeBlockHorizontal * 35,
+                    width: ScreenSize.safeBlockHorizontal * 55,
+                    height: ScreenSize.safeBlockHorizontal * 35,
                     child: Column(
                       children: [
                         SizedBox(height: 10),
@@ -58,7 +58,7 @@ class _MoonTableState extends State<MoonTable> {
                             ' Rise: ${weatherData.data.weather[0].astronomy[0].moonrise}',
                             style: TextStyle(
                               fontSize:
-                                  SizeConfig.safeBlockHorizontal * fontScale,
+                                  ScreenSize.safeBlockHorizontal * fontScale,
                               color: Colors.white,
                             ),
                           ),
@@ -70,7 +70,7 @@ class _MoonTableState extends State<MoonTable> {
                             ' Set:   ${weatherData.data.weather[0].astronomy[0].moonset}',
                             style: TextStyle(
                               fontSize:
-                                  SizeConfig.safeBlockHorizontal * fontScale,
+                                  ScreenSize.safeBlockHorizontal * fontScale,
                               color: Colors.white,
                             ),
                           )
@@ -82,7 +82,7 @@ class _MoonTableState extends State<MoonTable> {
                             ' Illumination:  ${weatherData.data.weather[0].astronomy[0].moonIllumination}',
                             style: TextStyle(
                               fontSize:
-                                  SizeConfig.safeBlockHorizontal * fontScale,
+                                  ScreenSize.safeBlockHorizontal * fontScale,
                               color: Colors.white,
                             ),
                           )
@@ -103,10 +103,10 @@ class SunTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.blue,
-      height: SizeConfig.safeBlockVertical * 45,
+      height: ScreenSize.safeBlockVertical * 45,
       child: Container(
-        height: SizeConfig.safeBlockVertical * 45,
-        width: SizeConfig.safeBlockHorizontal * 90,
+        height: ScreenSize.safeBlockVertical * 45,
+        width: ScreenSize.safeBlockHorizontal * 90,
         child: Column(
           children: [
             Text("Sunrise and Sunset", style: kTableTitleTextStyle),
@@ -114,8 +114,8 @@ class SunTable extends StatelessWidget {
             Row(
               children: [
                 Container(
-                    width: SizeConfig.safeBlockHorizontal * 35,
-                    height: SizeConfig.safeBlockHorizontal * 35,
+                    width: ScreenSize.safeBlockHorizontal * 35,
+                    height: ScreenSize.safeBlockHorizontal * 35,
                     child: Image.asset(
                       "assets/images/sunrise.jpg",
 //            width: MediaQuery.of(context).size.width / 2.5,
@@ -123,8 +123,8 @@ class SunTable extends StatelessWidget {
                     )),
                 Container(
                     // color: Colors.black,
-                    width: SizeConfig.safeBlockHorizontal * 55,
-                    height: SizeConfig.safeBlockHorizontal * 35,
+                    width: ScreenSize.safeBlockHorizontal * 55,
+                    height: ScreenSize.safeBlockHorizontal * 35,
                     child: Column(
                       children: [
                         SizedBox(height: 30),
@@ -135,7 +135,7 @@ class SunTable extends StatelessWidget {
                             ' Rise:  ${weatherData.data.weather[0].astronomy[0].sunrise}',
                             style: TextStyle(
                               fontSize:
-                                  SizeConfig.safeBlockHorizontal * fontScale,
+                                  ScreenSize.safeBlockHorizontal * fontScale,
                               color: Colors.white,
                             ),
                           ),
@@ -146,7 +146,7 @@ class SunTable extends StatelessWidget {
                             ' Set:  ${weatherData.data.weather[0].astronomy[0].sunset}',
                             style: TextStyle(
                               fontSize:
-                                  SizeConfig.safeBlockHorizontal * fontScale,
+                                  ScreenSize.safeBlockHorizontal * fontScale,
                               color: Colors.white,
                             ),
                           )
