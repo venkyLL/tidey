@@ -31,8 +31,7 @@ class _TempGaugeState extends State<TempGauge> {
       //  backgroundColor: Colors.white,
       axes: <RadialAxis>[
         RadialAxis(
-            backgroundImage:
-                const AssetImage('assets/images/blueWithBorder.png'),
+            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             startAngle: 130,
             endAngle: 50,
             minimum: 0,
@@ -99,8 +98,10 @@ class _TempGaugeState extends State<TempGauge> {
                   widget: Container(
                     child: const Text(
                       'Hi Lo Temp',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white),
                     ),
                   ))
             ],
@@ -160,7 +161,7 @@ class _TempGaugeState extends State<TempGauge> {
 //                needleColor: const Color(0xFFF8B195),
 //              )
             ],
-            axisLabelStyle: GaugeTextStyle(fontSize: 20),
+            axisLabelStyle: GaugeTextStyle(fontSize: 20, color: Colors.white),
             majorTickStyle: MajorTickStyle(
                 length: 0.25, lengthUnit: GaugeSizeUnit.factor, thickness: 2),
             minorTickStyle: MinorTickStyle(

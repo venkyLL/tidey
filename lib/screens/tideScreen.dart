@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/rendering/box.dart';
 import 'package:marquee/marquee.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/moonTable.dart';
+import 'package:tidey/components/oldZeClock.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
@@ -92,9 +92,8 @@ class _LandScapeModeState extends State<LandScapeMode> {
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      constraints: BoxConstraints.expand(),
+      //constraints: BoxConstraints.expand(),
       child: MakeContainers(),
-      //  maingGaugeView(),
     );
   }
 }
@@ -104,24 +103,16 @@ class MakeContainers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // ClockRow(),
-        Stack(children: [
-//          DialRow(
-//            gaugeType1: TempGauge(),
-//            gaugeType2: BarometerGauge(),
-//          ),
-          //        DialRow(
-//              gaugeType1: ImageGauge(
-//                  imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
-//              gaugeType2: ImageGauge(
-//                  imageName: "gaugeSunset.png", textLabel: "8:15PM")),
-          // LandscapeTimerWidget(),
-          ClockRow(),
-        ]),
+        Stack(
+          children: [
+            LandscapeTimerWidget(),
+            ClockRow(),
+          ],
+        ),
         Container(
-          color: Colors.blue,
+          color: Colors.transparent,
           width: ScreenSize.safeBlockHorizontal * 100,
-          height: 150,
+          height: ScreenSize.marqueeHeight,
           child: ListView(
             padding: EdgeInsets.only(top: 50.0),
             children: [
@@ -143,34 +134,59 @@ class ClockRow extends StatelessWidget {
 
     return Row(
       children: [
-        Column(
-          children: [
-            SizedBox(height: ScreenSize.gaugeTop),
-            Container(
-              width: ScreenSize.gaugeSize,
-              height: ScreenSize.gaugeSize,
-              child: CircleContainer(),
-            ),
-            SizedBox(height: ScreenSize.gaugeBottom),
-          ],
-        ),
-        //  DrawShape(SizeConfig.safeBlockHorizontal * 30),
-        Column(
-          children: [
-            SizedBox(height: (ScreenSize.clockTop)),
-            Container(
-              //   color: Colors.yellow,
-              width: ScreenSize.clockSize,
-              height: ScreenSize.clockSize,
-              child: zeClockSync(),
-            ),
-          ],
-        ),
+        // guageColumn(gaugeType: CircleContainer()),
+        gaugeColumn(),
+        clockColumn(clockType: zeClockSync()),
+        // gaugeColumn(),
+      ],
+    );
+  }
+}
+
+class clockColumn extends StatelessWidget {
+  Widget clockType;
+  Color containerColor;
+  clockColumn({
+    this.clockType,
+    this.containerColor = Colors.transparent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: (ScreenSize.clockTop)),
         Container(
-          color: Colors.transparent,
+          color: containerColor,
+          width: ScreenSize.clockSize,
+          height: ScreenSize.clockSize,
+          child: clockType,
+        ),
+      ],
+    );
+  }
+}
+
+class gaugeColumn extends StatelessWidget {
+  Widget gaugeType;
+  Color containerColor;
+  gaugeColumn({
+    this.gaugeType,
+    this.containerColor = Colors.transparent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: ScreenSize.gaugeTop),
+        Container(
           width: ScreenSize.gaugeSize,
           height: ScreenSize.gaugeSize,
+          color: containerColor,
+          child: gaugeType,
         ),
+        SizedBox(height: ScreenSize.gaugeBottom),
       ],
     );
   }
@@ -271,35 +287,44 @@ class DialRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          color: Colors.red,
-          width: ScreenSize.safeBlockHorizontal * 30,
-          height: ScreenSize.safeBlockHorizontal * 30,
-          child: gaugeType1,
-        ),
-        //  DrawShape(SizeConfig.safeBlockHorizontal * 30),
-        Column(
-          children: [
-            SizedBox(
-              height: (ScreenSize.safeBlockVertical * 100 -
-                      ScreenSize.safeBlockHorizontal * 40) /
-                  2,
-            ),
-            Container(
-              color: Colors.transparent,
-              width: ScreenSize.safeBlockHorizontal * 40,
-              height: ScreenSize.safeBlockHorizontal * 40,
-            ),
-          ],
-        ),
-        Container(
-          color: Colors.red,
-          width: ScreenSize.safeBlockHorizontal * 30,
-          height: ScreenSize.safeBlockHorizontal * 30,
-          child: gaugeType2,
-        ),
+        gaugeColumn(gaugeType: gaugeType1, containerColor: Colors.transparent),
+        clockColumn(),
+        gaugeColumn(gaugeType: gaugeType2, containerColor: Colors.transparent),
       ],
     );
+
+//
+//    return Row(
+//      children: [
+//        Container(
+//          color: Colors.red,
+//          width: ScreenSize.safeBlockHorizontal * 30,
+//          height: ScreenSize.safeBlockHorizontal * 30,
+//          child: gaugeType1,
+//        ),
+//        //  DrawShape(SizeConfig.safeBlockHorizontal * 30),
+//        Column(
+//          children: [
+//            SizedBox(
+//              height: (ScreenSize.safeBlockVertical * 100 -
+//                      ScreenSize.safeBlockHorizontal * 40) /
+//                  2,
+//            ),
+//            Container(
+//              color: Colors.transparent,
+//              width: ScreenSize.safeBlockHorizontal * 40,
+//              height: ScreenSize.safeBlockHorizontal * 40,
+//            ),
+//          ],
+//        ),
+//        Container(
+//          color: Colors.red,
+//          width: ScreenSize.safeBlockHorizontal * 30,
+//          height: ScreenSize.safeBlockHorizontal * 30,
+//          child: gaugeType2,
+//        ),
+//      ],
+//    );
   }
 }
 
@@ -457,13 +482,13 @@ class PortraitMode extends StatelessWidget {
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      constraints: BoxConstraints.expand(),
+      // constraints: BoxConstraints.expand(),
       child: Column(
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(height: ScreenSize.safeBlockVertical * 2),
-            zeClockSync(),
+            oldzeClockSync(),
 //                ClockExample(),
             SizedBox(height: ScreenSize.safeBlockVertical * 2),
             // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),

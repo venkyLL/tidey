@@ -26,8 +26,7 @@ class _BarometerGaugeState extends State<BarometerGauge> {
     return SfRadialGauge(
       axes: <RadialAxis>[
         RadialAxis(
-            backgroundImage:
-                const AssetImage('assets/images/blueWithBorder.png'),
+            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             showAxisLine: false,
             ticksPosition: ElementsPosition.outside,
             labelsPosition: ElementsPosition.outside,
@@ -43,9 +42,24 @@ class _BarometerGaugeState extends State<BarometerGauge> {
                 MajorTickStyle(length: 0.16, lengthUnit: GaugeSizeUnit.factor),
             minorTickStyle: MinorTickStyle(
                 length: 0.16, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
-            axisLabelStyle: GaugeTextStyle(fontSize: 40),
+            axisLabelStyle: GaugeTextStyle(fontSize: 40, color: Colors.white),
             pointers: <GaugePointer>[
-              MarkerPointer(value: 90, markerType: MarkerType.triangle),
+              NeedlePointer(
+                  value: 2,
+                  needleLength: .9,
+                  lengthUnit: (GaugeSizeUnit.factor),
+                  needleColor: Color(0xFFE20A22),
+                  needleStartWidth: 0,
+                  needleEndWidth: 8,
+                  enableAnimation: true,
+                  animationType: AnimationType.ease,
+                  knobStyle: KnobStyle(
+                      borderColor: const Color(0xFFE20A22),
+                      borderWidth: 0.015,
+                      color: Colors.white,
+                      sizeUnit: GaugeSizeUnit.factor,
+                      knobRadius: 0.05)),
+              //       MarkerPointer(value: 90, markerType: MarkerType.triangle),
               NeedlePointer(
                   value: 310,
                   needleLength: 0.5,
@@ -85,21 +99,21 @@ class _BarometerGaugeState extends State<BarometerGauge> {
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_cloudy),
-                        size: 35, color: Colors.grey),
+                        size: 35, color: Colors.white30),
                   )),
               GaugeAnnotation(
                   angle: 310,
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_sunny),
-                        size: 35, color: Colors.grey),
+                        size: 35, color: Colors.white30),
                   )),
               GaugeAnnotation(
                   angle: 129,
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.thunderstorm),
-                        size: 35, color: Colors.grey),
+                        size: 35, color: Colors.white30),
                   )),
 //              GaugeAnnotation(
 //                  angle: 50,

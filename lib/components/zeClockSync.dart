@@ -78,6 +78,7 @@ class _zeClockSyncState extends State<zeClockSync> {
         /// Renders inner axis and positioned it using CenterX and
         /// CenterY properties and reduce the radius using radiusFactor
         RadialAxis(
+            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             startAngle: 270,
             endAngle: 270,
             minimum: 0,

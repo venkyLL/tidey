@@ -55,8 +55,7 @@ class DirectionAndSpeedGauge extends StatelessWidget {
         axes: <RadialAxis>[
           RadialAxis(
             // useRangeColorForAxis: true,
-            backgroundImage:
-                const AssetImage('assets/images/blueWithBorder.png'),
+            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             axisLineStyle: AxisLineStyle(
                 thicknessUnit: GaugeSizeUnit.factor,
                 thickness: 0.10,
@@ -70,7 +69,7 @@ class DirectionAndSpeedGauge extends StatelessWidget {
             interval: gaugeInterval,
             radiusFactor: 0.9,
             //  showFirstLabel: false,
-            axisLabelStyle: GaugeTextStyle(fontSize: 20),
+            axisLabelStyle: GaugeTextStyle(fontSize: 20, color: Colors.white),
             minorTicksPerInterval: 0,
             onLabelCreated: _handleAxisLabelCreated,
             showTicks: false,
@@ -197,8 +196,10 @@ class DirectionAndSpeedGauge extends StatelessWidget {
                   color: const Color(0xFF3366CC)),
               interval: 10,
               canRotateLabels: true,
-              axisLabelStyle:
-                  GaugeTextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              axisLabelStyle: GaugeTextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
               minorTicksPerInterval: 0,
               majorTickStyle: MajorTickStyle(
                   thickness: 1.5,

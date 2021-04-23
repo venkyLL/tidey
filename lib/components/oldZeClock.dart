@@ -13,7 +13,7 @@ import 'package:tidey/const.dart';
 //import 'sample_view.dart';
 
 /// Renders the gauge clock sample.
-class zeClockSync extends StatefulWidget {
+class oldzeClockSync extends StatefulWidget {
   /// Creates the gauge clock sample.
 //  const ClockExample(Key key) : super(key: key);
 
@@ -21,7 +21,7 @@ class zeClockSync extends StatefulWidget {
   _zeClockSyncState createState() => _zeClockSyncState();
 }
 
-class _zeClockSyncState extends State<zeClockSync> {
+class _zeClockSyncState extends State<oldzeClockSync> {
   _zeClockSyncState();
 //  late Timer timer;
   Timer timer;
