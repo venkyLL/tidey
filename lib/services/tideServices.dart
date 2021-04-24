@@ -133,8 +133,8 @@ void paintSlackTides(centerX, centerY, radius, canvas) {
   int startAngleLow, startAngleHigh;
   int endAngleLow, endAngleHigh;
   int myAngleHigh, myAngleLow;
-  paintHigh.color = Colors.green;
-  paintLow.color = Colors.green;
+  paintHigh.color = Colors.blue;
+  paintLow.color = Colors.blue;
 
   double radius1;
   num degToRad(num deg) => deg * (3.14159 / 180.0);
