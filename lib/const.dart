@@ -292,7 +292,7 @@ class ScreenSize {
   }
 }
 
-getWeatherIconBox({String time, String code}) {
+BoxedIcon getWeatherIconBox({String time, String code}) {
   // var iconName = "WeatherIcons.day_cloudy";
   print("Time is" + time);
   switch (time) {
