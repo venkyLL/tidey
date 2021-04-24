@@ -173,7 +173,7 @@ class HourlyDataSource extends DataGridSource {
             DataGridCell<String>(columnName: 'time', value: hourFmt[e.time]),
             DataGridCell<BoxedIcon>(
                 columnName: 'condition',
-                value: getWeatherIcon(time: e.time, code: e.weatherCode)),
+                value: getWeatherIconBox(time: e.time, code: e.weatherCode)),
             //     BoxedIcon((WeatherIcons.day_cloudy), color: Colors.blue)),
             DataGridCell<String>(
                 columnName: 'temp', value: e.tempF + " \u2109"),
@@ -255,25 +255,6 @@ class HourlyDataSource extends DataGridSource {
     ]);
   }
 
-  getWeatherIcon({String time, String code}) {
-    // var iconName = "WeatherIcons.day_cloudy";
-    print("Time is" + time);
-    switch (time) {
-      case "0":
-      case "300":
-      case "2100":
-        {
-          return BoxedIcon((weatherNightIconMap[code]), color: Colors.white);
-        }
-        break;
-
-      default:
-        {
-          return BoxedIcon((weatherDayIconMap[code]), color: Colors.white);
-        }
-        break;
-    }
-
 //    if (code == "116") {
 //      // termination case
 //      return BoxedIcon((WeatherIcons.day_cloudy), color: Colors.blue);
@@ -281,5 +262,4 @@ class HourlyDataSource extends DataGridSource {
 //      return BoxedIcon((WeatherIcons.day_sunny), color: Colors.blue);
 //      // function invokes itself
 //    }
-  }
 }

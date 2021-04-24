@@ -358,8 +358,14 @@ class LandScapeSwapper extends StatelessWidget {
         return DialRow(
           gaugeType1: TempGauge(
               high: double.parse(localWeather.data.weather[0].maxtempF),
-              low: double.parse(localWeather.data.weather[0].mintempF)),
-          gaugeType2: BarometerGauge(),
+              low: double.parse(localWeather.data.weather[0].mintempF),
+              conditionIcon: weatherDayIconMap[
+                  localWeather.data.weather[0].hourly[0].weatherCode]),
+          gaugeType2: BarometerGauge(
+            current: double.parse(
+                weatherData.data.weather[0].hourly[0].pressureInches),
+            change: getBarometerChange(),
+          ),
         );
         break;
       case 1:
@@ -430,7 +436,9 @@ class LandScapeSwapper extends StatelessWidget {
                   " \u2109",
               textColor: Colors.black,
             ),
-            gaugeType2: CompassGauge());
+            gaugeType2: CompassGauge(
+              direction: currentDirection,
+            ));
       case 5:
         return DialRow(
             gaugeType1: ImageGauge(
@@ -460,6 +468,7 @@ class LandscapeTimerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TimerBuilder.periodic(Duration(seconds: 5), builder: (context) {
       counter = (counter + 1) % 6;
+      // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
       return LandScapeSwapper();
     });

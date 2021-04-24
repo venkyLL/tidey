@@ -7,11 +7,19 @@ import '../const.dart';
 
 /// Locals imports
 class CompassGauge extends StatefulWidget {
+  final double direction;
+  CompassGauge({
+    this.direction = 31.0,
+  });
   @override
-  _CompassGaugeState createState() => _CompassGaugeState();
+  _CompassGaugeState createState() => _CompassGaugeState(direction: direction);
 }
 
 class _CompassGaugeState extends State<CompassGauge> {
+  final double direction;
+  _CompassGaugeState({
+    this.direction = 31.0,
+  });
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
@@ -82,7 +90,7 @@ class _CompassGaugeState extends State<CompassGauge> {
 //                      sizeUnit: GaugeSizeUnit.factor,
 //                      color: Colors.transparent)),
               NeedlePointer(
-                value: 22.5,
+                value: direction,
                 needleLength: 0.6,
                 lengthUnit: GaugeSizeUnit.factor,
                 needleStartWidth: 1,
@@ -130,7 +138,7 @@ class _CompassGaugeState extends State<CompassGauge> {
                   angle: 270,
                   positionFactor: _positionFactor,
                   widget: Text(
-                    '90',
+                    direction.toStringAsFixed(0),
                     style: TextStyle(
                         color: const Color(0xFFDF5F2D),
                         fontWeight: FontWeight.bold,

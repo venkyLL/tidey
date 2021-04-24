@@ -8,22 +8,27 @@ import 'package:weather_icons/weather_icons.dart';
 class TempGauge extends StatefulWidget {
   final double high;
   final double low;
-  TempGauge({
-    this.high = 45,
-    this.low = 86,
-  });
+  final IconData conditionIcon;
+  TempGauge(
+      {this.high = 45,
+      this.low = 86,
+      this.conditionIcon = WeatherIcons.day_cloudy});
 
   @override
-  _TempGaugeState createState() => _TempGaugeState(high: high, low: low);
+  _TempGaugeState createState() =>
+      _TempGaugeState(high: high, low: low, conditionIcon: conditionIcon);
 }
 
 class _TempGaugeState extends State<TempGauge> {
   final double high;
   final double low;
-  _TempGaugeState({
-    this.high = 45,
-    this.low = 86,
-  });
+  final IconData conditionIcon;
+
+  _TempGaugeState(
+      {this.high = 45,
+      this.low = 86,
+      this.conditionIcon = WeatherIcons.day_cloudy});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -99,7 +104,7 @@ class _TempGaugeState extends State<TempGauge> {
                   angle: 90,
                   positionFactor: 0.1,
                   widget: Container(
-                    child: BoxedIcon((WeatherIcons.day_cloudy),
+                    child: BoxedIcon((conditionIcon),
                         size: 50, color: Colors.blue),
                   )),
 //                      const Text('Temp.°F',

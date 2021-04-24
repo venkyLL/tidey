@@ -22,6 +22,7 @@ double globalNextHighTidePointerValue = 10;
 double globalNextLowTidePointerValue = 6;
 double globalNextHighTideHeightInFeet = 99999;
 double globalNextLowTideHeightInFeet = 999999;
+double currentDirection = 193;
 
 int globalNumberOfDaysOfWeatherData = 1;
 
@@ -289,4 +290,43 @@ class ScreenSize {
     print("Clock TopLeft , ${clockTopLeft.dx} ${clockTopLeft.dy}");
     print("Clock TopRight , ${clockBottomRight.dx} ${clockBottomRight.dy}");
   }
+}
+
+getWeatherIconBox({String time, String code}) {
+  // var iconName = "WeatherIcons.day_cloudy";
+  print("Time is" + time);
+  switch (time) {
+    case "0":
+    case "300":
+    case "2100":
+      {
+        return BoxedIcon((weatherNightIconMap[code]), color: Colors.white);
+      }
+      break;
+
+    default:
+      {
+        return BoxedIcon((weatherDayIconMap[code]), color: Colors.white);
+      }
+      break;
+  }
+}
+
+enum BarometerChange {
+  rising,
+  falling,
+  flat,
+}
+getBarometerChange() {
+  // var iconName = "WeatherIcons.day_cloudy";
+  double current =
+      double.parse(weatherData.data.weather[0].hourly[0].pressureInches);
+  double future =
+      double.parse(weatherData.data.weather[0].hourly[1].pressureInches);
+  if (current == future)
+    return BarometerChange.flat;
+  else if (current > future)
+    return BarometerChange.falling;
+  else
+    return BarometerChange.rising;
 }

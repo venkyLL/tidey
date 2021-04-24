@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/const.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 /// Locals imports
 class BarometerGauge extends StatefulWidget {
+  final double current;
+  final BarometerChange change;
+
+  BarometerGauge({
+    this.current = 31.0,
+    this.change = BarometerChange.flat,
+  });
+
   @override
-  _BarometerGaugeState createState() => _BarometerGaugeState();
+  _BarometerGaugeState createState() =>
+      _BarometerGaugeState(current: current, change: change);
 }
 
 class _BarometerGaugeState extends State<BarometerGauge> {
+  final double current;
+  final BarometerChange change;
+
+  _BarometerGaugeState({
+    this.current,
+    this.change,
+  });
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -28,11 +45,11 @@ class _BarometerGaugeState extends State<BarometerGauge> {
         RadialAxis(
             backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             showAxisLine: false,
-            ticksPosition: ElementsPosition.outside,
+            // ticksPosition: ElementsPosition.outside,
             labelsPosition: ElementsPosition.outside,
             startAngle: 0,
             endAngle: 0,
-            minorTicksPerInterval: 0,
+            minorTicksPerInterval: 1,
             minimum: 27,
             maximum: 31,
             showFirstLabel: false,
@@ -45,7 +62,7 @@ class _BarometerGaugeState extends State<BarometerGauge> {
             axisLabelStyle: GaugeTextStyle(fontSize: 40, color: Colors.white),
             pointers: <GaugePointer>[
               NeedlePointer(
-                  value: 2,
+                  value: this.current, //,
                   needleLength: .9,
                   lengthUnit: (GaugeSizeUnit.factor),
                   needleColor: Color(0xFFE20A22),
@@ -115,16 +132,18 @@ class _BarometerGaugeState extends State<BarometerGauge> {
                     child: BoxedIcon((WeatherIcons.thunderstorm),
                         size: 35, color: Colors.white30),
                   )),
-//              GaugeAnnotation(
-//                  angle: 50,
-//                  positionFactor: 0.38,
-//                  widget: Container(
-//                    child: Text('E',
-//                        style: TextStyle(
-//                            fontFamily: 'Times',
-//                            fontWeight: FontWeight.bold,
-//                            fontSize: isCardView ? 12 : 18)),
-//                  ))
+              GaugeAnnotation(
+                angle: 50,
+                positionFactor: 0.38,
+                widget: Container(
+                    child: (change == BarometerChange.falling)
+                        ? Icon(Icons.arrow_circle_down_sharp,
+                            size: 50, color: Colors.red)
+                        : (change == BarometerChange.rising)
+                            ? Icon(Icons.arrow_circle_up_sharp,
+                                size: 50, color: Colors.green)
+                            : Text("-")),
+              )
             ])
       ],
     );
