@@ -10,6 +10,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/services/tideServices.dart';
 
+import '../services/tideServices.dart';
+
 /// Local imports
 //import 'sample_view.dart';
 
@@ -33,7 +35,8 @@ class _zeClockSyncState extends State<zeClockSync> {
     super.initState();
     // update the needle pointer in 1 second interval
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
-    timer2 = Timer.periodic(const Duration(hours: 1), _kickOffTideComputation);
+    timer2 =
+        Timer.periodic(const Duration(minutes: 30), _kickOffTideComputation);
   }
 
   void _updateData(Timer timer) {
@@ -55,19 +58,17 @@ class _zeClockSyncState extends State<zeClockSync> {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
-    final double _containerSize = math.min(_size.width, _size.height);
-
+//    final Size _size = MediaQuery.of(context).size;
+//    final double _containerSize = math.min(_size.width, _size.height);
     return Center(
       child: Container(
-          height: _containerSize,
-          width: _containerSize,
           child: new Stack(
               //alignment:new Alignment(x, y)
               children: <Widget>[
-                TideServicesPainter(_size),
-                _buildMyClock(),
-              ])),
+//            CurvePainter(),
+            TideServicesPainter(),
+            _buildMyClock(),
+          ])),
     );
   }
 
@@ -78,7 +79,7 @@ class _zeClockSyncState extends State<zeClockSync> {
         /// Renders inner axis and positioned it using CenterX and
         /// CenterY properties and reduce the radius using radiusFactor
         RadialAxis(
-            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
+//            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
             startAngle: 270,
             endAngle: 270,
             minimum: 0,

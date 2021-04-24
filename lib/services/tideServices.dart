@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/const.dart';
@@ -21,12 +20,9 @@ calcTideHeightArray() {
 //     );
 
 class TideServicesPainter extends StatelessWidget {
-  Size _containerSize;
-  TideServicesPainter(this._containerSize);
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-//      painter: PathPainter(),
       painter: CurvePainter(),
     );
   }
@@ -34,26 +30,38 @@ class TideServicesPainter extends StatelessWidget {
 
 class CurvePainter extends CustomPainter {
   int numberOfSecondsInTwelveHours = 12 * 60 * 60;
-//  Size containerSize;
-//  CurvePainter(this.containerSize);
+  double _deviceScalingFactor =
+      ScreenSize.clockSize / 564.0; // based on 14 inch ipad
+  double _sineWaveScalingFactor = 10.0 / (globalA + globalC);
+
   @override
   void paint(Canvas canvas, Size containerSize) {
-//    print("arrived in paint subroutine");
-    Size _containerSize = containerSize;
+    Offset _topLeft = ScreenSize.clockTopLeft;
+    Offset _bottomRight = ScreenSize.clockBottomRight;
+    var paintClockFace = Paint();
+    paintClockFace.color = Colors.black;
+    paintClockFace.style = PaintingStyle.fill; // Change this to fill
+
+    var paintClockRim = Paint();
+    paintClockRim.color = Colors.white;
+    paintClockFace.style = PaintingStyle.fill; // Change this to fill
+
     var paint = Paint();
     paint.color = Colors.white24;
     paint.style = PaintingStyle.fill; // Change this to fill
     num degToRad(num deg) => deg * (3.14159 / 180.0);
     var path = Path();
-    //  Offset center = _containerSize.center(Offset(0, 0));
-    Offset centerOffSet =
-        Offset(containerSize.width / 2, containerSize.height / 2);
-    double centerX = centerOffSet.dx;
-    double centerY = centerOffSet.dy;
-//    double containerW = _containerSize.width;
-//    double containerH = _containerSize.height;
-    double radius = 181.0;
-    double _scaling_factor = 2.5;
+    double centerX = ScreenSize.clockSize / 2;
+    double centerY = ScreenSize.clockSize / 2;
+    double ringRadius = ScreenSize.clockSize / 2 - 50.0;
+    canvas.drawCircle(
+        Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
+
+    print("screensize ${ScreenSize.clockSize}");
+    double radius = centerY - 30.0 * _deviceScalingFactor;
+    // this is the scaling factor for the tidal dial
+    double _scaling_factor = _sineWaveScalingFactor * _deviceScalingFactor;
+
     path.moveTo(centerX, centerY - radius);
 
     for (var i = 0; i <= 360; i++) {
@@ -64,8 +72,7 @@ class CurvePainter extends CustomPainter {
       path.lineTo(sin(degToRad(i)) * radius1 + centerX,
           centerY - cos(degToRad(i)) * radius1);
     }
-    radius -= 10.0;
-
+    radius -= 20 * _deviceScalingFactor;
     path.lineTo(centerX, centerY - radius);
 
     for (var i = 360; i >= 0; i--) {
@@ -74,12 +81,47 @@ class CurvePainter extends CustomPainter {
     }
     canvas.drawPath(path, paint);
     paintSlackTides(centerX, centerY, radius, canvas);
+    drawRing(centerX, centerY, ScreenSize.clockSize / 2, paintClockRim, canvas);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
+}
+
+void drawRing(centerX, centerY, inputRadius, myPaint, canvas) {
+  double radius = inputRadius * 0.8; // 80% per sync clock setting
+  print("myRingRadius is $radius, $inputRadius");
+  double width = 3;
+  double radius1 = radius - width;
+  var myPath = Path();
+  int startAngle = 0;
+  int myAngle = 0;
+  int i;
+  num degToRad(num deg) => deg * (3.14159 / 180.0);
+
+  print("in draw ring with $centerX,$centerY,$radius, $myPaint, $canvas");
+
+  myPath.moveTo(sin(degToRad(startAngle)) * radius + centerX,
+      centerY - cos(degToRad(startAngle)) * radius);
+
+  for (i = 0; i <= 360; i++) {
+    myAngle = i;
+    myPath.lineTo(sin(degToRad(myAngle)) * radius + centerX,
+        centerY - cos(degToRad(myAngle)) * radius);
+  }
+  myPath.moveTo(sin(degToRad(myAngle)) * radius1 + centerX,
+      centerY - cos(degToRad(myAngle)) * radius1);
+  for (i = 0; i <= 360; i++) {
+    myAngle = 360 - i;
+    myPath.lineTo(sin(degToRad(myAngle)) * radius1 + centerX,
+        centerY - cos(degToRad(myAngle)) * radius1);
+  }
+  myPath.lineTo(sin(degToRad(startAngle)) * radius + centerX,
+      centerY - cos(degToRad(startAngle)) * radius);
+
+  canvas.drawPath(myPath, myPaint);
 }
 
 void paintSlackTides(centerX, centerY, radius, canvas) {
@@ -194,7 +236,7 @@ class mySineWaveData {
       current_tide = todayTomorrowTideData[i];
       print("Current tide: $current_tide");
       if ((DateTime.parse(current_tide["tideDateTime"]))
-          .addHours(2)
+          .addMinutes(30)
           .isSameOrAfter(DateTime.now())) {
         if (current_tide["tide_type"] == "HIGH") {
           _highTideFeet =
@@ -208,7 +250,7 @@ class mySineWaveData {
     for (var i = 0; i < todayTomorrowTideData.length; i++) {
       current_tide = todayTomorrowTideData[i];
       if (DateTime.parse(current_tide["tideDateTime"])
-          .addHours(2)
+          .addMinutes(30)
           .isSameOrAfter(DateTime.now())) {
         if (current_tide["tide_type"] == "LOW") {
           _lowTideFeet =
