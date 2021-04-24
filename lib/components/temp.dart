@@ -6,11 +6,24 @@ import 'package:weather_icons/weather_icons.dart';
 
 /// Locals imports
 class TempGauge extends StatefulWidget {
+  final double high;
+  final double low;
+  TempGauge({
+    this.high = 45,
+    this.low = 86,
+  });
+
   @override
-  _TempGaugeState createState() => _TempGaugeState();
+  _TempGaugeState createState() => _TempGaugeState(high: high, low: low);
 }
 
 class _TempGaugeState extends State<TempGauge> {
+  final double high;
+  final double low;
+  _TempGaugeState({
+    this.high = 45,
+    this.low = 86,
+  });
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -124,7 +137,7 @@ class _TempGaugeState extends State<TempGauge> {
 //              )
               MarkerPointer(
                 color: Colors.red,
-                value: 88,
+                value: high,
                 markerHeight: 20,
                 markerWidth: 20,
                 markerType: MarkerType.triangle,
@@ -132,7 +145,7 @@ class _TempGaugeState extends State<TempGauge> {
               ),
               MarkerPointer(
                 color: Colors.blue,
-                value: 68,
+                value: low,
                 markerHeight: 20,
                 markerWidth: 20,
                 markerType: MarkerType.triangle,

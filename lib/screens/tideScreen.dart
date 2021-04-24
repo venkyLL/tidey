@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
 import 'package:tidey/components/barometer.dart';
+import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/moonTable.dart';
@@ -93,12 +95,12 @@ class _LandScapeModeState extends State<LandScapeMode> {
         ),
       ),
       //constraints: BoxConstraints.expand(),
-      child: MakeContainers(),
+      child: LandscapeView(),
     );
   }
 }
 
-class MakeContainers extends StatelessWidget {
+class LandscapeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -150,12 +152,35 @@ class clockColumn extends StatelessWidget {
     this.clockType,
     this.containerColor = Colors.transparent,
   });
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  // final String formatted = DateFormat.format(now);
+
+//  String formattedDate = DateFormat('MM-dd').format(now);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: (ScreenSize.clockTop)),
+        Container(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+                localWeather.data.nearestArea[0].areaName[0].value +
+                    //   localWeather.data.nearestArea[0].country[0].value +
+                    "\n" +
+                    DateFormat('E MM/d').format(now) +
+                    "\n" +
+                    localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    //    backgroundColor: Colors.white30,
+                    color: Colors.white)),
+          ),
+          height: (ScreenSize.clockTop),
+        ),
         Container(
           color: containerColor,
           width: ScreenSize.clockSize,
@@ -243,15 +268,6 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size containerSize) {
     print("contaierSize ${containerSize.height} ${containerSize.width}");
-    //  Size _containerSize = this._topLeft;
-//    print(
-//        "Top Left ${_containerSize.width.toString()} ${_containerSize.height}");
-//    print(
-//        "Botom Right ${_bottomRight.width.toString()} ${_bottomRight.height}");
-//    double _boxHeight = this._bottomRight.height - this._topLeft.height;
-//    double _boxWidth = this._bottomRight.width - this._topLeft.width;
-//    double _centerX = _topLeft.width + (_boxWidth / 2);
-//    double _centerY = _topLeft.height + (_boxHeight / 2);
 
     var myPaint = Paint();
     myPaint.color = Colors.redAccent;
@@ -340,7 +356,9 @@ class LandScapeSwapper extends StatelessWidget {
     switch (counter) {
       case 0:
         return DialRow(
-          gaugeType1: TempGauge(),
+          gaugeType1: TempGauge(
+              high: double.parse(localWeather.data.weather[0].maxtempF),
+              low: double.parse(localWeather.data.weather[0].mintempF)),
           gaugeType2: BarometerGauge(),
         );
         break;
@@ -359,24 +377,24 @@ class LandScapeSwapper extends StatelessWidget {
 //            // crossFadeState: crossFadeState,
 //            duration: const Duration(seconds: 2));
         return DialRow(
-            gaugeType1:
-                ImageGauge(imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
-            gaugeType2:
-                ImageGauge(imageName: "gaugeSunset.png", textLabel: "8:15PM"));
+            gaugeType1: ImageGauge(
+                imageName: "gaugeSunrise.png",
+                textLabel: localWeather.data.weather[0].astronomy[0].sunrise),
+            gaugeType2: ImageGauge(
+                imageName: "gaugeSunset.png",
+                textLabel: localWeather.data.weather[0].astronomy[0].sunset));
         break;
-//      case 1:
-//        return DialRow(
-//            gaugeType1:
-//                ImageGauge(imageName: "gaugeSunset.png", textLabel: "8:15PM"),
-//            gaugeType2:
-//                ImageGauge(imageName: "gaugeSunset.png", textLabel: "8:15PM"));
-//        break;
+
       case 2:
         return DialRow(
           gaugeType1: ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
           gaugeType2: ImageGauge(
               imageName: "gaugeStars.png",
-              textLabel: "Waxing Crescent\nRise: 12:PM\nSet: 03:00AM",
+              textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
+                  "\nRise: " +
+                  localWeather.data.weather[0].astronomy[0].moonrise +
+                  "\nSet:" +
+                  localWeather.data.weather[0].astronomy[0].moonset,
               textPosition: 40,
               textBackgroundColor: Colors.transparent,
               fontSize: 20),
@@ -385,12 +403,19 @@ class LandScapeSwapper extends StatelessWidget {
 
       case 3:
         return DialRow(
-          gaugeType1: DirectionAndSpeedGauge(),
+          gaugeType1: DirectionAndSpeedGauge(
+            gaugeDirection:
+                weatherData.data.weather[0].hourly[0].winddir16Point,
+            gaugeValue: double.parse(
+                weatherData.data.weather[0].hourly[0].windspeedMiles),
+          ),
           gaugeType2: DirectionAndSpeedGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
-            gaugeDirection: "NW",
-            gaugeValue: 3,
+            gaugeDirection:
+                weatherData.data.weather[0].hourly[0].swellDir16Point,
+            gaugeValue: double.parse(
+                weatherData.data.weather[0].hourly[0].swellHeightFt),
             gaugeMax: 10,
             gaugeInterval: 1,
           ),
@@ -400,7 +425,17 @@ class LandScapeSwapper extends StatelessWidget {
         return DialRow(
             gaugeType1: ImageGauge(
               imageName: "gaugeWater.png",
-              textLabel: "Water 87 \u2109",
+              textLabel: "Water " +
+                  weatherData.data.weather[0].hourly[0].waterTempF +
+                  " \u2109",
+              textColor: Colors.black,
+            ),
+            gaugeType2: CompassGauge());
+      case 5:
+        return DialRow(
+            gaugeType1: ImageGauge(
+              imageName: "gaugeBoat.png",
+              textLabel: "",
               textColor: Colors.black,
             ),
             gaugeType2: ImageGauge(
@@ -424,7 +459,7 @@ class LandscapeTimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TimerBuilder.periodic(Duration(seconds: 5), builder: (context) {
-      counter = (counter + 1) % 5;
+      counter = (counter + 1) % 6;
       // counter == 0 ? counter = 1 : counter = 0;
       return LandScapeSwapper();
     });
@@ -439,8 +474,11 @@ Widget _buildMarquee() {
 
 Widget _buildComplexMarquee() {
   return Marquee(
-    text:
-        'The weather outside is frightful. Let it snow, Let it Snow, Let it Snow',
+    text: localWeather.data.nearestArea[0].areaName[0].value +
+        " " +
+        localWeather.data.nearestArea[0].country[0].value +
+        ' The weather outside is frightful. Let it snow, Let it Snow, Let it Snow',
+
     style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 40,

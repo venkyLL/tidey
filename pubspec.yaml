@@ -36,7 +36,9 @@ dependencies:
   syncfusion_flutter_datagrid:
   timer_builder:
   dart_date: ^1.1.0
+  intl:
   marquee:
+  webview_flutter:
 
 
   weather_icons:
