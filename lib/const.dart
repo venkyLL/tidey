@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
 
@@ -25,6 +26,8 @@ double globalNextLowTideHeightInFeet = 999999;
 int globalNumberOfDaysOfWeatherData = 1;
 
 MarineWeather weatherData = MarineWeather();
+LocalWeather localWeather = LocalWeather();
+
 const hourFmt = {
   '0': '12:00',
   '300': "3AM",
