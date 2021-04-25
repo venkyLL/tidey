@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/components/drawTools.dart';
 
 List<double> tideHeightArray = [];
 calcTideHeightArray() {
@@ -33,11 +34,19 @@ class CurvePainter extends CustomPainter {
   double _deviceScalingFactor =
       ScreenSize.clockSize / 564.0; // based on 14 inch ipad
   double _sineWaveScalingFactor = 20.0 / (globalA * 2.0);
+  DrawingTools myDraw = DrawingTools();
 
   @override
   void paint(Canvas canvas, Size containerSize) {
     Offset _topLeft = ScreenSize.clockTopLeft;
     Offset _bottomRight = ScreenSize.clockBottomRight;
+
+    var paintClockBezel = Paint();
+    paintClockBezel.color = Color(0xff6b0015);
+//    paintClockBezel.color = Color(0xff5c0012);
+
+    paintClockBezel.style = PaintingStyle.fill; // Change this to fill
+
     var paintClockFace = Paint();
     paintClockFace.color = Colors.black;
     paintClockFace.style = PaintingStyle.fill; // Change this to fill
@@ -54,9 +63,11 @@ class CurvePainter extends CustomPainter {
     double centerX = ScreenSize.clockSize / 2;
     double centerY = ScreenSize.clockSize / 2;
     double ringRadius = ScreenSize.clockSize / 2 - 50.0;
+    myDraw.drawFilledCircle(
+        centerX, centerY, ScreenSize.clockSize / 2, paintClockFace, canvas);
 
-    canvas.drawCircle(
-        Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
+    //   canvas.drawCircle(
+    //       Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
 
     print("screensize ${ScreenSize.clockSize}");
     double radius = centerY - 35.0 * _deviceScalingFactor;
@@ -82,8 +93,14 @@ class CurvePainter extends CustomPainter {
     }
     canvas.drawPath(path, paint);
     paintSlackTides(centerX, centerY, radius, canvas);
-    drawRing(
-        centerX, centerY, (ScreenSize.clockSize / 2), paintClockRim, canvas);
+    myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2) * 0.8, 5.0,
+        paintClockRim, canvas);
+
+    myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2), 3.0,
+        paintClockBezel, canvas);
+
+    //drawRing(
+    //  centerX, centerY, (ScreenSize.clockSize / 2), paintClockRim, canvas);
   }
 
   @override
