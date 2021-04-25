@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/const.dart';
 import 'package:tidey/services/tideServices.dart';
 
 // Renders the gauge multiple needle pointers sample
@@ -49,8 +50,8 @@ class DirectionAndSpeedGauge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 300,
+      width: ScreenSize.gaugeSize,
+      height: ScreenSize.gaugeSize,
       child: Stack(
         children: <Widget>[
           DirectionAndSpeedPainter(),

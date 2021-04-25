@@ -1,8 +1,9 @@
 import 'dart:math';
+
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
-import 'package:tidey/const.dart';
 import 'package:tidey/components/drawTools.dart';
+import 'package:tidey/const.dart';
 
 List<double> tideHeightArray = [];
 calcTideHeightArray() {
@@ -195,8 +196,8 @@ void paintSlackTides(centerX, centerY, radius, canvas) {
   int startAngleLow, startAngleHigh;
   int endAngleLow, endAngleHigh;
   int myAngleHigh, myAngleLow;
-  paintHigh.color = Colors.blue;
-  paintLow.color = Colors.blue;
+  paintHigh.color = const Color(0xFF3366CC);
+  paintLow.color = const Color(0xFF3366CC);
 
   double radius1;
   num degToRad(num deg) => deg * (3.14159 / 180.0);

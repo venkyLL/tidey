@@ -89,7 +89,7 @@ class _LandScapeModeState extends State<LandScapeMode> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/bgBlue2.JPG'),
+          image: AssetImage('assets/images/background.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -218,78 +218,78 @@ class gaugeColumn extends StatelessWidget {
   }
 }
 
-class CircleContainer extends StatelessWidget {
-//  final double cwidth;
-//  CircleContainer(this.cwidth);
-  @override
-  Widget build(BuildContext context) {
-    Size _topLeft =
-        Size(ScreenSize.gauge1TopLeft.dx, ScreenSize.gauge1TopLeft.dy);
-    Size _bottomRight =
-        Size(ScreenSize.gauge1BottomRight.dx, ScreenSize.gauge1BottomRight.dy);
-
-    // print("Print parent size ${cwidth} ");
-    // print("My Size is ${_size.width}");
-    return Container(
-        color: Colors.grey,
-//        width: SizeConfig.safeBlockHorizontal * 30,
-//        height: SizeConfig.safeBlockHorizontal * 30,
-        // Size _size = MediaQuery.of(context).size;
-        child:
-            //Text("Hello " + _size.width.toString() + " "));
-            DrawShape(
-          _topLeft,
-          _bottomRight,
-          100.0,
-        ));
-  }
-}
-
-class DrawShape extends StatelessWidget {
-  Size _topLeft;
-  Size _bottomRight;
-  double radius;
-  DrawShape(this._topLeft, this._bottomRight, this.radius);
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-//      painter: PathPainter(),
-      painter: CurvePainter(),
-    );
-  }
-}
-
-class CurvePainter extends CustomPainter {
+//class CircleContainer extends StatelessWidget {
+////  final double cwidth;
+////  CircleContainer(this.cwidth);
+//  @override
+//  Widget build(BuildContext context) {
+//    Size _topLeft =
+//        Size(ScreenSize.gauge1TopLeft.dx, ScreenSize.gauge1TopLeft.dy);
+//    Size _bottomRight =
+//        Size(ScreenSize.gauge1BottomRight.dx, ScreenSize.gauge1BottomRight.dy);
+//
+//    // print("Print parent size ${cwidth} ");
+//    // print("My Size is ${_size.width}");
+//    return Container(
+//        color: Colors.grey,
+////        width: SizeConfig.safeBlockHorizontal * 30,
+////        height: SizeConfig.safeBlockHorizontal * 30,
+//        // Size _size = MediaQuery.of(context).size;
+//        child:
+//            //Text("Hello " + _size.width.toString() + " "));
+//            DrawShape(
+//          _topLeft,
+//          _bottomRight,
+//          100.0,
+//        ));
+//  }
+//}
+//
+//class DrawShape extends StatelessWidget {
 //  Size _topLeft;
 //  Size _bottomRight;
 //  double radius;
-//  CurvePainter(this._topLeft, this._bottomRight, this.radius);
-
-  @override
-  void paint(Canvas canvas, Size containerSize) {
-    print("contaierSize ${containerSize.height} ${containerSize.width}");
-
-    var myPaint = Paint();
-    myPaint.color = Colors.redAccent;
-    myPaint.style = PaintingStyle.fill;
-//    var paintLowTide = Paint();
-//    paintLowTide.color = Colors.blueAccent;
-//    paintLowTide.style = PaintingStyle.fill;
-//    canvas.drawCircle(Offset(0.0, 0.0), 20, myPaint);
-//    canvas.drawCircle(Offset(153.3, 153.3), 153.3, myPaint);
-    canvas.drawCircle(Offset(containerSize.width / 2, containerSize.height / 2),
-        containerSize.height / 2, myPaint);
-
-//    canvas.drawCircle(Offset(centerX + radius + 7, centerY), 10, paintHighTide);
-//    canvas.drawCircle(Offset(centerX - radius - 3, centerY), 10, paintLowTide);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-}
+//  DrawShape(this._topLeft, this._bottomRight, this.radius);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return CustomPaint(
+////      painter: PathPainter(),
+//      painter: CurvePainter(),
+//    );
+//  }
+//}
+//
+//class CurvePainter extends CustomPainter {
+////  Size _topLeft;
+////  Size _bottomRight;
+////  double radius;
+////  CurvePainter(this._topLeft, this._bottomRight, this.radius);
+//
+//  @override
+//  void paint(Canvas canvas, Size containerSize) {
+//    print("contaierSize ${containerSize.height} ${containerSize.width}");
+//
+//    var myPaint = Paint();
+//    myPaint.color = Colors.redAccent;
+//    myPaint.style = PaintingStyle.fill;
+////    var paintLowTide = Paint();
+////    paintLowTide.color = Colors.blueAccent;
+////    paintLowTide.style = PaintingStyle.fill;
+////    canvas.drawCircle(Offset(0.0, 0.0), 20, myPaint);
+////    canvas.drawCircle(Offset(153.3, 153.3), 153.3, myPaint);
+//    canvas.drawCircle(Offset(containerSize.width / 2, containerSize.height / 2),
+//        containerSize.height / 2, myPaint);
+//
+////    canvas.drawCircle(Offset(centerX + radius + 7, centerY), 10, paintHighTide);
+////    canvas.drawCircle(Offset(centerX - radius - 3, centerY), 10, paintLowTide);
+//  }
+//
+//  @override
+//  bool shouldRepaint(CustomPainter oldDelegate) {
+//    return true;
+//  }
+//}
 
 class DialRow extends StatelessWidget {
   final Widget gaugeType1;
@@ -417,19 +417,24 @@ class LandScapeSwapper extends StatelessWidget {
 //            // crossFadeState: crossFadeState,
 //            duration: const Duration(seconds: 2));
         return DialRow(
-            gaugeType1: ImageGauge(
-                imageName: "gaugeSunrise.png",
+            gaugeType1: ImageGaugeNew(
+                imageName: "sunrise.jpeg",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunrise),
-            gaugeType2: ImageGauge(
-                imageName: "gaugeSunset.png",
+            gaugeType2: ImageGaugeNew(
+                imageName: "sunset.jpeg",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunset));
         break;
 
       case 2:
         return DialRow(
-          gaugeType1: ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-          gaugeType2: ImageGauge(
-              imageName: "gaugeStars.png",
+          gaugeType1: ImageGaugeNew(
+            imageName: getMoonImageName(),
+            innerLineColor: Colors.transparent,
+          ),
+          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+          gaugeType2: ImageGaugeNew(
+              imageName: "blackCircle.png",
+              innerLineColor: Colors.transparent,
               textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
                   "\nRise: " +
                   localWeather.data.weather[0].astronomy[0].moonrise +
@@ -463,26 +468,21 @@ class LandScapeSwapper extends StatelessWidget {
         break;
       case 4:
         return DialRow(
-            gaugeType1: ImageGauge(
-              imageName: "gaugeWater.png",
+            gaugeType1: ImageGaugeNew(
+              imageName: "water.JPG",
               textLabel: "Water " +
                   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
               textColor: Colors.black,
             ),
-            gaugeType2: CompassGauge(
-              direction: globalCompassDirection,
-            ));
+            gaugeType2: CompassGauge2());
       case 5:
         return DialRow(
-            gaugeType1: ImageGauge(
-              imageName: "gaugeBoat.png",
-              textLabel: "",
-              textColor: Colors.black,
+            gaugeType1: ImageGaugeNew(
+              imageName: "boat1.jpg",
             ),
-            gaugeType2: ImageGauge(
-              imageName: "gaugeBoatDrone.png",
-              textLabel: "",
+            gaugeType2: ImageGaugeNew(
+              imageName: "boat2.jpg",
             ));
 
       default:
@@ -558,7 +558,7 @@ class PortraitMode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/bgBlue2.JPG'),
+          image: AssetImage('assets/images/new/background.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),

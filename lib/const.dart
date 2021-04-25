@@ -352,42 +352,42 @@ String getMoonImageName() {
   switch (weatherData.data.weather[0].astronomy[0].moonPhase) {
     case "New Moon":
       {
-        return "moons/moon1.png";
+        return "moon0.png";
       }
       break;
     case "Waxing Crescent":
       {
-        return "moons/moon6.png";
+        return "moon6.png";
       }
       break;
     case "First Quarter":
       {
-        return "moons/moon9.png";
+        return "moon9.png";
       }
       break;
     case "Waxing Gibbous":
       {
-        return "moons/moon11.png";
+        return "moon11.png";
       }
       break;
     case "Full Moon":
       {
-        return "fullMoon.jpg";
+        return "moon15.png";
       }
       break;
     case "Waning Gibbous":
       {
-        return "moons/moon18.png";
+        return "moon18.png";
       }
       break;
     case "Last Quarter":
       {
-        return "moons/moon20.png";
+        return "moon20.png";
       }
       break;
     case "Waning Crescent":
       {
-        return "moons/moon23.png";
+        return "moon23.png";
       }
       break;
     default:
@@ -395,5 +395,69 @@ String getMoonImageName() {
         return "assets/images/moons/moon1.png";
       }
       break;
+  }
+}
+
+class GaugeContainer extends StatelessWidget {
+  final String imageName;
+  final String textLabel;
+  final Color textColor;
+  final Color textBackgroundColor;
+  final double fontSize;
+  final int textPosition;
+  final Color backgroundColor;
+  final Color bezelColor;
+  final double bezelWidth;
+  final double imageInset;
+  final Widget child;
+
+  GaugeContainer({
+    this.imageName,
+    this.textLabel = "",
+    this.textColor = Colors.white,
+    this.textBackgroundColor = Colors.white30,
+    this.fontSize = 24,
+    this.textPosition = 67,
+    this.backgroundColor = Colors.black,
+    this.bezelColor = const Color(0xFF999999),
+    this.bezelWidth = 5,
+    this.imageInset = 30,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: ScreenSize.gaugeSize,
+          height: ScreenSize.gaugeSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bezelColor,
+          ),
+        ),
+        Positioned.fill(
+          top: bezelWidth,
+          right: bezelWidth,
+          left: bezelWidth,
+          bottom: bezelWidth,
+          child: Container(
+            width: ScreenSize.gaugeSize,
+            height: ScreenSize.gaugeSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: backgroundColor,
+            ),
+          ),
+        ),
+        Positioned.fill(
+            top: imageInset,
+            right: imageInset,
+            bottom: imageInset,
+            left: imageInset,
+            child: child),
+      ],
+    );
   }
 }

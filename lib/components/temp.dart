@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Gauge imports
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/const.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 /// Locals imports
@@ -33,9 +34,9 @@ class _TempGaugeState extends State<TempGauge> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 300,
-        height: 300,
-        child: _buildRadialEaseExample(),
+        width: ScreenSize.gaugeSize,
+        height: ScreenSize.gaugeSize,
+        child: GaugeContainer(child: _buildRadialEaseExample()),
       ),
     );
   }
@@ -44,7 +45,7 @@ class _TempGaugeState extends State<TempGauge> {
   SfRadialGauge _buildRadialEaseExample() {
     const isCardView = false;
     return SfRadialGauge(
-      animationDuration: 3500,
+      animationDuration: 2000,
       enableLoadingAnimation: true,
       //  backgroundColor: Colors.white,
       axes: <RadialAxis>[
@@ -62,6 +63,30 @@ class _TempGaugeState extends State<TempGauge> {
             interval: 10,
             radiusFactor: 0.9,
             //labelOffset: 8,
+            annotations: <GaugeAnnotation>[
+              GaugeAnnotation(
+                  angle: 90,
+                  positionFactor: 0.1,
+                  widget: Container(
+                    child: BoxedIcon((conditionIcon),
+                        size: 50, color: const Color(0xFF3366CC)),
+                  )),
+//                      const Text('Temp.°F',
+//                          style: TextStyle(
+//                              color: Color(0xff000000), fontSize: 16)))),
+              GaugeAnnotation(
+                  angle: 90,
+                  positionFactor: 0.8,
+                  widget: Container(
+                    child: const Text(
+                      'Hi Lo Temp',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: const Color(0xFF3366CC)),
+                    ),
+                  ))
+            ],
             ranges: <GaugeRange>[
               GaugeRange(
                   startValue: -10,
@@ -99,30 +124,6 @@ class _TempGaugeState extends State<TempGauge> {
                   endWidth: 0.265,
                   color: const Color.fromRGBO(238, 79, 34, 0.65)),
             ],
-            annotations: <GaugeAnnotation>[
-              GaugeAnnotation(
-                  angle: 90,
-                  positionFactor: 0.1,
-                  widget: Container(
-                    child: BoxedIcon((conditionIcon),
-                        size: 50, color: Colors.blue),
-                  )),
-//                      const Text('Temp.°F',
-//                          style: TextStyle(
-//                              color: Color(0xff000000), fontSize: 16)))),
-              GaugeAnnotation(
-                  angle: 90,
-                  positionFactor: 0.8,
-                  widget: Container(
-                    child: const Text(
-                      'Hi Lo Temp',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white),
-                    ),
-                  ))
-            ],
             pointers: <GaugePointer>[
 //              RangePointer(
 //                value: 68,
@@ -149,7 +150,7 @@ class _TempGaugeState extends State<TempGauge> {
                 markerOffset: 40,
               ),
               MarkerPointer(
-                color: Colors.blue,
+                color: const Color(0xFF3366CC),
                 value: low,
                 markerHeight: 20,
                 markerWidth: 20,
