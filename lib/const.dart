@@ -38,6 +38,10 @@ int globalNumberOfDaysOfWeatherData = 1;
 MarineWeather weatherData = MarineWeather();
 LocalWeather localWeather = LocalWeather();
 
+//gauge constants
+double globalCompassDirection;
+DateTime globalCompassValueLastReadAt;
+
 const hourFmt = {
   '0': '12:00',
   '300': "3AM",
@@ -305,7 +309,7 @@ class ScreenSize {
   }
 }
 
-getWeatherIconBox({String time, String code}) {
+BoxedIcon getWeatherIconBox({String time, String code}) {
   // var iconName = "WeatherIcons.day_cloudy";
   print("Time is" + time);
   switch (time) {

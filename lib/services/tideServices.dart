@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:dart_date/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/components/drawTools.dart';
 
 List<double> tideHeightArray = [];
 calcTideHeightArray() {
@@ -19,6 +20,49 @@ calcTideHeightArray() {
 //       ),
 //     );
 
+class DirectionAndSpeedPainter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: GaugePainter(),
+    );
+  }
+}
+
+class GaugePainter extends CustomPainter {
+  int numberOfSecondsInTwelveHours = 12 * 60 * 60;
+  double _deviceScalingFactor =
+      ScreenSize.clockSize / 564.0; // based on 14 inch ipad
+  double _sineWaveScalingFactor = 20.0 / (globalA * 2.0);
+  DrawingTools myDraw = DrawingTools();
+
+  @override
+  void paint(Canvas canvas, Size containerSize) {
+    Offset _topLeft = ScreenSize.clockTopLeft;
+    Offset _bottomRight = ScreenSize.clockBottomRight;
+
+    var paintClockFace = Paint();
+    paintClockFace.color = Colors.black;
+    paintClockFace.style = PaintingStyle.fill; // Change this to fill
+
+    var path = Path();
+    double centerX = ScreenSize.gaugeSize / 2;
+    double centerY = ScreenSize.gaugeSize / 2;
+    myDraw.drawFilledCircle(
+        centerX, centerY, ScreenSize.gaugeSize / 2, paintClockFace, canvas);
+
+    var gaugeBezel = Paint();
+    gaugeBezel.color = Color(0xFF999999);
+    myDraw.drawRing(
+        centerX, centerY, ScreenSize.gaugeSize / 2, 5.0, gaugeBezel, canvas);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
 class TideServicesPainter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,12 +76,20 @@ class CurvePainter extends CustomPainter {
   int numberOfSecondsInTwelveHours = 12 * 60 * 60;
   double _deviceScalingFactor =
       ScreenSize.clockSize / 564.0; // based on 14 inch ipad
-  double _sineWaveScalingFactor = 10.0 / (globalA + globalC);
+  double _sineWaveScalingFactor = 20.0 / (globalA * 2.0);
+  DrawingTools myDraw = DrawingTools();
 
   @override
   void paint(Canvas canvas, Size containerSize) {
     Offset _topLeft = ScreenSize.clockTopLeft;
     Offset _bottomRight = ScreenSize.clockBottomRight;
+
+    var paintClockBezel = Paint();
+    paintClockBezel.color = Color(0xFF999999);
+//    paintClockBezel.color = Color(0xff5c0012);
+
+    paintClockBezel.style = PaintingStyle.fill; // Change this to fill
+
     var paintClockFace = Paint();
     paintClockFace.color = Colors.black;
     paintClockFace.style = PaintingStyle.fill; // Change this to fill
@@ -54,11 +106,14 @@ class CurvePainter extends CustomPainter {
     double centerX = ScreenSize.clockSize / 2;
     double centerY = ScreenSize.clockSize / 2;
     double ringRadius = ScreenSize.clockSize / 2 - 50.0;
-    canvas.drawCircle(
-        Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
+    myDraw.drawFilledCircle(
+        centerX, centerY, ScreenSize.clockSize / 2, paintClockFace, canvas);
+
+    //   canvas.drawCircle(
+    //       Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
 
     print("screensize ${ScreenSize.clockSize}");
-    double radius = centerY - 30.0 * _deviceScalingFactor;
+    double radius = centerY - 35.0 * _deviceScalingFactor;
     // this is the scaling factor for the tidal dial
     double _scaling_factor = _sineWaveScalingFactor * _deviceScalingFactor;
 
@@ -72,7 +127,7 @@ class CurvePainter extends CustomPainter {
       path.lineTo(sin(degToRad(i)) * radius1 + centerX,
           centerY - cos(degToRad(i)) * radius1);
     }
-    radius -= 20 * _deviceScalingFactor;
+    radius -= 10 * _deviceScalingFactor;
     path.lineTo(centerX, centerY - radius);
 
     for (var i = 360; i >= 0; i--) {
@@ -81,7 +136,14 @@ class CurvePainter extends CustomPainter {
     }
     canvas.drawPath(path, paint);
     paintSlackTides(centerX, centerY, radius, canvas);
-    drawRing(centerX, centerY, ScreenSize.clockSize / 2, paintClockRim, canvas);
+    myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2) * 0.8, 5.0,
+        paintClockRim, canvas);
+
+    myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2), 1.0,
+        paintClockBezel, canvas);
+
+    //drawRing(
+    //  centerX, centerY, (ScreenSize.clockSize / 2), paintClockRim, canvas);
   }
 
   @override
@@ -267,8 +329,9 @@ class mySineWaveData {
     globalNextHighTideHeightInFeet = _highTideFeet;
     globalNextLowTideHeightInFeet = _lowTideFeet;
 
-    double c = _lowTideFeet;
-    double a = _highTideFeet - _lowTideFeet;
+    double c = (_lowTideFeet + _highTideFeet) / 2;
+    double a = _highTideFeet - c;
+
     DateTime firstDate = _highTideTime;
     DateTime secondDate = _lowTideTime;
     int period = (secondDate.difference(firstDate).inSeconds)
@@ -277,8 +340,14 @@ class mySineWaveData {
     globalC = c;
     globalOmega =
         pi / period; // since we are only going from high to low for period
-    globalAlpha =
-        (pi / 2 - getSecondsFromDateTime(_highTideTime) * globalOmega);
+
+    if (firstDate.isBefore(secondDate)) {
+      globalAlpha =
+          (pi / 2 - getSecondsFromDateTime(_highTideTime) * globalOmega);
+    } else {
+      globalAlpha =
+          (3 * pi / 2 - getSecondsFromDateTime(_lowTideTime) * globalOmega);
+    }
 
     print("A,w,alpha, c, $a, $globalOmega, $globalAlpha, $c");
   }
@@ -321,3 +390,17 @@ class mySineWaveData {
     return myRadians;
   }
 }
+
+// double c = _lowTideFeet;
+// double a = _highTideFeet - _lowTideFeet;
+// DateTime firstDate = _highTideTime;
+// DateTime secondDate = _lowTideTime;
+// int period = (secondDate.difference(firstDate).inSeconds)
+//     .abs(); // return absolute value of the period.
+// globalA = a;
+// globalC = c;
+// globalOmega =
+// pi / period; // since we are only going from high to low for period
+// globalAlpha =
+// (pi / 2 - getSecondsFromDateTime(_highTideTime) * globalOmega);
+//

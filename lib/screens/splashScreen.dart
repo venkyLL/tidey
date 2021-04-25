@@ -6,6 +6,7 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'package:tidey/services/compass.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -39,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
     Navigator.pushReplacementNamed(context, TideScreen.id);
+    MyCompass theCompass = MyCompass();
+    theCompass.init();
   }
 
   @override

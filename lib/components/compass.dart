@@ -7,12 +7,9 @@ import '../const.dart';
 
 /// Locals imports
 class CompassGauge extends StatefulWidget {
-  final double direction;
-  CompassGauge({
-    this.direction = 31.0,
-  });
+  CompassGauge({double direction});
   @override
-  _CompassGaugeState createState() => _CompassGaugeState(direction: direction);
+  _CompassGaugeState createState() => _CompassGaugeState();
 }
 
 class _CompassGaugeState extends State<CompassGauge> {
@@ -20,6 +17,7 @@ class _CompassGaugeState extends State<CompassGauge> {
   _CompassGaugeState({
     this.direction = 31.0,
   });
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {

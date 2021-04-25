@@ -42,6 +42,7 @@ dependencies:
   package_info: ^2.0.0
 
 
+  flutter_sensor_compass: ^0.1.1
   weather_icons:
 
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/services/tideServices.dart';
 
 // Renders the gauge multiple needle pointers sample
 
@@ -50,34 +51,41 @@ class DirectionAndSpeedGauge extends StatelessWidget {
     return Container(
       width: 300,
       height: 300,
-      child: SfRadialGauge(
-        //  backgroundColor: Colors.white,
-        axes: <RadialAxis>[
-          RadialAxis(
-            // useRangeColorForAxis: true,
-            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
-            axisLineStyle: AxisLineStyle(
-                thicknessUnit: GaugeSizeUnit.factor,
-                thickness: 0.10,
-                color: const Color(0xFF3366CC)),
+      child: Stack(
+        children: <Widget>[
+          DirectionAndSpeedPainter(),
+          SfRadialGauge(
+            //  backgroundColor: Colors.white,
+            axes: <RadialAxis>[
+              RadialAxis(
+                // useRangeColorForAxis: true,
+// //                backgroundImage:
+//                     const AssetImage('assets/images/blackCircle.png'),
+                axisLineStyle: AxisLineStyle(
+                    thicknessUnit: GaugeSizeUnit.factor,
+                    thickness: 0.10,
+                    color: const Color(0xFF3366CC)),
 //              startAngle: 32,
 //              endAngle: 212,
-            minimum: 0,
-            maximum: gaugeMax,
-            labelsPosition: ElementsPosition.outside,
-            labelOffset: 15,
-            interval: gaugeInterval,
-            radiusFactor: 0.9,
-            //  showFirstLabel: false,
-            axisLabelStyle: GaugeTextStyle(fontSize: 20, color: Colors.white),
-            minorTicksPerInterval: 0,
-            onLabelCreated: _handleAxisLabelCreated,
-            showTicks: false,
-            minorTickStyle: MinorTickStyle(
-                lengthUnit: GaugeSizeUnit.factor, length: 0.05, thickness: 1),
-            majorTickStyle:
-                MajorTickStyle(lengthUnit: GaugeSizeUnit.factor, length: 0.1),
-            pointers: <GaugePointer>[
+                minimum: 0,
+                maximum: gaugeMax,
+                labelsPosition: ElementsPosition.outside,
+                labelOffset: 15,
+                interval: gaugeInterval,
+                radiusFactor: 0.9,
+                //  showFirstLabel: false,
+                axisLabelStyle:
+                    GaugeTextStyle(fontSize: 20, color: Colors.white),
+                minorTicksPerInterval: 0,
+                onLabelCreated: _handleAxisLabelCreated,
+                showTicks: false,
+                minorTickStyle: MinorTickStyle(
+                    lengthUnit: GaugeSizeUnit.factor,
+                    length: 0.05,
+                    thickness: 1),
+                majorTickStyle: MajorTickStyle(
+                    lengthUnit: GaugeSizeUnit.factor, length: 0.1),
+                pointers: <GaugePointer>[
 //              NeedlePointer(
 //                  value: dirMap[gaugeDirection],
 //                  needleLength: 0.35,
@@ -88,23 +96,23 @@ class DirectionAndSpeedGauge extends StatelessWidget {
 //                  enableAnimation: true,
 //                  knobStyle: KnobStyle(knobRadius: 0),
 //                  animationType: AnimationType.ease),
-              NeedlePointer(
-                  value: gaugeValue,
-                  needleLength: .9,
-                  lengthUnit: (GaugeSizeUnit.factor),
-                  needleColor: Color(0xFFE20A22),
-                  needleStartWidth: 0,
-                  needleEndWidth: 8,
-                  enableAnimation: true,
-                  animationType: AnimationType.ease,
-                  knobStyle: KnobStyle(
-                      borderColor: const Color(0xFFE20A22),
-                      borderWidth: 0.015,
-                      color: Colors.white,
-                      sizeUnit: GaugeSizeUnit.factor,
-                      knobRadius: 0.05)),
-            ],
-            annotations: <GaugeAnnotation>[
+                  NeedlePointer(
+                      value: gaugeValue,
+                      needleLength: .9,
+                      lengthUnit: (GaugeSizeUnit.factor),
+                      needleColor: Color(0xFFE20A22),
+                      needleStartWidth: 0,
+                      needleEndWidth: 8,
+                      enableAnimation: true,
+                      animationType: AnimationType.ease,
+                      knobStyle: KnobStyle(
+                          borderColor: const Color(0xFFE20A22),
+                          borderWidth: 0.015,
+                          color: Colors.white,
+                          sizeUnit: GaugeSizeUnit.factor,
+                          knobRadius: 0.05)),
+                ],
+                annotations: <GaugeAnnotation>[
 //              GaugeAnnotation(
 //                  angle: 90,
 //                  positionFactor: 0.35,
@@ -112,58 +120,58 @@ class DirectionAndSpeedGauge extends StatelessWidget {
 //                      child: const Text('Temp.°C',
 //                          style: TextStyle(
 //                              color: Color(0xFFF8B195), fontSize: 16)))),
-              GaugeAnnotation(
-                  angle: 90,
-                  positionFactor: 0.8,
-                  widget: Container(
-                    child: Text(
-                      "\n" + gaugeType + "\n " + gaugeUnit,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF3366CC)),
-                    ),
-                  ))
-            ],
-          ),
-          RadialAxis(
-              startAngle: 270,
-              endAngle: 270,
-              radiusFactor: 0.52,
-              minimum: 0,
-              maximum: 80,
-              pointers: <GaugePointer>[
-                //      MarkerPointer(
+                  GaugeAnnotation(
+                      angle: 90,
+                      positionFactor: 0.8,
+                      widget: Container(
+                        child: Text(
+                          "\n" + gaugeType + "\n " + gaugeUnit,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF3366CC)),
+                        ),
+                      ))
+                ],
+              ),
+              RadialAxis(
+                  startAngle: 270,
+                  endAngle: 270,
+                  radiusFactor: 0.52,
+                  minimum: 0,
+                  maximum: 80,
+                  pointers: <GaugePointer>[
+                    //      MarkerPointer(
 //                    value: dirMap[gaugeDirection],
 //                    markerType: MarkerType.triangle,
 //                    markerWidth: 30,
 //                    markerHeight: 20,
 //                    markerOffset: 40,
 //                    color: Color(0xFFF67280)),
-                NeedlePointer(
-                  value: dirMap[gaugeDirection],
-                  lengthUnit: GaugeSizeUnit.factor,
-                  needleLength: 0.5,
-                  needleEndWidth: 10,
-                  gradient: const LinearGradient(colors: <Color>[
-                    Color(0xFFFF6B78),
-                    Color(0xFFFF6B78),
-                    Color(0xFFE20A22),
-                    Color(0xFFE20A22)
-                  ], stops: <double>[
-                    0,
-                    0.5,
-                    0.5,
-                    1
-                  ]),
-                  knobStyle: KnobStyle(
-                      borderColor: const Color(0xFFF67280),
-                      borderWidth: 0.0,
-                      color: Colors.white,
-                      sizeUnit: GaugeSizeUnit.factor,
-                      knobRadius: 0.05),
-                )
+                    NeedlePointer(
+                      value: dirMap[gaugeDirection],
+                      lengthUnit: GaugeSizeUnit.factor,
+                      needleLength: 0.5,
+                      needleEndWidth: 10,
+                      gradient: const LinearGradient(colors: <Color>[
+                        Color(0xFFFF6B78),
+                        Color(0xFFFF6B78),
+                        Color(0xFFE20A22),
+                        Color(0xFFE20A22)
+                      ], stops: <double>[
+                        0,
+                        0.5,
+                        0.5,
+                        1
+                      ]),
+                      knobStyle: KnobStyle(
+                          borderColor: const Color(0xFFF67280),
+                          borderWidth: 0.0,
+                          color: Colors.white,
+                          sizeUnit: GaugeSizeUnit.factor,
+                          knobRadius: 0.05),
+                    )
 //                NeedlePointer(
 //                    value: dirMap[gaugeDirection],
 //                    needleLength: 0.9,
@@ -189,24 +197,26 @@ class DirectionAndSpeedGauge extends StatelessWidget {
 //                        color: Colors.white,
 //                        sizeUnit: GaugeSizeUnit.factor,
 //                        knobRadius: 0.05)),
-              ],
-              axisLineStyle: AxisLineStyle(
-                  thicknessUnit: GaugeSizeUnit.factor,
-                  thickness: 0.1,
-                  color: const Color(0xFF3366CC)),
-              interval: 10,
-              canRotateLabels: true,
-              axisLabelStyle: GaugeTextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-              minorTicksPerInterval: 0,
-              majorTickStyle: MajorTickStyle(
-                  thickness: 1.5,
-                  lengthUnit: GaugeSizeUnit.factor,
-                  length: 0.07),
-              showLabels: true,
-              onLabelCreated: _handleLabelCreated),
+                  ],
+                  axisLineStyle: AxisLineStyle(
+                      thicknessUnit: GaugeSizeUnit.factor,
+                      thickness: 0.1,
+                      color: const Color(0xFF3366CC)),
+                  interval: 10,
+                  canRotateLabels: true,
+                  axisLabelStyle: GaugeTextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  minorTicksPerInterval: 0,
+                  majorTickStyle: MajorTickStyle(
+                      thickness: 1.5,
+                      lengthUnit: GaugeSizeUnit.factor,
+                      length: 0.07),
+                  showLabels: true,
+                  onLabelCreated: _handleLabelCreated),
+            ],
+          ),
         ],
       ),
     );

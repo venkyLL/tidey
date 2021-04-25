@@ -471,7 +471,7 @@ class LandScapeSwapper extends StatelessWidget {
               textColor: Colors.black,
             ),
             gaugeType2: CompassGauge(
-              direction: currentDirection,
+              direction: globalCompassDirection,
             ));
       case 5:
         return DialRow(

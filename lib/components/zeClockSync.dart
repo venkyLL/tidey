@@ -1,6 +1,7 @@
 // Dart imports
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:tidey/services/compass.dart';
 
 /// Flutter package imports
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _zeClockSyncState extends State<zeClockSync> {
 //  late Timer timer;
   Timer timer;
   Timer timer2;
+  // Timer compassTimer;
 
   @override
   void initState() {
@@ -37,18 +39,24 @@ class _zeClockSyncState extends State<zeClockSync> {
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
     timer2 =
         Timer.periodic(const Duration(minutes: 30), _kickOffTideComputation);
+    // compassTimer = Timer.periodic(const Duration(milliseconds: 1000), _kickOffCompass);
   }
 
   void _updateData(Timer timer) {
     setState(() {
       _value = DateTime.now();
     });
+    print("Compass reading in zeSyncClock ${globalCompassDirection}");
   }
 
   void _kickOffTideComputation(Timer timer) {
     mySineWaveData msw = mySineWaveData();
     msw.computeTidesForPainting();
   }
+
+  // void _kickOffCompass(Timer timer) {
+  //   print("Compass reading in zeSyncClock ${globalCompassDirection}");
+  // }
 
   @override
   void dispose() {
@@ -62,7 +70,7 @@ class _zeClockSyncState extends State<zeClockSync> {
 //    final double _containerSize = math.min(_size.width, _size.height);
     return Center(
       child: Container(
-          child: new Stack(
+          child: Stack(
               //alignment:new Alignment(x, y)
               children: <Widget>[
 //            CurvePainter(),
