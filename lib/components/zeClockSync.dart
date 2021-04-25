@@ -70,7 +70,7 @@ class _zeClockSyncState extends State<zeClockSync> {
 //    final double _containerSize = math.min(_size.width, _size.height);
     return Center(
       child: Container(
-          child: new Stack(
+          child: Stack(
               //alignment:new Alignment(x, y)
               children: <Widget>[
 //            CurvePainter(),
