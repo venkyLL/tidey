@@ -10,6 +10,7 @@ import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/moonScreen.dart';
+import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:timer_builder/timer_builder.dart';
 
@@ -29,9 +30,11 @@ class TideScreen extends StatelessWidget {
           //  backgroundColor: Color(0x44000000),
           elevation: 0,
           leading: GestureDetector(
-            onTap: () {/* Write listener code here */},
+            onTap: () {
+              Navigator.pushNamed(context, SettingsScreen.id);
+            },
             child: Icon(
-              Icons.menu, // add custom icons also
+              Icons.settings, // add custom icons also
             ),
           ),
           actions: <Widget>[

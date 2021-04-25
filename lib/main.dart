@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tidey/screens/forecast.dart';
 import 'package:tidey/screens/moonScreen.dart';
+import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       TideScreen.id: (context) => TideScreen(),
       MoonScreen.id: (context) => MoonScreen(),
       ForecastScreen.id: (context) => ForecastScreen(),
+      SettingsScreen.id: (context) => SettingsScreen(),
     });
   }
 }

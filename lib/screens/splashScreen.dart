@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/localWeather.dart';
@@ -26,7 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
     await location.getCurrentLocation();
     WeatherService weatherService = WeatherService();
     await weatherService.getMarineData();
-
+    packageInfo = await PackageInfo.fromPlatform();
+    print("Yo Yo");
+    print(packageInfo.appName);
+    print(packageInfo.buildNumber);
+    print(packageInfo.version);
+    print(packageInfo.packageName);
+    print("Ma");
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
     mySineWaveData msw = mySineWaveData();

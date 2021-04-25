@@ -5,6 +5,8 @@ PODS:
   - Flutter (1.0.0)
   - geolocator (6.2.0):
     - Flutter
+  - package_info (0.0.1):
+    - Flutter
   - Reachability (3.2)
   - webview_flutter (0.0.1):
     - Flutter
@@ -13,6 +15,7 @@ DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - Flutter (from `Flutter`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
@@ -26,6 +29,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
@@ -33,6 +38,7 @@ SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
 

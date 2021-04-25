@@ -39,6 +39,7 @@ dependencies:
   intl:
   marquee:
   webview_flutter:
+  package_info: ^2.0.0
 
 
   weather_icons:

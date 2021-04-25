@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -11,6 +12,13 @@ bool globalMarineWeatherPrintDone = false;
 int secondsBetweenTransition = 5;
 
 const metersToFeet = 3.28084;
+PackageInfo packageInfo = PackageInfo();
+PackageInfo _packageInfo = PackageInfo(
+  appName: 'Unknown',
+  packageName: 'Unknown',
+  version: 'Unknown',
+  buildNumber: 'Unknown',
+);
 
 //globals for the sinewave function y = A sin (omega * t + alpha) + C
 double globalA;
@@ -156,6 +164,9 @@ const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 const kPrimaryColor = Colors.indigo;
 const kTitleBoxColor = Color(0xFFBEC2CB);
+const kTextSettingSize = 20.0;
+const kTextSettingsStyle = TextStyle(fontSize: kTextSettingSize);
+const kIconSettingSize = 40.0;
 const kClockTextStyle = TextStyle(
   fontSize: 45,
   color: Colors.white,
