@@ -39,8 +39,7 @@ dependencies:
   intl:
   marquee:
   webview_flutter:
-
-
+  flutter_sensor_compass: ^0.1.1
   weather_icons:
 
 dev_dependencies:

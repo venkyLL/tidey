@@ -29,6 +29,10 @@ int globalNumberOfDaysOfWeatherData = 1;
 MarineWeather weatherData = MarineWeather();
 LocalWeather localWeather = LocalWeather();
 
+//gauge constants
+double globalCompassDirection;
+DateTime globalCompassValueLastReadAt;
+
 const hourFmt = {
   '0': '12:00',
   '300': "3AM",
