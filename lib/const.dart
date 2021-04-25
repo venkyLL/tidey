@@ -8,6 +8,7 @@ String globalLongitude;
 
 // Print debugger
 bool globalMarineWeatherPrintDone = false;
+int secondsBetweenTransition = 5;
 
 const metersToFeet = 3.28084;
 
@@ -246,6 +247,7 @@ class ScreenSize {
   static double marqueeHeight;
   static Offset clockTopLeft;
   static Offset clockBottomRight;
+  static double portraitClockSpace;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -263,7 +265,7 @@ class ScreenSize {
     gaugeSize = safeBlockHorizontal * 30;
     clockSize = safeBlockHorizontal * 40;
     clockTop = ((safeBlockVertical * 100) - clockSize) / 2;
-
+    portraitClockSpace = ((safeBlockHorizontal * 100) - clockSize) / 2;
     gaugeTop = ((safeBlockVertical * 100) - gaugeSize) / 4;
     marqueeHeight = clockTop;
     gaugeBottom =
@@ -333,4 +335,54 @@ getBarometerChange() {
     return BarometerChange.falling;
   else
     return BarometerChange.rising;
+}
+
+String getMoonImageName() {
+  switch (weatherData.data.weather[0].astronomy[0].moonPhase) {
+    case "New Moon":
+      {
+        return "moons/moon1.png";
+      }
+      break;
+    case "Waxing Crescent":
+      {
+        return "moons/moon6.png";
+      }
+      break;
+    case "First Quarter":
+      {
+        return "moons/moon9.png";
+      }
+      break;
+    case "Waxing Gibbous":
+      {
+        return "moons/moon11.png";
+      }
+      break;
+    case "Full Moon":
+      {
+        return "fullMoon.jpg";
+      }
+      break;
+    case "Waning Gibbous":
+      {
+        return "moons/moon18.png";
+      }
+      break;
+    case "Last Quarter":
+      {
+        return "moons/moon20.png";
+      }
+      break;
+    case "Waning Crescent":
+      {
+        return "moons/moon23.png";
+      }
+      break;
+    default:
+      {
+        return "assets/images/moons/moon1.png";
+      }
+      break;
+  }
 }

@@ -6,8 +6,6 @@ import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
-import 'package:tidey/components/moonTable.dart';
-import 'package:tidey/components/oldZeClock.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
@@ -350,6 +348,39 @@ class DialRow extends StatelessWidget {
 //    firstChild: const Icon(Icons.text_rotate_up, size: 150),
 //    secondChild: const Icon(Icons.text_rotate_vertical, size: 150),
 //  ),
+class Swapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    switch (counter) {
+      case 0:
+        return TempGauge(
+            high: double.parse(localWeather.data.weather[0].maxtempF),
+            low: double.parse(localWeather.data.weather[0].mintempF),
+            conditionIcon: weatherDayIconMap[
+                localWeather.data.weather[0].hourly[0].weatherCode]);
+        break;
+      case 1:
+        return BarometerGauge(
+          current: double.parse(
+              weatherData.data.weather[0].hourly[0].pressureInches),
+          change: getBarometerChange(),
+        );
+        break;
+      case 2:
+        return ImageGauge(
+            imageName: "gaugeSunrise.png",
+            textLabel: localWeather.data.weather[0].astronomy[0].sunrise);
+        break;
+
+      default:
+        {
+          print("Error");
+        }
+        break;
+    }
+  }
+}
+
 class LandScapeSwapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -466,7 +497,8 @@ class LandScapeSwapper extends StatelessWidget {
 class LandscapeTimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: 5), builder: (context) {
+    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
+        builder: (context) {
       counter = (counter + 1) % 6;
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
@@ -523,7 +555,7 @@ class PortraitMode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/blueTexture.jpg'),
+          image: AssetImage('assets/images/bgBlue2.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -534,12 +566,32 @@ class PortraitMode extends StatelessWidget {
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: ScreenSize.safeBlockVertical * 2),
-            oldzeClockSync(),
+            SizedBox(
+                height: ((ScreenSize.safeBlockVertical * 100) -
+                        ScreenSize.clockSize -
+                        ScreenSize.gaugeSize -
+                        100) /
+                    2),
+            Row(
+              children: [
+                SizedBox(width: ScreenSize.portraitClockSpace - 25),
+                Container(
+                    child: zeClockSync(),
+                    width: ScreenSize.clockSize + 25,
+                    height: ScreenSize.clockSize),
+                SizedBox(width: 200),
+              ],
+            ),
 //                ClockExample(),
-            SizedBox(height: ScreenSize.safeBlockVertical * 2),
+            SizedBox(height: ScreenSize.safeBlockVertical * 5),
             // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),
             TimerWidget(),
+            SizedBox(
+                height: ((ScreenSize.safeBlockVertical * 100) -
+                        ScreenSize.clockSize -
+                        ScreenSize.gaugeSize -
+                        100) /
+                    2),
           ]),
     );
   }
@@ -676,38 +728,13 @@ TableRow tideTableRow(
   );
 }
 
-class Swapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    switch (counter) {
-      case 0:
-        return buildMyTideTable();
-        break;
-      case 1:
-        return SunTable();
-        break;
-      case 2:
-        return MoonTable();
-        break;
-
-      default:
-        {
-          print("Error");
-        }
-        break;
-    }
-//    return counter == 0
-//        ? buildMyTideTable()
-//        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
-  }
-}
-
 int counter = 0;
 
 class TimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: 5), builder: (context) {
+    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
+        builder: (context) {
       counter = (counter + 1) % 3;
       // counter == 0 ? counter = 1 : counter = 0;
       return Swapper();
