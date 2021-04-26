@@ -403,12 +403,12 @@ class PortraitSwapper extends StatelessWidget {
 //            duration: const Duration(seconds: 2));
         return PortraitDialRow(
             gaugeType1: ImageGaugeNew(
-              imageName: "sunrise.jpeg",
+              imageName: "sunset1.gif",
               textLabel: localWeather.data.weather[0].astronomy[0].sunrise,
               textPosition: 60,
             ),
             gaugeType2: ImageGaugeNew(
-                imageName: "sunset.jpeg",
+                imageName: "sunset2.gif",
                 textPosition: 60,
                 textLabel: localWeather.data.weather[0].astronomy[0].sunset));
         break;
@@ -421,7 +421,7 @@ class PortraitSwapper extends StatelessWidget {
           ),
           //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
           gaugeType2: ImageGaugeNew(
-              imageName: "stars.jpg",
+              imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
               textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
                   "\nRise: " +
@@ -457,7 +457,7 @@ class PortraitSwapper extends StatelessWidget {
       case 4:
         return PortraitDialRow(
             gaugeType1: ImageGaugeNew(
-              imageName: "water.JPG",
+              imageName: "water.gif",
               textLabel: "Water " +
                   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
