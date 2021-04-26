@@ -6,6 +6,26 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../const.dart';
 
 /// Locals imports
+
+class CompassGauge2 extends StatefulWidget {
+  @override
+  _CompassGauge2State createState() => _CompassGauge2State();
+}
+
+class _CompassGauge2State extends State<CompassGauge2> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: ScreenSize.gaugeSize,
+      height: ScreenSize.gaugeSize,
+      child: GaugeContainer(
+          child: CompassGauge(
+        direction: currentDirection,
+      )),
+    );
+  }
+}
+
 class CompassGauge extends StatefulWidget {
   CompassGauge({double direction});
   @override
@@ -63,8 +83,8 @@ class _CompassGaugeState extends State<CompassGauge> {
                 thickness: 2.3,
                 length: 0.087,
                 lengthUnit: GaugeSizeUnit.factor),
-            backgroundImage:
-                const AssetImage('assets/images/dark_theme_gauge.png'),
+//            backgroundImage:
+//                const AssetImage('assets/images/dark_theme_gauge.png'),
             pointers: <GaugePointer>[
 //              NeedlePointer(
 //                  value: 70,
@@ -148,8 +168,8 @@ class _CompassGaugeState extends State<CompassGauge> {
 
     return Container(
       child: _widget,
-      height: ScreenSize.safeBlockHorizontal * 30,
-      width: ScreenSize.safeBlockHorizontal * 30,
+//      height: ScreenSize.gaugeSize,
+//      width: ScreenSize.gaugeSize,
     );
   }
 

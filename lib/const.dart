@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -11,6 +14,13 @@ bool globalMarineWeatherPrintDone = false;
 int secondsBetweenTransition = 5;
 
 const metersToFeet = 3.28084;
+PackageInfo packageInfo = PackageInfo();
+PackageInfo _packageInfo = PackageInfo(
+  appName: 'Unknown',
+  packageName: 'Unknown',
+  version: 'Unknown',
+  buildNumber: 'Unknown',
+);
 
 //globals for the sinewave function y = A sin (omega * t + alpha) + C
 double globalA;
@@ -158,8 +168,13 @@ const marineWeatherService = weatherServerURL + "marine.ashx";
 const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
+const kHeadingColor = Color(0xFFAAAAAA);
 const kPrimaryColor = Colors.indigo;
-const kTitleBoxColor = Color(0xFFBEC2CB);
+const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);
+const kTextSettingSize = 20.0;
+const kTextSettingsStyle =
+    TextStyle(fontSize: kTextSettingSize, color: Colors.white);
+const kIconSettingSize = 40.0;
 const kClockTextStyle = TextStyle(
   fontSize: 45,
   color: Colors.white,
@@ -172,18 +187,20 @@ const kTitleTextStyle = TextStyle(
 const kTableTitleTextStyle = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Colors.white,
 );
+const kTableTextStyle =
+    TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20);
 const kMoonTextStyle = TextStyle(
-  fontSize: 20,
+  fontSize: 18,
   color: Colors.white,
 );
 const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
   color: Colors.white,
 );
-const kTableTextStyle =
-    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
+//const kTableTextStyle =
+//    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
 const kTableTextStyleRed = TextStyle(
   fontSize: 20,
   color: Colors.red,
@@ -262,20 +279,25 @@ class ScreenSize {
         _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
-    gaugeSize = safeBlockHorizontal * 30;
-    clockSize = safeBlockHorizontal * 40;
-    clockTop = ((safeBlockVertical * 100) - clockSize) / 2;
-    portraitClockSpace = ((safeBlockHorizontal * 100) - clockSize) / 2;
-    gaugeTop = ((safeBlockVertical * 100) - gaugeSize) / 4;
+    gaugeSize = max(safeBlockHorizontal, safeBlockVertical) * 30;
+    clockSize = max(safeBlockHorizontal, safeBlockVertical) * 40;
+    clockTop =
+        ((min(safeBlockVertical, safeBlockHorizontal) * 100) - clockSize) / 2;
+    // portraitClockSpace = ((safeBlockHorizontal * 100) - clockSize) / 2;
+    gaugeTop = clockTop / 2;
+//    gaugeTop =
+//        ((max(safeBlockVertical, safeBlockHorizontal) * 100) - gaugeSize) / 4;
     marqueeHeight = clockTop;
-    gaugeBottom =
-        (safeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
-    // gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
 
+    // gaugeBottom =
+    //   (safeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
+    //  gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
+    gaugeBottom = clockTop + clockSize - gaugeSize - gaugeTop;
     gauge1TopLeft = Offset(0, gaugeTop);
     gauge1BottomRight = Offset(gaugeSize, gaugeTop + gaugeSize);
     clockTopLeft = Offset(gaugeSize, clockTop);
     clockBottomRight = Offset(gaugeSize + clockSize, clockTop + clockSize);
+    print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
     print("GaugeTop = ${gaugeTop}");
@@ -298,7 +320,8 @@ class ScreenSize {
   }
 }
 
-BoxedIcon getWeatherIconBox({String time, String code}) {
+BoxedIcon getWeatherIconBox(
+    {String time, String code, Color color = Colors.white}) {
   // var iconName = "WeatherIcons.day_cloudy";
   print("Time is" + time);
   switch (time) {
@@ -306,13 +329,13 @@ BoxedIcon getWeatherIconBox({String time, String code}) {
     case "300":
     case "2100":
       {
-        return BoxedIcon((weatherNightIconMap[code]), color: Colors.white);
+        return BoxedIcon((weatherNightIconMap[code]), color: color);
       }
       break;
 
     default:
       {
-        return BoxedIcon((weatherDayIconMap[code]), color: Colors.white);
+        return BoxedIcon((weatherDayIconMap[code]), color: color);
       }
       break;
   }
@@ -341,42 +364,42 @@ String getMoonImageName() {
   switch (weatherData.data.weather[0].astronomy[0].moonPhase) {
     case "New Moon":
       {
-        return "moons/moon1.png";
+        return "moon0.png";
       }
       break;
     case "Waxing Crescent":
       {
-        return "moons/moon6.png";
+        return "moon6.png";
       }
       break;
     case "First Quarter":
       {
-        return "moons/moon9.png";
+        return "moon9.png";
       }
       break;
     case "Waxing Gibbous":
       {
-        return "moons/moon11.png";
+        return "moon11.png";
       }
       break;
     case "Full Moon":
       {
-        return "fullMoon.jpg";
+        return "moon15.png";
       }
       break;
     case "Waning Gibbous":
       {
-        return "moons/moon18.png";
+        return "moon18.png";
       }
       break;
     case "Last Quarter":
       {
-        return "moons/moon20.png";
+        return "moon20.png";
       }
       break;
     case "Waning Crescent":
       {
-        return "moons/moon23.png";
+        return "moon23.png";
       }
       break;
     default:
@@ -384,5 +407,69 @@ String getMoonImageName() {
         return "assets/images/moons/moon1.png";
       }
       break;
+  }
+}
+
+class GaugeContainer extends StatelessWidget {
+  final String imageName;
+  final String textLabel;
+  final Color textColor;
+  final Color textBackgroundColor;
+  final double fontSize;
+  final int textPosition;
+  final Color backgroundColor;
+  final Color bezelColor;
+  final double bezelWidth;
+  final double imageInset;
+  final Widget child;
+
+  GaugeContainer({
+    this.imageName,
+    this.textLabel = "",
+    this.textColor = Colors.white,
+    this.textBackgroundColor = Colors.white30,
+    this.fontSize = 24,
+    this.textPosition = 67,
+    this.backgroundColor = Colors.black,
+    this.bezelColor = const Color(0xFF999999),
+    this.bezelWidth = 5,
+    this.imageInset = 30,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          width: ScreenSize.gaugeSize,
+          height: ScreenSize.gaugeSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bezelColor,
+          ),
+        ),
+        Positioned.fill(
+          top: bezelWidth,
+          right: bezelWidth,
+          left: bezelWidth,
+          bottom: bezelWidth,
+          child: Container(
+            width: ScreenSize.gaugeSize,
+            height: ScreenSize.gaugeSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: backgroundColor,
+            ),
+          ),
+        ),
+        Positioned.fill(
+            top: imageInset,
+            right: imageInset,
+            bottom: imageInset,
+            left: imageInset,
+            child: child),
+      ],
+    );
   }
 }

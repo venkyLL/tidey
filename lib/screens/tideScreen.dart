@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
+import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
+import 'package:tidey/components/dsGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
-import 'package:tidey/screens/moonScreen.dart';
+import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:timer_builder/timer_builder.dart';
 
@@ -29,9 +31,11 @@ class TideScreen extends StatelessWidget {
           //  backgroundColor: Color(0x44000000),
           elevation: 0,
           leading: GestureDetector(
-            onTap: () {/* Write listener code here */},
+            onTap: () {
+              Navigator.pushNamed(context, SettingsScreen.id);
+            },
             child: Icon(
-              Icons.menu, // add custom icons also
+              Icons.settings, // add custom icons also
             ),
           ),
           actions: <Widget>[
@@ -48,20 +52,30 @@ class TideScreen extends StatelessWidget {
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, MoonScreen.id);
+                    Navigator.pushNamed(context, TodayScreen.id);
                   },
                   child: Icon(Icons.chevron_right),
                 )),
           ],
         ),
-        body: OrientationBuilder(
-          builder: (context, orientation) {
-            if (orientation == Orientation.portrait) {
-              return PortraitMode();
-            } else {
-              return LandScapeMode();
-            }
+        body: SwipeGestureRecognizer(
+          onSwipeRight: () {
+            Navigator.pushNamed(context, SettingsScreen.id);
           },
+          onSwipeLeft: () {
+            Navigator.pushNamed(context, TodayScreen.id);
+          },
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
+//         //   }
+              if (orientation == Orientation.portrait) {
+                return PortraitMode();
+              } else {
+                return LandScapeMode();
+              }
+            },
+          ),
         ));
   }
 }
@@ -86,13 +100,12 @@ class _LandScapeModeState extends State<LandScapeMode> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/bgBlue2.JPG'),
+          image: AssetImage('assets/images/background.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      //constraints: BoxConstraints.expand(),
       child: LandscapeView(),
     );
   }
@@ -161,22 +174,22 @@ class clockColumn extends StatelessWidget {
     return Column(
       children: [
         Container(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-                localWeather.data.nearestArea[0].areaName[0].value +
-                    //   localWeather.data.nearestArea[0].country[0].value +
-                    "\n" +
-                    DateFormat('E MM/d').format(now) +
-                    "\n" +
-                    localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    //    backgroundColor: Colors.white30,
-                    color: Colors.white)),
-          ),
+//          child: Align(
+//            alignment: Alignment.center,
+//            child: Text(
+//                localWeather.data.nearestArea[0].areaName[0].value +
+//                    //   localWeather.data.nearestArea[0].country[0].value +
+//                    "\n" +
+//                    DateFormat('E MM/d').format(now) +
+//                    "\n" +
+//                    localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
+//                textAlign: TextAlign.center,
+//                style: TextStyle(
+//                    fontWeight: FontWeight.bold,
+//                    fontSize: 25,
+//                    //    backgroundColor: Colors.white30,
+//                    color: Colors.white)),
+//          ),
           height: (ScreenSize.clockTop),
         ),
         Container(
@@ -215,79 +228,6 @@ class gaugeColumn extends StatelessWidget {
   }
 }
 
-class CircleContainer extends StatelessWidget {
-//  final double cwidth;
-//  CircleContainer(this.cwidth);
-  @override
-  Widget build(BuildContext context) {
-    Size _topLeft =
-        Size(ScreenSize.gauge1TopLeft.dx, ScreenSize.gauge1TopLeft.dy);
-    Size _bottomRight =
-        Size(ScreenSize.gauge1BottomRight.dx, ScreenSize.gauge1BottomRight.dy);
-
-    // print("Print parent size ${cwidth} ");
-    // print("My Size is ${_size.width}");
-    return Container(
-        color: Colors.grey,
-//        width: SizeConfig.safeBlockHorizontal * 30,
-//        height: SizeConfig.safeBlockHorizontal * 30,
-        // Size _size = MediaQuery.of(context).size;
-        child:
-            //Text("Hello " + _size.width.toString() + " "));
-            DrawShape(
-          _topLeft,
-          _bottomRight,
-          100.0,
-        ));
-  }
-}
-
-class DrawShape extends StatelessWidget {
-  Size _topLeft;
-  Size _bottomRight;
-  double radius;
-  DrawShape(this._topLeft, this._bottomRight, this.radius);
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-//      painter: PathPainter(),
-      painter: CurvePainter(),
-    );
-  }
-}
-
-class CurvePainter extends CustomPainter {
-//  Size _topLeft;
-//  Size _bottomRight;
-//  double radius;
-//  CurvePainter(this._topLeft, this._bottomRight, this.radius);
-
-  @override
-  void paint(Canvas canvas, Size containerSize) {
-    print("contaierSize ${containerSize.height} ${containerSize.width}");
-
-    var myPaint = Paint();
-    myPaint.color = Colors.redAccent;
-    myPaint.style = PaintingStyle.fill;
-//    var paintLowTide = Paint();
-//    paintLowTide.color = Colors.blueAccent;
-//    paintLowTide.style = PaintingStyle.fill;
-//    canvas.drawCircle(Offset(0.0, 0.0), 20, myPaint);
-//    canvas.drawCircle(Offset(153.3, 153.3), 153.3, myPaint);
-    canvas.drawCircle(Offset(containerSize.width / 2, containerSize.height / 2),
-        containerSize.height / 2, myPaint);
-
-//    canvas.drawCircle(Offset(centerX + radius + 7, centerY), 10, paintHighTide);
-//    canvas.drawCircle(Offset(centerX - radius - 3, centerY), 10, paintLowTide);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
 class DialRow extends StatelessWidget {
   final Widget gaugeType1;
   final Widget gaugeType2;
@@ -306,39 +246,6 @@ class DialRow extends StatelessWidget {
         gaugeColumn(gaugeType: gaugeType2, containerColor: Colors.transparent),
       ],
     );
-
-//
-//    return Row(
-//      children: [
-//        Container(
-//          color: Colors.red,
-//          width: ScreenSize.safeBlockHorizontal * 30,
-//          height: ScreenSize.safeBlockHorizontal * 30,
-//          child: gaugeType1,
-//        ),
-//        //  DrawShape(SizeConfig.safeBlockHorizontal * 30),
-//        Column(
-//          children: [
-//            SizedBox(
-//              height: (ScreenSize.safeBlockVertical * 100 -
-//                      ScreenSize.safeBlockHorizontal * 40) /
-//                  2,
-//            ),
-//            Container(
-//              color: Colors.transparent,
-//              width: ScreenSize.safeBlockHorizontal * 40,
-//              height: ScreenSize.safeBlockHorizontal * 40,
-//            ),
-//          ],
-//        ),
-//        Container(
-//          color: Colors.red,
-//          width: ScreenSize.safeBlockHorizontal * 30,
-//          height: ScreenSize.safeBlockHorizontal * 30,
-//          child: gaugeType2,
-//        ),
-//      ],
-//    );
   }
 }
 
@@ -414,19 +321,24 @@ class LandScapeSwapper extends StatelessWidget {
 //            // crossFadeState: crossFadeState,
 //            duration: const Duration(seconds: 2));
         return DialRow(
-            gaugeType1: ImageGauge(
-                imageName: "gaugeSunrise.png",
+            gaugeType1: ImageGaugeNew(
+                imageName: "sunrise.jpeg",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunrise),
-            gaugeType2: ImageGauge(
-                imageName: "gaugeSunset.png",
+            gaugeType2: ImageGaugeNew(
+                imageName: "sunset.jpeg",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunset));
         break;
 
       case 2:
         return DialRow(
-          gaugeType1: ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-          gaugeType2: ImageGauge(
-              imageName: "gaugeStars.png",
+          gaugeType1: ImageGaugeNew(
+            imageName: getMoonImageName(),
+            innerLineColor: Colors.transparent,
+          ),
+          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+          gaugeType2: ImageGaugeNew(
+              imageName: "stars.jpg",
+              innerLineColor: Colors.transparent,
               textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
                   "\nRise: " +
                   localWeather.data.weather[0].astronomy[0].moonrise +
@@ -460,26 +372,138 @@ class LandScapeSwapper extends StatelessWidget {
         break;
       case 4:
         return DialRow(
-            gaugeType1: ImageGauge(
-              imageName: "gaugeWater.png",
+            gaugeType1: ImageGaugeNew(
+              imageName: "water.JPG",
               textLabel: "Water " +
                   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
               textColor: Colors.black,
             ),
-            gaugeType2: CompassGauge(
-              direction: globalCompassDirection,
-            ));
+            gaugeType2: CompassGauge2());
       case 5:
         return DialRow(
-            gaugeType1: ImageGauge(
-              imageName: "gaugeBoat.png",
-              textLabel: "",
-              textColor: Colors.black,
+            gaugeType1: ImageGaugeNew(
+              imageName: "boat1.jpg",
             ),
-            gaugeType2: ImageGauge(
-              imageName: "gaugeBoatDrone.png",
-              textLabel: "",
+            gaugeType2: ImageGaugeNew(
+              imageName: "boat2.jpg",
+            ));
+
+      default:
+        {
+          print("Error");
+        }
+        break;
+    }
+//    return counter == 0
+//        ? buildMyTideTable()
+//        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
+  }
+}
+
+class PortraitSwapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    switch (counter) {
+      case 0:
+        return PortraitDialRow(
+          gaugeType1: TempGauge(
+              high: double.parse(localWeather.data.weather[0].maxtempF),
+              low: double.parse(localWeather.data.weather[0].mintempF),
+              conditionIcon: weatherDayIconMap[
+                  localWeather.data.weather[0].hourly[0].weatherCode]),
+          gaugeType2: BarometerGauge(
+            current: double.parse(
+                weatherData.data.weather[0].hourly[0].pressureInches),
+            change: getBarometerChange(),
+          ),
+        );
+        break;
+      case 1:
+//        return AnimatedCrossFade(
+//            crossFadeState: _crossFadeState,
+//            firstChild: DialRow(
+//              gaugeType1: TempGauge(),
+//              gaugeType2: BarometerGauge(),
+//            ),
+//            secondChild: DialRow(
+//                gaugeType1: ImageGauge(
+//                    imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
+//                gaugeType2: ImageGauge(
+//                    imageName: "gaugeSunset.png", textLabel: "8:15PM")),
+//            // crossFadeState: crossFadeState,
+//            duration: const Duration(seconds: 2));
+        return PortraitDialRow(
+            gaugeType1: ImageGaugeNew(
+              imageName: "sunrise.jpeg",
+              textLabel: localWeather.data.weather[0].astronomy[0].sunrise,
+              textPosition: 60,
+            ),
+            gaugeType2: ImageGaugeNew(
+                imageName: "sunset.jpeg",
+                textPosition: 60,
+                textLabel: localWeather.data.weather[0].astronomy[0].sunset));
+        break;
+
+      case 2:
+        return PortraitDialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: getMoonImageName(),
+            innerLineColor: Colors.transparent,
+          ),
+          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+          gaugeType2: ImageGaugeNew(
+              imageName: "stars.jpg",
+              innerLineColor: Colors.transparent,
+              textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
+                  "\nRise: " +
+                  localWeather.data.weather[0].astronomy[0].moonrise +
+                  "\nSet:" +
+                  localWeather.data.weather[0].astronomy[0].moonset,
+              textPosition: 40,
+              textBackgroundColor: Colors.transparent,
+              fontSize: 20),
+        );
+        break;
+
+      case 3:
+        return PortraitDialRow(
+          gaugeType1: DSGauge(
+//            gaugeDirection:
+//                weatherData.data.weather[0].hourly[0].winddir16Point,
+//            gaugeValue: double.parse(
+//                weatherData.data.weather[0].hourly[0].windspeedMiles),
+              ),
+          gaugeType2: DSGauge(
+//            gaugeType: "Waves",
+//            gaugeUnit: "ft",
+//            gaugeDirection:
+//                weatherData.data.weather[0].hourly[0].swellDir16Point,
+//            gaugeValue: double.parse(
+//                weatherData.data.weather[0].hourly[0].swellHeightFt),
+//            gaugeMax: 10,
+//            gaugeInterval: 1,
+              ),
+        );
+        break;
+      case 4:
+        return PortraitDialRow(
+            gaugeType1: ImageGaugeNew(
+              imageName: "water.JPG",
+              textLabel: "Water " +
+                  weatherData.data.weather[0].hourly[0].waterTempF +
+                  " \u2109",
+              textColor: Colors.black,
+              textPosition: 50,
+            ),
+            gaugeType2: CompassGauge2());
+      case 5:
+        return PortraitDialRow(
+            gaugeType1: ImageGaugeNew(
+              imageName: "boat1.jpg",
+            ),
+            gaugeType2: ImageGaugeNew(
+              imageName: "boat2.jpg",
             ));
 
       default:
@@ -503,6 +527,19 @@ class LandscapeTimerWidget extends StatelessWidget {
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
       return LandScapeSwapper();
+    });
+  }
+}
+
+class PortraitTimerWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
+        builder: (context) {
+      counter = (counter + 1) % 6;
+      // counter = 4;
+      // counter == 0 ? counter = 1 : counter = 0;
+      return PortraitSwapper();
     });
   }
 }
@@ -555,44 +592,76 @@ class PortraitMode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/bgBlue2.JPG'),
+          image: AssetImage('assets/images/background.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      // constraints: BoxConstraints.expand(),
-      child: Column(
-//            crossAxisAlignment: CrossAxisAlignment.stretch,
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-                height: ((ScreenSize.safeBlockVertical * 100) -
-                        ScreenSize.clockSize -
-                        ScreenSize.gaugeSize -
-                        100) /
-                    2),
-            Row(
-              children: [
-                SizedBox(width: ScreenSize.portraitClockSpace - 25),
-                Container(
-                    child: zeClockSync(),
-                    width: ScreenSize.clockSize + 25,
-                    height: ScreenSize.clockSize),
-                SizedBox(width: 200),
-              ],
-            ),
-//                ClockExample(),
-            SizedBox(height: ScreenSize.safeBlockVertical * 5),
-            // MoonRow(moonPhaseImageName: "assets/images/fullMoon.jpg"),
-            TimerWidget(),
-            SizedBox(
-                height: ((ScreenSize.safeBlockVertical * 100) -
-                        ScreenSize.clockSize -
-                        ScreenSize.gaugeSize -
-                        100) /
-                    2),
+      child: Stack(
+        children: [
+          PortraitTimerWidget(),
+          Column(children: [
+            SizedBox(height: ScreenSize.safeBlockVertical * 4),
+            Container(
+                height:
+                    ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+            SizedBox(height: ScreenSize.safeBlockVertical * 2),
+            PortraitClockRow(),
+            SizedBox(height: ScreenSize.safeBlockVertical * 2),
+            Container(
+                height:
+                    ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
           ]),
+        ],
+      ),
+    );
+  }
+
+  Container PortraitClockRow() {
+    return Container(
+        alignment: Alignment.center,
+        child: zeClockSync(),
+        width: ScreenSize.clockSize + 25,
+        height: ScreenSize.clockSize);
+  }
+}
+
+class PortraitDialRow extends StatelessWidget {
+  final Widget gaugeType1;
+  final Widget gaugeType2;
+
+  PortraitDialRow({
+    this.gaugeType1,
+    this.gaugeType2,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      SizedBox(height: ScreenSize.safeBlockVertical * 4),
+      PortraitGaugeRow(child: gaugeType1),
+      SizedBox(height: ScreenSize.safeBlockVertical * 2),
+      Container(
+          alignment: Alignment.center,
+          color: Colors.transparent,
+          width: ScreenSize.clockSize + 25,
+          height: ScreenSize.clockSize),
+      SizedBox(height: ScreenSize.safeBlockVertical * 2),
+      PortraitGaugeRow(child: gaugeType2),
+    ]);
+  }
+}
+
+class PortraitGaugeRow extends StatelessWidget {
+  Widget child;
+  PortraitGaugeRow({this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: child,
+      height: ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4),
     );
   }
 }
@@ -729,126 +798,3 @@ TableRow tideTableRow(
 }
 
 int counter = 0;
-
-class TimerWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
-        builder: (context) {
-      counter = (counter + 1) % 3;
-      // counter == 0 ? counter = 1 : counter = 0;
-      return Swapper();
-    });
-  }
-}
-
-//  Container buildTideTable() {
-//    return Container(
-//      child: Column(
-//        children: [
-//          Text("Tides", style: kTableTitleTextStyle),
-//          SizedBox(height: 10),
-//          Padding(
-//            padding: const EdgeInsets.only(left: 65, right: 65),
-//            child: Table(
-////            columnWidths: {
-////          0: FractionColumnWidth(.32),
-////          1: FractionColumnWidth(.33),
-////          2: FractionColumnWidth(.30),
-////          //   3: FractionColumnWidth(.05),
-////        } ,
-//                children: [
-//                  tideTableRow(
-//                      day: 'Today',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideType),
-//                  tideTableRow(
-//                      day: 'Today',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideType),
-//                  tideTableRow(
-//                      day: 'Tomorrow',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideType),
-//                  tideTableRow(
-//                      day: 'Tomorrow',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideType),
-//                ]),
-//            // mySubTile(kMySubTileData),
-//          ),
-//        ],
-//      ),
-//    );
-//
-//  }
-//
-//// 3.28084
-//  TableRow tideTableRow(
-//      {String day, String time, double level, String direction}) {
-//    print("Direction is $day,$time, $level,$direction");
-//    // static htInFeet = double.parse(level)/3.28084;
-//    final String pos = level > 2.0 ? "+" : "-";
-//    return TableRow(
-//      children: [
-//        Text(day, style: kTableTextStyle),
-//        Text(
-//          time,
-//          style: kTableTextStyle,
-//          textAlign: TextAlign.right,
-//        ),
-//        direction == "LOW"
-//            ? RichText(
-//                textAlign: TextAlign.right,
-//                text: TextSpan(
-//                  /*defining default style is optional */
-//                  children: <TextSpan>[
-//                    TextSpan(
-//                      text: ((level * 3.28084).toStringAsFixed(2)) + 'ft ',
-//                      style: kTableTextStyle,
-//                    ),
-//                    TextSpan(text: 'L', style: kTableTextStyleRed),
-//                  ],
-//                ),
-//              )
-//            : RichText(
-//                textAlign: TextAlign.right,
-//                text: TextSpan(
-//                  /*defining default style is optional */
-//                  children: <TextSpan>[
-//                    TextSpan(
-//                      text: ((level * 3.28084).toStringAsFixed(2)) + 'ft ',
-//                      style: kTableTextStyle,
-//                    ),
-//                    TextSpan(text: 'H', style: kTableTextStyleGreen),
-//                  ],
-//                ),
-//              ),
-//
-////        Text(
-////            //  (level > 0.0 ? "+" : "-") +
-////            ((level * 3.28084).toStringAsFixed(2)) + 'ft',
-////            style: kClockTextSmallStyle),
-////        direction == "LOW"
-////            ? Text("L", style: kTableTextStyleRed)
-////            : Text("H", style: kTableTextStyleGreen),
-//      ],
-//    );
-//  }
-//}

@@ -30,9 +30,9 @@ class _BarometerGaugeState extends State<BarometerGauge> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 300,
-        height: 300,
-        child: _buildRadialEaseExample(),
+//        width: ScreenSize.gaugeSize,
+//        height: ScreenSize.gaugeSize,
+        child: GaugeContainer(child: _buildRadialEaseExample()),
       ),
     );
   }
@@ -116,21 +116,21 @@ class _BarometerGaugeState extends State<BarometerGauge> {
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_cloudy),
-                        size: 35, color: Colors.white30),
+                        size: 35, color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                   angle: 310,
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_sunny),
-                        size: 35, color: Colors.white30),
+                        size: 35, color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                   angle: 129,
                   positionFactor: 0.38,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.thunderstorm),
-                        size: 35, color: Colors.white30),
+                        size: 35, color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                 angle: 50,

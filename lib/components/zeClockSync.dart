@@ -1,8 +1,5 @@
 // Dart imports
 import 'dart:async';
-import 'dart:math' as math;
-import 'package:tidey/services/compass.dart';
-import 'package:tidey/components/hourlyBell.dart';
 
 /// Flutter package imports
 import 'package:flutter/material.dart';
@@ -31,13 +28,11 @@ class _zeClockSyncState extends State<zeClockSync> {
 //  late Timer timer;
   Timer timer;
   Timer timer2;
-  HourlyBellRinger bellRinger = HourlyBellRinger();
   // Timer compassTimer;
 
   @override
   void initState() {
     super.initState();
-    bellRinger.init();
     // update the needle pointer in 1 second interval
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
     timer2 =
@@ -49,8 +44,7 @@ class _zeClockSyncState extends State<zeClockSync> {
     setState(() {
       _value = DateTime.now();
     });
-    print("Compass reading in zeSyncClock ${globalCompassDirection}");
-    bellRinger.ringTheBellIfItIsTime();
+    // print("Compass reading in zeSyncClock ${globalCompassDirection}");
   }
 
   void _kickOffTideComputation(Timer timer) {
