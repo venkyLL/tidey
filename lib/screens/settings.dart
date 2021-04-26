@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/screens/webWeather.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'SettingsScreen';
@@ -58,7 +59,16 @@ class _settingsScreenState extends State<SettingsScreen> {
 //                ),
 //              ),
               MenuListTile(
-                title: "Refresh Weather Data",
+                title: "View Current Weather on Web",
+                icon: Icons.cloud_circle_outlined,
+                onTap: () => {Navigator.pushNamed(context, WebWeather.id)},
+              ),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTile(
+                title: "Refresh Weather Data (network access required)",
                 icon: Icons.refresh,
                 onTap: () => {},
               ),
@@ -283,6 +293,7 @@ class MenuListTile extends StatelessWidget {
       trailing: const Icon(
         Icons.chevron_right,
         size: kIconSettingSize,
+        color: Colors.white,
       ),
       onTap: onTap,
     );
