@@ -255,38 +255,6 @@ class DialRow extends StatelessWidget {
 //    firstChild: const Icon(Icons.text_rotate_up, size: 150),
 //    secondChild: const Icon(Icons.text_rotate_vertical, size: 150),
 //  ),
-class Swapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    switch (counter) {
-      case 0:
-        return TempGauge(
-            high: double.parse(localWeather.data.weather[0].maxtempF),
-            low: double.parse(localWeather.data.weather[0].mintempF),
-            conditionIcon: weatherDayIconMap[
-                localWeather.data.weather[0].hourly[0].weatherCode]);
-        break;
-      case 1:
-        return BarometerGauge(
-          current: double.parse(
-              weatherData.data.weather[0].hourly[0].pressureInches),
-          change: getBarometerChange(),
-        );
-        break;
-      case 2:
-        return ImageGauge(
-            imageName: "gaugeSunrise.png",
-            textLabel: localWeather.data.weather[0].astronomy[0].sunrise);
-        break;
-
-      default:
-        {
-          print("Error");
-        }
-        break;
-    }
-  }
-}
 
 class LandScapeSwapper extends StatelessWidget {
   @override
@@ -322,10 +290,10 @@ class LandScapeSwapper extends StatelessWidget {
 //            duration: const Duration(seconds: 2));
         return DialRow(
             gaugeType1: ImageGaugeNew(
-                imageName: "sunrise.jpeg",
+                imageName: "sunset1.gif",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunrise),
             gaugeType2: ImageGaugeNew(
-                imageName: "sunset.jpeg",
+                imageName: "sunset2.gif",
                 textLabel: localWeather.data.weather[0].astronomy[0].sunset));
         break;
 
@@ -337,7 +305,7 @@ class LandScapeSwapper extends StatelessWidget {
           ),
           //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
           gaugeType2: ImageGaugeNew(
-              imageName: "stars.jpg",
+              imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
               textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
                   "\nRise: " +
@@ -373,7 +341,7 @@ class LandScapeSwapper extends StatelessWidget {
       case 4:
         return DialRow(
             gaugeType1: ImageGaugeNew(
-              imageName: "water.JPG",
+              imageName: "water.gif",
               textLabel: "Water " +
                   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
