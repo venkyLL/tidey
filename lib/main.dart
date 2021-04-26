@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tidey/screens/forecast.dart';
-import 'package:tidey/screens/moonScreen.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/screens/weatherToday.dart';
+import 'package:tidey/screens/webWeather.dart';
 
 void main() {
 //  double globalLatitude;
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(title: 'Tidey', initialRoute: SplashScreen.id, routes: {
       SplashScreen.id: (context) => SplashScreen(),
       TideScreen.id: (context) => TideScreen(),
-      MoonScreen.id: (context) => MoonScreen(),
+      WebWeather.id: (context) => WebWeather(),
       ForecastScreen.id: (context) => ForecastScreen(),
       SettingsScreen.id: (context) => SettingsScreen(),
       TodayScreen.id: (context) => TodayScreen(),
