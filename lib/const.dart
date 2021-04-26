@@ -346,6 +346,7 @@ enum BarometerChange {
   falling,
   flat,
 }
+
 getBarometerChange() {
   // var iconName = "WeatherIcons.day_cloudy";
   double current =
@@ -473,3 +474,17 @@ class GaugeContainer extends StatelessWidget {
     );
   }
 }
+
+//void refreshWeatherData () async {
+//Location location = Location();
+//await location.getCurrentLocation();
+//WeatherService weatherService = WeatherService();
+//await weatherService.getMarineData();
+//LocalWeatherService localWeatherService = LocalWeatherService();
+//await localWeatherService.getLocalWeatherData();
+//mySineWaveData msw = mySineWaveData();
+//await msw.computeTidesForPainting();
+//Navigator.pushReplacementNamed(context, TideScreen.id);
+//MyCompass theCompass = MyCompass();
+//theCompass.init();
+//}
