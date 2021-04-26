@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
@@ -273,20 +275,25 @@ class ScreenSize {
         _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
-    gaugeSize = safeBlockHorizontal * 30;
-    clockSize = safeBlockHorizontal * 40;
-    clockTop = ((safeBlockVertical * 100) - clockSize) / 2;
-    portraitClockSpace = ((safeBlockHorizontal * 100) - clockSize) / 2;
-    gaugeTop = ((safeBlockVertical * 100) - gaugeSize) / 4;
+    gaugeSize = max(safeBlockHorizontal, safeBlockVertical) * 30;
+    clockSize = max(safeBlockHorizontal, safeBlockVertical) * 40;
+    clockTop =
+        ((min(safeBlockVertical, safeBlockHorizontal) * 100) - clockSize) / 2;
+    // portraitClockSpace = ((safeBlockHorizontal * 100) - clockSize) / 2;
+    gaugeTop = clockTop / 2;
+//    gaugeTop =
+//        ((max(safeBlockVertical, safeBlockHorizontal) * 100) - gaugeSize) / 4;
     marqueeHeight = clockTop;
-    gaugeBottom =
-        (safeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
-    // gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
 
+    // gaugeBottom =
+    //   (safeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
+    //  gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
+    gaugeBottom = clockTop + clockSize - gaugeSize - gaugeTop;
     gauge1TopLeft = Offset(0, gaugeTop);
     gauge1BottomRight = Offset(gaugeSize, gaugeTop + gaugeSize);
     clockTopLeft = Offset(gaugeSize, clockTop);
     clockBottomRight = Offset(gaugeSize + clockSize, clockTop + clockSize);
+    print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
     print("GaugeTop = ${gaugeTop}");

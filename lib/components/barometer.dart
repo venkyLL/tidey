@@ -30,8 +30,8 @@ class _BarometerGaugeState extends State<BarometerGauge> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: ScreenSize.gaugeSize,
-        height: ScreenSize.gaugeSize,
+//        width: ScreenSize.gaugeSize,
+//        height: ScreenSize.gaugeSize,
         child: GaugeContainer(child: _buildRadialEaseExample()),
       ),
     );

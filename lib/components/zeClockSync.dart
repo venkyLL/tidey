@@ -1,7 +1,5 @@
 // Dart imports
 import 'dart:async';
-import 'dart:math' as math;
-import 'package:tidey/services/compass.dart';
 
 /// Flutter package imports
 import 'package:flutter/material.dart';
@@ -46,7 +44,7 @@ class _zeClockSyncState extends State<zeClockSync> {
     setState(() {
       _value = DateTime.now();
     });
-    print("Compass reading in zeSyncClock ${globalCompassDirection}");
+    // print("Compass reading in zeSyncClock ${globalCompassDirection}");
   }
 
   void _kickOffTideComputation(Timer timer) {

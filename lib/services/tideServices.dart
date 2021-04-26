@@ -155,7 +155,7 @@ class CurvePainter extends CustomPainter {
 
 void drawRing(centerX, centerY, inputRadius, myPaint, canvas) {
   double radius = inputRadius * 0.8; // 80% per sync clock setting
-  print("myRingRadius is $radius, $inputRadius");
+  // print("myRingRadius is $radius, $inputRadius");
   double width = 3;
   double radius1 = radius - width;
   var myPath = Path();
@@ -164,7 +164,7 @@ void drawRing(centerX, centerY, inputRadius, myPaint, canvas) {
   int i;
   num degToRad(num deg) => deg * (3.14159 / 180.0);
 
-  print("in draw ring with $centerX,$centerY,$radius, $myPaint, $canvas");
+  // print("in draw ring with $centerX,$centerY,$radius, $myPaint, $canvas");
 
   myPath.moveTo(sin(degToRad(startAngle)) * radius + centerX,
       centerY - cos(degToRad(startAngle)) * radius);

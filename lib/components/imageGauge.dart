@@ -83,8 +83,8 @@ class ImageGaugeNew extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: ScreenSize.gaugeSize,
-          height: ScreenSize.gaugeSize,
+//          width: ScreenSize.gaugeSize,
+//          height: ScreenSize.gaugeSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bezelColor,
@@ -96,8 +96,8 @@ class ImageGaugeNew extends StatelessWidget {
           left: bezelWidth,
           bottom: bezelWidth,
           child: Container(
-            width: ScreenSize.gaugeSize,
-            height: ScreenSize.gaugeSize,
+//            width: ScreenSize.gaugeSize,
+//            height: ScreenSize.gaugeSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: backgroundColor,
@@ -110,8 +110,8 @@ class ImageGaugeNew extends StatelessWidget {
           left: imageInset,
           bottom: imageInset,
           child: Container(
-            width: ScreenSize.gaugeSize,
-            height: ScreenSize.gaugeSize,
+//            width: ScreenSize.gaugeSize,
+//            height: ScreenSize.gaugeSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: innerLineColor,
@@ -124,8 +124,8 @@ class ImageGaugeNew extends StatelessWidget {
           bottom: imageInset + 2,
           left: imageInset + 2,
           child: Container(
-            width: ScreenSize.gaugeSize,
-            height: ScreenSize.gaugeSize,
+//            width: ScreenSize.gaugeSize,
+//            height: ScreenSize.gaugeSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
