@@ -59,6 +59,11 @@ class _settingsScreenState extends State<SettingsScreen> {
 //                ),
 //              ),
               MenuListTile(
+                title: "Set Location",
+                icon: Icons.location_city,
+                onTap: () => {},
+              ),
+              MenuListTile(
                 title: "View Current Weather on Web",
                 icon: Icons.cloud_circle_outlined,
                 onTap: () => {Navigator.pushNamed(context, WebWeather.id)},
