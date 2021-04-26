@@ -11,7 +11,6 @@ import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
-import 'package:tidey/screens/moonScreen.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:timer_builder/timer_builder.dart';
@@ -53,7 +52,7 @@ class TideScreen extends StatelessWidget {
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, MoonScreen.id);
+                    Navigator.pushNamed(context, TodayScreen.id);
                   },
                   child: Icon(Icons.chevron_right),
                 )),
@@ -64,7 +63,7 @@ class TideScreen extends StatelessWidget {
             Navigator.pushNamed(context, SettingsScreen.id);
           },
           onSwipeLeft: () {
-            Navigator.pushNamed(context, ForecastScreen.id);
+            Navigator.pushNamed(context, TodayScreen.id);
           },
           child: OrientationBuilder(
             builder: (context, orientation) {

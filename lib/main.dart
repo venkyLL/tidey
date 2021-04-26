@@ -4,6 +4,7 @@ import 'package:tidey/screens/moonScreen.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
+import 'package:tidey/screens/weatherToday.dart';
 
 void main() {
 //  double globalLatitude;
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       MoonScreen.id: (context) => MoonScreen(),
       ForecastScreen.id: (context) => ForecastScreen(),
       SettingsScreen.id: (context) => SettingsScreen(),
+      TodayScreen.id: (context) => TodayScreen(),
     });
   }
 }
