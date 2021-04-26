@@ -10,6 +10,7 @@ import 'package:tidey/const.dart';
 import 'package:tidey/services/tideServices.dart';
 
 import '../services/tideServices.dart';
+import 'package:tidey/components/hourlyBell.dart';
 
 /// Local imports
 //import 'sample_view.dart';
@@ -28,29 +29,37 @@ class _zeClockSyncState extends State<zeClockSync> {
 //  late Timer timer;
   Timer timer;
   Timer timer2;
+  Timer timer3;
+  HourlyBellRinger myHourlyBell = HourlyBellRinger();
   // Timer compassTimer;
 
   @override
   void initState() {
     super.initState();
+    myHourlyBell.init();
     // update the needle pointer in 1 second interval
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
     timer2 =
         Timer.periodic(const Duration(minutes: 30), _kickOffTideComputation);
+//    timer3 = Timer.periodic(const Duration(minutes: 1), _kickOffClockTesting);
     // compassTimer = Timer.periodic(const Duration(milliseconds: 1000), _kickOffCompass);
   }
 
   void _updateData(Timer timer) {
+    if (globalChimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();
     });
-    // print("Compass reading in zeSyncClock ${globalCompassDirection}");
   }
 
   void _kickOffTideComputation(Timer timer) {
     mySineWaveData msw = mySineWaveData();
     msw.computeTidesForPainting();
   }
+
+  // void _kickOffClockTesting(Timer timer) {
+  //   myHourlyBell.ringTheBellIfItIsTime();
+  // }
 
   // void _kickOffCompass(Timer timer) {
   //   print("Compass reading in zeSyncClock ${globalCompassDirection}");

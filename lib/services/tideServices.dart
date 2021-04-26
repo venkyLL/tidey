@@ -113,7 +113,7 @@ class CurvePainter extends CustomPainter {
     //   canvas.drawCircle(
     //       Offset(centerX, centerY), ScreenSize.clockSize / 2, paintClockFace);
 
-    print("screensize ${ScreenSize.clockSize}");
+    //print("screensize ${ScreenSize.clockSize}");
     double radius = centerY - 35.0 * _deviceScalingFactor;
     // this is the scaling factor for the tidal dial
     double _scaling_factor = _sineWaveScalingFactor * _deviceScalingFactor;

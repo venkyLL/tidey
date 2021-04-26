@@ -44,6 +44,19 @@ LocalWeather localWeather = LocalWeather();
 double globalCompassDirection;
 DateTime globalCompassValueLastReadAt;
 
+//global bell constants
+bool globalChimeOn = true;
+bool chimeDoNotDisturb = false;
+
+enum globalChime {
+  single,
+  hourly,
+  nautical,
+}
+globalChime globalChimeType = globalChime.hourly;
+
+bool globalImperialUnits = true;
+
 const hourFmt = {
   '0': '12:00',
   '300': "3AM",
@@ -346,6 +359,7 @@ enum BarometerChange {
   falling,
   flat,
 }
+
 getBarometerChange() {
   // var iconName = "WeatherIcons.day_cloudy";
   double current =
