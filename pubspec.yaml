@@ -41,6 +41,8 @@ dependencies:
   webview_flutter:
   flutter_sensor_compass: ^0.1.1
   weather_icons:
+  assets_audio_player: ^3.0.3+2
+
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +65,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/audio/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
