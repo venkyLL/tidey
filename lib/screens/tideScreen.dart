@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
+import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
@@ -58,16 +59,24 @@ class TideScreen extends StatelessWidget {
                 )),
           ],
         ),
-        body: OrientationBuilder(
-          builder: (context, orientation) {
-            //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
-//         //   }
-            if (orientation == Orientation.portrait) {
-              return PortraitMode();
-            } else {
-              return LandScapeMode();
-            }
+        body: SwipeGestureRecognizer(
+          onSwipeRight: () {
+            Navigator.pushNamed(context, SettingsScreen.id);
           },
+          onSwipeLeft: () {
+            Navigator.pushNamed(context, ForecastScreen.id);
+          },
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
+//         //   }
+              if (orientation == Orientation.portrait) {
+                return PortraitMode();
+              } else {
+                return LandScapeMode();
+              }
+            },
+          ),
         ));
   }
 }
@@ -126,50 +135,6 @@ class LandscapeView extends StatelessWidget {
             ].map(_wrapWithStuff).toList(),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class padPortraitMode extends StatefulWidget {
-  @override
-  _padPortraitModeState createState() => _padPortraitModeState();
-}
-
-class _padPortraitModeState extends State<padPortraitMode> {
-  HourlyDataSource hourlyDataSource;
-
-  @override
-  void initState() {
-    hourlyDataSource =
-        HourlyDataSource(hourlyData: weatherData.data.weather[0].hourly);
-    print("Number of hourly records is " +
-        weatherData.data.weather[0].hourly.length.toString());
-  }
-
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/background.JPG'),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.8), BlendMode.dstATop),
-        ),
-      ),
-      child: padPortraitView(),
-    );
-  }
-}
-
-class padPortraitView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TempGauge(),
-        zeClockSync(),
-        BarometerGauge(),
       ],
     );
   }
@@ -628,7 +593,7 @@ class PortraitMode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/new/background.JPG'),
+          image: AssetImage('assets/images/background.JPG'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -834,126 +799,3 @@ TableRow tideTableRow(
 }
 
 int counter = 0;
-
-class TimerWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
-        builder: (context) {
-      counter = (counter + 1) % 3;
-      // counter == 0 ? counter = 1 : counter = 0;
-      return Swapper();
-    });
-  }
-}
-
-//  Container buildTideTable() {
-//    return Container(
-//      child: Column(
-//        children: [
-//          Text("Tides", style: kTableTitleTextStyle),
-//          SizedBox(height: 10),
-//          Padding(
-//            padding: const EdgeInsets.only(left: 65, right: 65),
-//            child: Table(
-////            columnWidths: {
-////          0: FractionColumnWidth(.32),
-////          1: FractionColumnWidth(.33),
-////          2: FractionColumnWidth(.30),
-////          //   3: FractionColumnWidth(.05),
-////        } ,
-//                children: [
-//                  tideTableRow(
-//                      day: 'Today',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[0].tideType),
-//                  tideTableRow(
-//                      day: 'Today',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[1].tideType),
-//                  tideTableRow(
-//                      day: 'Tomorrow',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[2].tideType),
-//                  tideTableRow(
-//                      day: 'Tomorrow',
-//                      time: weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideTime,
-//                      level: (double.parse(weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideHeightMt)),
-//                      direction: weatherData
-//                          .data.weather[0].tides[0].tideData[3].tideType),
-//                ]),
-//            // mySubTile(kMySubTileData),
-//          ),
-//        ],
-//      ),
-//    );
-//
-//  }
-//
-//// 3.28084
-//  TableRow tideTableRow(
-//      {String day, String time, double level, String direction}) {
-//    print("Direction is $day,$time, $level,$direction");
-//    // static htInFeet = double.parse(level)/3.28084;
-//    final String pos = level > 2.0 ? "+" : "-";
-//    return TableRow(
-//      children: [
-//        Text(day, style: kTableTextStyle),
-//        Text(
-//          time,
-//          style: kTableTextStyle,
-//          textAlign: TextAlign.right,
-//        ),
-//        direction == "LOW"
-//            ? RichText(
-//                textAlign: TextAlign.right,
-//                text: TextSpan(
-//                  /*defining default style is optional */
-//                  children: <TextSpan>[
-//                    TextSpan(
-//                      text: ((level * 3.28084).toStringAsFixed(2)) + 'ft ',
-//                      style: kTableTextStyle,
-//                    ),
-//                    TextSpan(text: 'L', style: kTableTextStyleRed),
-//                  ],
-//                ),
-//              )
-//            : RichText(
-//                textAlign: TextAlign.right,
-//                text: TextSpan(
-//                  /*defining default style is optional */
-//                  children: <TextSpan>[
-//                    TextSpan(
-//                      text: ((level * 3.28084).toStringAsFixed(2)) + 'ft ',
-//                      style: kTableTextStyle,
-//                    ),
-//                    TextSpan(text: 'H', style: kTableTextStyleGreen),
-//                  ],
-//                ),
-//              ),
-//
-////        Text(
-////            //  (level > 0.0 ? "+" : "-") +
-////            ((level * 3.28084).toStringAsFixed(2)) + 'ft',
-////            style: kClockTextSmallStyle),
-////        direction == "LOW"
-////            ? Text("L", style: kTableTextStyleRed)
-////            : Text("H", style: kTableTextStyleGreen),
-//      ],
-//    );
-//  }
-//}

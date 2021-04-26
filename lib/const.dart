@@ -168,10 +168,12 @@ const marineWeatherService = weatherServerURL + "marine.ashx";
 const kTextAndIconColor = Color(0xFFFFFFFF);
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
+const kHeadingColor = Color(0xFFAAAAAA);
 const kPrimaryColor = Colors.indigo;
-const kTitleBoxColor = Color(0xFFBEC2CB);
+const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);
 const kTextSettingSize = 20.0;
-const kTextSettingsStyle = TextStyle(fontSize: kTextSettingSize);
+const kTextSettingsStyle =
+    TextStyle(fontSize: kTextSettingSize, color: Colors.white);
 const kIconSettingSize = 40.0;
 const kClockTextStyle = TextStyle(
   fontSize: 45,
@@ -185,18 +187,20 @@ const kTitleTextStyle = TextStyle(
 const kTableTitleTextStyle = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Colors.white,
 );
+const kTableTextStyle =
+    TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20);
 const kMoonTextStyle = TextStyle(
-  fontSize: 20,
+  fontSize: 18,
   color: Colors.white,
 );
 const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
   color: Colors.white,
 );
-const kTableTextStyle =
-    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
+//const kTableTextStyle =
+//    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
 const kTableTextStyleRed = TextStyle(
   fontSize: 20,
   color: Colors.red,
@@ -316,7 +320,8 @@ class ScreenSize {
   }
 }
 
-BoxedIcon getWeatherIconBox({String time, String code}) {
+BoxedIcon getWeatherIconBox(
+    {String time, String code, Color color = Colors.white}) {
   // var iconName = "WeatherIcons.day_cloudy";
   print("Time is" + time);
   switch (time) {
@@ -324,13 +329,13 @@ BoxedIcon getWeatherIconBox({String time, String code}) {
     case "300":
     case "2100":
       {
-        return BoxedIcon((weatherNightIconMap[code]), color: Colors.white);
+        return BoxedIcon((weatherNightIconMap[code]), color: color);
       }
       break;
 
     default:
       {
-        return BoxedIcon((weatherDayIconMap[code]), color: Colors.white);
+        return BoxedIcon((weatherDayIconMap[code]), color: color);
       }
       break;
   }
