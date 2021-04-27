@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/webWeather.dart';
+import 'package:tidey/services/localWeather.dart';
+import 'package:tidey/services/locationServices.dart';
+import 'package:tidey/services/marineWeather.dart';
+import 'package:tidey/services/tideServices.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'SettingsScreen';
@@ -12,7 +17,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _settingsScreenState extends State<SettingsScreen> {
   double _currentSliderValue = 10;
-  int _sliding = 0;
+  int _sliding = globalImperialUnits ? 0 : 1;
+  var selectedRingMode = "Single ring on the hour";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +81,7 @@ class _settingsScreenState extends State<SettingsScreen> {
               MenuListTile(
                 title: "Refresh Weather Data (network access required)",
                 icon: Icons.refresh,
-                onTap: () => {},
+                onTap: () => {getMyLocation()},
               ),
               Divider(
                 height: 10,
@@ -107,6 +113,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                     onValueChanged: (newValue) {
                       setState(() {
                         _sliding = newValue;
+                        _sliding == 0
+                            ? globalImperialUnits = true
+                            : globalImperialUnits = false;
                       });
                     }),
               ),
@@ -115,9 +124,43 @@ class _settingsScreenState extends State<SettingsScreen> {
                 thickness: 5,
               ),
               MenuListTileWithSwitch(
-                  title: "Enable Hourly Chime",
-                  value: true,
-                  icon: Icons.notifications),
+                  title: "Enable Ship Bell",
+                  value: globalChimeOn,
+                  icon: Icons.notifications,
+                  onTap: () {
+                    setState(() {
+                      globalChimeOn = !globalChimeOn;
+                    });
+                  }),
+              MenuListTileWithSwitch(
+                  title: "Disable Bell at Night",
+                  value: chimeDoNotDisturb,
+                  icon: Icons.notifications_paused,
+                  onTap: () {
+                    setState(() {
+                      chimeDoNotDisturb = !chimeDoNotDisturb;
+                    });
+                  }),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTile(
+                title: "Select Bell Ring Schedule",
+                icon: Icons.notifications_active,
+                onTap: () => {
+                  showMaterialScrollPicker(
+                    headerColor: kAppBlueColor,
+                    maxLongSide: 400,
+                    context: context,
+                    title: "Select Bell Ring Schedule",
+                    items: ringOptions,
+                    selectedValue: selectedRingMode,
+                    onChanged: (value) =>
+                        setState(() => selectedRingMode = value),
+                  )
+                },
+              ),
               Container(
                 height: 50,
                 width: double.infinity,
@@ -272,6 +315,48 @@ class _settingsScreenState extends State<SettingsScreen> {
             child: Text('Done'))
       ],
     );
+  }
+
+  List<String> ringOptions = <String>[
+    'Single ring on the hour',
+    'Multiple ring based on time',
+    'Traditional ship bell watch code',
+  ];
+
+  int _selectedValue = 0;
+  void _showPicker(BuildContext ctx) {
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+              width: 300,
+              height: 250,
+              child: CupertinoPicker(
+                backgroundColor: Colors.white,
+                itemExtent: 30,
+                scrollController: FixedExtentScrollController(initialItem: 1),
+                children: [
+                  Text('Single ring on the hour'),
+                  Text('Multiple hourly ring based on time '),
+                  Text('Traditional Ship Bell Code'),
+                ],
+                onSelectedItemChanged: (value) {
+                  setState(() {
+                    _selectedValue = value;
+                  });
+                },
+              ),
+            ));
+  }
+
+  void getMyLocation() async {
+    Location location = Location();
+    await location.getCurrentLocation();
+    WeatherService weatherService = WeatherService();
+    await weatherService.getMarineData();
+    LocalWeatherService localWeatherService = LocalWeatherService();
+    await localWeatherService.getLocalWeatherData();
+    mySineWaveData msw = mySineWaveData();
+    await msw.computeTidesForPainting();
   }
 }
 

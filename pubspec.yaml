@@ -41,6 +41,7 @@ dependencies:
   webview_flutter:
   package_info: ^2.0.0
   swipe_gesture_recognizer:
+  flutter_material_pickers:
 
 
   flutter_sensor_compass: ^0.1.1
