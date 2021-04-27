@@ -2,6 +2,7 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
@@ -90,6 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await location.getCurrentLocation();
     WeatherService weatherService = WeatherService();
     await weatherService.getMarineData();
+
     packageInfo = await PackageInfo.fromPlatform();
 
     print(packageInfo.appName);
@@ -99,6 +101,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
+
+    marqueeString = getMarqueeString();
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
     Navigator.pushReplacementNamed(context, TideScreen.id);
@@ -126,4 +130,162 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
+}
+
+String spacer = " \u2022\u2022\u2022\u2022 ";
+getMarqueeString() {
+  // String spacer = "\u2015\u2015\u2015\u2015";
+
+  String firstHt = (double.parse(
+              weatherData.data.weather[0].tides[0].tideData[0].tideHeightMt) /
+          3.28084)
+      .toStringAsFixed(2);
+  String firstDate = DateFormat('hh:mma EE').format(DateTime.parse(
+      weatherData.data.weather[0].tides[0].tideData[0].tideDateTime));
+  String secondHt = (double.parse(
+              weatherData.data.weather[0].tides[0].tideData[1].tideHeightMt) /
+          3.28084)
+      .toStringAsFixed(2);
+  String secondDate = DateFormat('hh:mma EE').format(DateTime.parse(
+      weatherData.data.weather[0].tides[0].tideData[1].tideDateTime));
+  String thirdHt = (double.parse(
+              weatherData.data.weather[0].tides[0].tideData[2].tideHeightMt) /
+          3.28084)
+      .toStringAsFixed(2);
+  String thirdDate = DateFormat('hh:mma EE').format(DateTime.parse(
+      weatherData.data.weather[0].tides[0].tideData[2].tideDateTime));
+  String fourthHt = (double.parse(
+              weatherData.data.weather[0].tides[0].tideData[3].tideHeightMt) /
+          3.28084)
+      .toStringAsFixed(2);
+  String fourthDate = DateFormat('hh:mma EE').format(DateTime.parse(
+      weatherData.data.weather[0].tides[0].tideData[3].tideDateTime));
+
+//  String dday = DateFormat('EE').format(localWeather.data.weather[0].date);
+//  String todayWeather = dday +
+//      "Today's Weather:    " +
+//      localWeather.data.weather[0].hourly[0].weatherDesc[0].value +
+//      spacer +
+//      "Lo " +
+//      localWeather.data.weather[0].mintempF +
+//      " \u2109" +
+//      spacer +
+//      "High " +
+//      weatherData.data.weather[0].maxtempF +
+//      " \u2109" +
+//      spacer +
+//      "Humidity " +
+//      localWeather.data.weather[0].hourly[0].humidity +
+//      "%" +
+//      spacer +
+//      "Barometric Pressure " +
+//      localWeather.data.weather[0].hourly[0].pressureInches +
+//      spacer +
+//      "Chance of Rain " +
+//      localWeather.data.weather[0].hourly[0].chanceofrain +
+//      "%" +
+//      spacer +
+//      "Cloud Cover " +
+//      localWeather.data.weather[0].hourly[0].cloudcover +
+//      "%" +
+//      spacer +
+//      "Wind Speed " +
+//      localWeather.data.weather[0].hourly[0].windspeedMiles +
+//      "(mph) gusting to " +
+//      localWeather.data.weather[0].hourly[0].windGustMiles +
+//      spacer +
+//      "Visibility " +
+//      localWeather.data.weather[0].hourly[0].visibilityMiles +
+//      "miles" +
+//      spacer +
+//      "Air Quality  " +
+//      airQuality[localWeather.data.weather[0].hourly[0].airQuality.usEpaIndex] +
+//      spacer +
+//      "           ";
+
+  String tides = "Tides: First " +
+      weatherData.data.weather[0].tides[0].tideData[0].tideType.toLowerCase() +
+      " tide " +
+      firstHt +
+      "ft@ " +
+      firstDate +
+      spacer +
+      "First " +
+      weatherData.data.weather[0].tides[0].tideData[1].tideType.toLowerCase() +
+      " tide " +
+      secondHt +
+      "ft@ " +
+      secondDate +
+      spacer +
+      "Second " +
+      weatherData.data.weather[0].tides[0].tideData[2].tideType.toLowerCase() +
+      " tide " +
+      thirdHt +
+      "ft@ " +
+      thirdDate +
+      spacer +
+      "Second " +
+      weatherData.data.weather[0].tides[0].tideData[3].tideType.toLowerCase() +
+      " tide " +
+      fourthHt +
+      "ft@ " +
+      fourthDate +
+      "             ";
+
+  //DateFormat('EE').format(localWeather.data.weather[0].date)
+  //String day2 = getWeatherLine("Tuesday", 1);
+  String day1 = getWeatherLine("Today\'s", 0);
+  String day2 = getWeatherLine(
+      DateFormat('EEEE').format(localWeather.data.weather[1].date), 0);
+  String day3 = getWeatherLine(
+      DateFormat('EEEE').format(localWeather.data.weather[2].date), 0);
+  String day4 = getWeatherLine(
+      DateFormat('EEEE').format(localWeather.data.weather[3].date), 0);
+  return tides + day1 + day2 + day3 + day4;
+}
+
+getWeatherLine(String stringDay, int day) {
+  return ("     " +
+      stringDay +
+      " Weather:    " +
+      localWeather.data.weather[day].hourly[0].weatherDesc[0].value +
+      spacer +
+      "Lo " +
+      localWeather.data.weather[day].mintempF +
+      " \u2109" +
+      spacer +
+      "High " +
+      weatherData.data.weather[day].maxtempF +
+      " \u2109" +
+      spacer +
+      "Humidity " +
+      localWeather.data.weather[day].hourly[0].humidity +
+      "%" +
+      spacer +
+      "Barometric Pressure " +
+      localWeather.data.weather[day].hourly[0].pressureInches +
+      "in" +
+      spacer +
+      "Chance of Rain " +
+      localWeather.data.weather[day].hourly[0].chanceofrain +
+      "%" +
+      spacer +
+      "Cloud Cover " +
+      localWeather.data.weather[day].hourly[0].cloudcover +
+      "%" +
+      spacer +
+      "Wind Speed " +
+      localWeather.data.weather[day].hourly[0].windspeedMiles +
+      "(mph) gusting to " +
+      localWeather.data.weather[day].hourly[0].windGustMiles +
+      spacer +
+      "Visibility " +
+      localWeather.data.weather[day].hourly[0].visibilityMiles +
+      " miles" +
+      spacer +
+      "Air Quality  " +
+      airQuality[
+          localWeather.data.weather[day].hourly[0].airQuality.usEpaIndex] +
+      spacer +
+      "           ");
 }

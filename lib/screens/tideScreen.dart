@@ -129,8 +129,8 @@ class LandscapeView extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.only(top: 50.0),
             children: [
-              // _buildMarquee(),
-              _buildComplexMarquee(),
+              buildMarquee(),
+              // _buildComplexMarquee(),
             ].map(_wrapWithStuff).toList(),
           ),
         ),
@@ -512,9 +512,28 @@ class PortraitTimerWidget extends StatelessWidget {
   }
 }
 
-Widget _buildMarquee() {
+Widget buildMarquee() {
   return Marquee(
-    text: 'There once was a boy who told this story about a boy: "',
+    text: marqueeString,
+    style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 24,
+        //    backgroundColor: Colors.white30,
+        color: Colors.white),
+    scrollAxis: Axis.horizontal,
+    velocity: 100.0,
+    showFadingOnlyWhenScrolling: true,
+    fadingEdgeStartFraction: 0.1,
+    fadingEdgeEndFraction: 0.1,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    pauseAfterRound: Duration(seconds: 1),
+    blankSpace: 20.0,
+    startPadding: 10.0,
+    accelerationDuration: Duration(seconds: 1),
+    accelerationCurve: Curves.linear,
+    decelerationDuration: Duration(milliseconds: 500),
+    decelerationCurve: Curves.easeOut,
+    // blankSpace: 20.0,
   );
 }
 

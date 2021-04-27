@@ -39,7 +39,7 @@ int globalNumberOfDaysOfWeatherData = 1;
 
 MarineWeather weatherData = MarineWeather();
 LocalWeather localWeather = LocalWeather();
-
+String marqueeString;
 //gauge constants
 double globalCompassDirection;
 DateTime globalCompassValueLastReadAt;
@@ -103,7 +103,16 @@ final globalChimeValues = EnumValues({
 
 //final String testString = globalChimeValues.mapToString[GloabalChime.single];
 //final GloabalChime testEnum =
-//    globalChimeValues.mapToEnum["Single ring on the hour"];
+//
+
+const airQuality = {
+  "1": "Good",
+  "2": "Moderate",
+  "3": "Unhealthy",
+  "4": "Unhealthy",
+  "5": "Very Unhealthy",
+  "6": "Hazardous"
+};
 
 const hourFmt = {
   '0': '12:00',
