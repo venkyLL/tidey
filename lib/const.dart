@@ -183,6 +183,7 @@ const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 const kHeadingColor = Color(0xFFAAAAAA);
 const kPrimaryColor = Colors.indigo;
+const kAppBlueColor = Color(0xFF3366CC);
 const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);
 const kTextSettingSize = 20.0;
 const kTextSettingsStyle =
@@ -487,3 +488,17 @@ class GaugeContainer extends StatelessWidget {
     );
   }
 }
+
+//void refreshWeatherData () async {
+//Location location = Location();
+//await location.getCurrentLocation();
+//WeatherService weatherService = WeatherService();
+//await weatherService.getMarineData();
+//LocalWeatherService localWeatherService = LocalWeatherService();
+//await localWeatherService.getLocalWeatherData();
+//mySineWaveData msw = mySineWaveData();
+//await msw.computeTidesForPainting();
+//Navigator.pushReplacementNamed(context, TideScreen.id);
+//MyCompass theCompass = MyCompass();
+//theCompass.init();
+//}
