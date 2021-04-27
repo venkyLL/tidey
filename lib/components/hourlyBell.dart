@@ -5,6 +5,7 @@ import 'package:tidey/const.dart';
 class HourlyBellRinger {
   DateTime bellLastRungDateTime;
   int myHour;
+  int myMinutes;
   // int test_bell_has_rung_counter = 12;
 
   init() {
@@ -14,20 +15,31 @@ class HourlyBellRinger {
   void ringTheBellIfItIsTime() {
 //    int test = DateTime.now().getMinutes;
 //    print("arrived in ringTheBellIfItIsTime $test");
-    if (DateTime.now().getMinutes == 0) {
-      if (bellLastRungDateTime.addMinutes(1).isPast) {
-        bellLastRungDateTime = DateTime.now();
-        myHour = DateTime.now().getHours;
-        if (myHour > 12) myHour = myHour - 12;
-        if (myHour == 0) myHour = 12;
-        ringMyBell(myHour);
-      }
-    } else {
-//      print("not ringing the bell @ ${DateTime.now()}");
-      //   test_bell_has_rung_counter++;
-      //   if (test_bell_has_rung_counter < 10)
-      //     AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
-    }
+    if (globalChimeType == globalChime.hourly) {
+      if (DateTime.now().getMinutes == 0) {
+        if (bellLastRungDateTime.addMinutes(1).isPast) {
+          bellLastRungDateTime = DateTime.now();
+          myHour = DateTime.now().getHours;
+          if (myHour > 12) myHour = myHour - 12;
+          if (myHour == 0) myHour = 12;
+          ringMyBell(myHour);
+        } //has the bell already rung for this hour
+      } // are we at the top of the hour
+    } // global chime hourly
+
+    if (globalChimeType == globalChime.nautical) {
+      myHour = DateTime.now().getHours;
+      myMinutes = DateTime.now().getMinutes;
+      if ((myMinutes == 0) || (myMinutes == 30)) {
+        if (bellLastRungDateTime.addMinutes(1).isPast) {
+          bellLastRungDateTime = DateTime.now();
+          if (myHour > 12) myHour = myHour - 12;
+          if (myHour == 0) myHour = 12;
+          myMinutes = DateTime.now().getMinutes;
+          ringMyNauticalBell(myHour, myMinutes);
+        } //has the bell already rung for this hour
+      } // are we at the top of the hour
+    } // global chime hourly
   }
 
   void ringMyBell(myHour) {
@@ -80,6 +92,117 @@ class HourlyBellRinger {
         break;
       case globalChime.nautical:
         AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
+        break;
+      default:
+        AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
+        break;
+    }
+  }
+
+  void ringMyNauticalBell(myHour, myMinutes) {
+    switch (globalChimeType) {
+      case globalChime.nautical:
+        switch (myHour) {
+          case 1:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell2.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell3.mp3'));
+            break;
+          case 2:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell4.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell5.mp3'));
+            break;
+          case 3:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell6.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell7.mp3'));
+            break;
+          case 4:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell8.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell1.mp3'));
+            break;
+          case 5:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell2.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell3.mp3'));
+            break;
+          case 6:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell4.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell5.mp3'));
+            break;
+          case 7:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell6.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell7.mp3'));
+            break;
+          case 8:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell8.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell1.mp3'));
+            break;
+          case 9:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell2.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell3.mp3'));
+            break;
+          case 10:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell4.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell5.mp3'));
+            break;
+          case 11:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell6.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell7.mp3'));
+            break;
+          case 12:
+            if (myMinutes == 0)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell8.mp3'));
+            if (myMinutes == 30)
+              AssetsAudioPlayer.playAndForget(
+                  Audio('assets/audio/navBell1.mp3'));
+            break;
+          default:
+            AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
+            break;
+        } // switch my hour
         break;
       default:
         AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));

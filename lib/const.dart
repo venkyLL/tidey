@@ -53,7 +53,7 @@ enum globalChime {
   hourly,
   nautical,
 }
-globalChime globalChimeType = globalChime.hourly;
+globalChime globalChimeType = globalChime.nautical;
 
 bool globalImperialUnits = true;
 
