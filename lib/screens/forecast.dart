@@ -24,7 +24,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
         WeatherDataSource(weatherData: weatherData.data.weather);
     print("Number of hourly records is " +
         weatherDataSource._weatherData.length.toString());
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: userSettings.transitionTime), () {
       Navigator.of(context).pop();
     });
   }

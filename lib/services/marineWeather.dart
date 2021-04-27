@@ -437,6 +437,9 @@ class EnumValues<T> {
   }
 }
 
+final String ted = tideTypeValues.reverseMap[TideType.LOW];
+final TideType tedT = tideTypeValues.map["Low"];
+
 //  http://api.worldweatheronline.com/premium/v1/marine.ashx?key=51503debb4b34526a33181926211204&q=26.7747,-77.3296&format=json&tide=yes&tp=3
 //const weatherServerURL
 

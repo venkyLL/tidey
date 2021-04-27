@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/webWeather.dart';
@@ -16,9 +17,21 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _settingsScreenState extends State<SettingsScreen> {
-  double _currentSliderValue = 10;
-  int _sliding = globalImperialUnits ? 0 : 1;
-  var selectedRingMode = "Single ring on the hour";
+  double _currentSliderValue = userSettings.transitionTime.toDouble();
+  int _sliding = userSettings.imperialUnits ? 0 : 1;
+  String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
+  SharedPreferences prefs;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    openPerfs();
+  }
+
+  void openPerfs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +59,7 @@ class _settingsScreenState extends State<SettingsScreen> {
           onSwipeLeft: () {
             Navigator.of(context).pop();
           },
-          child: Column(
+          child: ListView(
             children: [
 //              Container(
 //                height: 70,
@@ -66,7 +79,7 @@ class _settingsScreenState extends State<SettingsScreen> {
 //              ),
               MenuListTile(
                 title: "Set Location",
-                icon: Icons.location_city,
+                icon: Icons.location_on,
                 onTap: () => {},
               ),
               MenuListTile(
@@ -114,8 +127,10 @@ class _settingsScreenState extends State<SettingsScreen> {
                       setState(() {
                         _sliding = newValue;
                         _sliding == 0
-                            ? globalImperialUnits = true
-                            : globalImperialUnits = false;
+                            ? userSettings.imperialUnits = true
+                            : userSettings.imperialUnits = false;
+                        prefs.setBool(
+                            'imperialUnits', userSettings.imperialUnits);
                       });
                     }),
               ),
@@ -124,21 +139,32 @@ class _settingsScreenState extends State<SettingsScreen> {
                 thickness: 5,
               ),
               MenuListTileWithSwitch(
-                  title: "Enable Ship Bell",
-                  value: globalChimeOn,
+                  title: (userSettings.chimeOn)
+                      ? "Ship Bell (Enabled)"
+                      : "Ship Bell (Disabled)",
+                  value: userSettings.chimeOn,
                   icon: Icons.notifications,
                   onTap: () {
                     setState(() {
-                      globalChimeOn = !globalChimeOn;
+                      userSettings.chimeOn = !userSettings.chimeOn;
+                      print("Selected " + userSettings.chimeOn.toString());
+                      prefs.setBool('chimeOn', userSettings.chimeOn);
                     });
                   }),
               MenuListTileWithSwitch(
-                  title: "Disable Bell at Night",
-                  value: chimeDoNotDisturb,
+                  title: (userSettings.chimeDoNotDisturb)
+                      ? "Sleep Mode (Enabled)"
+                      : "Sleep at Night",
+                  value: userSettings.chimeDoNotDisturb,
                   icon: Icons.notifications_paused,
                   onTap: () {
                     setState(() {
-                      chimeDoNotDisturb = !chimeDoNotDisturb;
+                      userSettings.chimeDoNotDisturb =
+                          !userSettings.chimeDoNotDisturb;
+                      print("Selected " +
+                          userSettings.chimeDoNotDisturb.toString());
+                      prefs.setBool(
+                          'doNotDisturb', userSettings.chimeDoNotDisturb);
                     });
                   }),
               Divider(
@@ -146,55 +172,56 @@ class _settingsScreenState extends State<SettingsScreen> {
                 thickness: 5,
               ),
               MenuListTile(
-                title: "Select Bell Ring Schedule",
+                title: "Bell Ring Schedule (${selectedRingMode})",
                 icon: Icons.notifications_active,
                 onTap: () => {
                   showMaterialScrollPicker(
-                    headerColor: kAppBlueColor,
-                    maxLongSide: 400,
-                    context: context,
-                    title: "Select Bell Ring Schedule",
-                    items: ringOptions,
-                    selectedValue: selectedRingMode,
-                    onChanged: (value) =>
-                        setState(() => selectedRingMode = value),
-                  )
+                      headerColor: kAppBlueColor,
+                      maxLongSide: 400,
+                      context: context,
+                      title: "Select Bell Ring Schedule",
+                      items: ringOptions,
+                      selectedValue: selectedRingMode,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRingMode = value;
+                        });
+                        userSettings.chimeSelected =
+                            chimeTypeStringToEnum[value];
+                        print("Selected " +
+                            userSettings.chimeSelected.toString());
+                        prefs.setString('chimeSelected', value);
+                      })
                 },
               ),
-              Container(
-                height: 50,
-                width: double.infinity,
-                color: kHeadingColor,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 8),
-                    child: Text("Gauge Display Duration",
-                        style: TextStyle(
-                          //   backgroundColor: Colors.grey,
-                          fontSize: 20,
-                        )),
-                  ),
-                ),
-              ),
+//
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
                   children: [
-                    // Icon(Icons.timer, size: 40),
+                    Icon(
+                      Icons.timer,
+                      size: kIconSettingSize,
+                      color: Colors.white,
+                    ),
                     Text(
-                      _currentSliderValue.toString(),
+                      " Seconds between Screens (" +
+                          _currentSliderValue.round().toString() +
+                          ")     5",
                       style: kTextSettingsStyle,
                     ),
                     Slider(
                       value: _currentSliderValue,
                       min: 5,
                       max: 60,
-                      divisions: 5,
+                      divisions: 55,
                       label: _currentSliderValue.round().toString(),
                       onChanged: (double value) {
                         setState(() {
                           _currentSliderValue = value;
+                          userSettings.transitionTime = value.round();
+                          prefs.setInt(
+                              'transitionTime', userSettings.transitionTime);
                         });
                       },
                     ),
@@ -318,9 +345,9 @@ class _settingsScreenState extends State<SettingsScreen> {
   }
 
   List<String> ringOptions = <String>[
-    'Single ring on the hour',
-    'Multiple ring based on time',
-    'Traditional ship bell watch code',
+    chimeTypeEnumtoString[ChimeType.single],
+    chimeTypeEnumtoString[ChimeType.hourly],
+    chimeTypeEnumtoString[ChimeType.nautical],
   ];
 
   int _selectedValue = 0;

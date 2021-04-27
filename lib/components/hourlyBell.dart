@@ -15,7 +15,7 @@ class HourlyBellRinger {
   void ringTheBellIfItIsTime() {
 //    int test = DateTime.now().getMinutes;
 //    print("arrived in ringTheBellIfItIsTime $test");
-    if (globalChimeType == globalChime.hourly) {
+    if (userSettings.chimeSelected == ChimeType.hourly) {
       if (DateTime.now().getMinutes == 0) {
         if (bellLastRungDateTime.addMinutes(1).isPast) {
           bellLastRungDateTime = DateTime.now();
@@ -27,7 +27,7 @@ class HourlyBellRinger {
       } // are we at the top of the hour
     } // global chime hourly
 
-    if (globalChimeType == globalChime.nautical) {
+    if (userSettings.chimeSelected == ChimeType.nautical) {
       myHour = DateTime.now().getHours;
       myMinutes = DateTime.now().getMinutes;
       if ((myMinutes == 0) || (myMinutes == 30)) {
@@ -43,8 +43,8 @@ class HourlyBellRinger {
   }
 
   void ringMyBell(myHour) {
-    switch (globalChimeType) {
-      case globalChime.hourly:
+    switch (userSettings.chimeSelected) {
+      case ChimeType.hourly:
         switch (myHour) {
           case 1:
             AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
@@ -87,10 +87,10 @@ class HourlyBellRinger {
             break;
         } // switch my hour
         break;
-      case globalChime.single:
+      case ChimeType.single:
         AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
         break;
-      case globalChime.nautical:
+      case ChimeType.nautical:
         AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell1.mp3'));
         break;
       default:
@@ -100,8 +100,8 @@ class HourlyBellRinger {
   }
 
   void ringMyNauticalBell(myHour, myMinutes) {
-    switch (globalChimeType) {
-      case globalChime.nautical:
+    switch (userSettings.chimeSelected) {
+      case ChimeType.nautical:
         switch (myHour) {
           case 1:
             if (myMinutes == 0)

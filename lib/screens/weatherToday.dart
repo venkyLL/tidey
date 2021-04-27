@@ -24,7 +24,7 @@ class _TodayScreenState extends State<TodayScreen> {
         HourlyDataSource(hourlyData: weatherData.data.weather[0].hourly);
     print("Number of hourly records is " +
         weatherData.data.weather[0].hourly.length.toString());
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: userSettings.transitionTime), () {
       // 5s over, navigate to a new page
       Navigator.pushReplacementNamed(context, ForecastScreen.id);
     });

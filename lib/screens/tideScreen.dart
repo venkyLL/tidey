@@ -489,7 +489,7 @@ class PortraitSwapper extends StatelessWidget {
 class LandscapeTimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
+    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
         builder: (context) {
       counter = (counter + 1) % 6;
       // counter = 4;
@@ -502,7 +502,7 @@ class LandscapeTimerWidget extends StatelessWidget {
 class PortraitTimerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: secondsBetweenTransition),
+    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
         builder: (context) {
       counter = (counter + 1) % 6;
       // counter = 4;

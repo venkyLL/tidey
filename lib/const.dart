@@ -11,7 +11,7 @@ String globalLongitude;
 
 // Print debugger
 bool globalMarineWeatherPrintDone = false;
-int secondsBetweenTransition = 5;
+// int secondsBetweenTransition = 5;
 
 const metersToFeet = 3.28084;
 PackageInfo packageInfo = PackageInfo();
@@ -44,18 +44,66 @@ LocalWeather localWeather = LocalWeather();
 double globalCompassDirection;
 DateTime globalCompassValueLastReadAt;
 
-//global bell constants
-bool globalChimeOn = true;
-bool chimeDoNotDisturb = false;
+UserSettings userSettings = UserSettings();
+const kDefaultTransitionTime = 10;
 
-enum globalChime {
+class UserSettings {
+  bool chimeOn;
+  bool chimeDoNotDisturb;
+  ChimeType chimeSelected;
+//  String _chimeSelectedString;
+  bool imperialUnits;
+  int transitionTime;
+
+//  void set chimeSelected(ChimeType chimeSelected) {
+//    _chimeSelected = chimeSelected;
+//    chimeSelectedString = chimeTypeEnumtoString[chimeSelected];
+//  }
+//
+//  ChimeType get chimeSelected {
+//    return _chimeSelected;
+//  }
+//
+//  void set chimeSelectedString(String chimeSelectedString) {
+//    _chimeSelectedString = chimeSelectedString;
+//    chimeSelected = chimeTypeStringToEnum[chimeSelected];
+//  }
+//
+//  String get chimeSelectedString {
+//    return _chimeSelectedString;
+//  }
+}
+
+//global bell constants
+//bool globalChimeOn;
+//bool chimeDoNotDisturb;
+//ChimeType globalChimeSelected = ChimeType.single;
+
+enum ChimeType {
   single,
   hourly,
   nautical,
 }
-globalChime globalChimeType = globalChime.nautical;
+final chimeTypeStringToEnum = {
+  "Single ring on the hour": ChimeType.single,
+  "Multiple ring based on time": ChimeType.hourly,
+  "Traditional ship bell watch code": ChimeType.nautical
+};
+final chimeTypeEnumtoString = {
+  ChimeType.single: "Single ring on the hour",
+  ChimeType.hourly: "Multiple ring based on time",
+  ChimeType.nautical: "Traditional ship bell watch code"
+};
 
-bool globalImperialUnits = true;
+final globalChimeValues = EnumValues({
+  "Single ring on the hour": ChimeType.single,
+  "Multiple ring based on time": ChimeType.hourly,
+  "Traditional ship bell watch code": ChimeType.nautical
+});
+
+//final String testString = globalChimeValues.mapToString[GloabalChime.single];
+//final GloabalChime testEnum =
+//    globalChimeValues.mapToEnum["Single ring on the hour"];
 
 const hourFmt = {
   '0': '12:00',
@@ -502,3 +550,54 @@ class GaugeContainer extends StatelessWidget {
 //MyCompass theCompass = MyCompass();
 //theCompass.init();
 //}
+
+//class EnumValues<T> {
+//  /*
+//  How to define Enums to allow easy mapping back and forth between text strings
+//
+//  enum GloabalChime {
+//    single,
+//    hourly,
+//    nautical,
+//  }
+//
+//  final globalChimeValues = EnumValues({
+//    "Single ring on the hour": GloabalChime.single,
+//    "Multiple ring based on time": GloabalChime.hourly,
+//    "Traditional ship bell watch code": GloabalChime.nautical
+//  });
+//
+//Creating a String from enum :
+//final String testString = globalChimeValues.mapToString[GloabalChime.single];
+//
+//Creating an Enum from String
+//final GloabalChime testEnum =
+//    globalChimeValues.mapToEnum["Single ring on the hour"];
+//
+//  */
+//
+//  Map<String, T> mapToEnum;
+//  Map<T, String> mapToString;
+//
+//  EnumValues(this.mapToEnum);
+//
+//  Map<T, String> get reverse {
+//    if (mapToString == null) {
+//      mapToString = mapToEnum.map((k, v) => new MapEntry(v, k));
+//    }
+//    return mapToString;
+//  }
+//}
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap;
+  }
+}
