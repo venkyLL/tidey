@@ -171,13 +171,13 @@ class _LandscapeViewState extends State<LandscapeView> {
         scrollAxis: Axis.horizontal,
         crossAxisAlignment: CrossAxisAlignment.start,
         blankSpace: 20.0,
-        velocity: 200.0,
+        velocity: 100.0,
         pauseAfterRound: Duration(seconds: 1),
         showFadingOnlyWhenScrolling: true,
         fadingEdgeStartFraction: 0.1,
         fadingEdgeEndFraction: 0.1,
         numberOfRounds: 1,
-      //  startPadding: 10.0,
+        //  startPadding: 10.0,
         accelerationDuration: Duration(seconds: 1),
         accelerationCurve: Curves.linear,
         decelerationDuration: Duration(milliseconds: 500),
@@ -609,76 +609,10 @@ class PortraitTimerWidget extends StatelessWidget {
   }
 }
 
-class displayMarquee extends StatefulWidget {
-  @override
-  _displayMarqueeState createState() => _displayMarqueeState();
-}
-
-class _displayMarqueeState extends State<displayMarquee> {
-  @override
-  Widget build(BuildContext context) {
-    return Marquee(
-        text:
-            "ABC DEF GHI JKL MNO P QRS TUV now I have said my ABCs tell me what youthink of me",
-        // marqueeString,
-        style: kMarqueeTextstyle,
-        scrollAxis: Axis.horizontal,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        blankSpace: 20.0,
-        velocity: 300.0,
-        pauseAfterRound: Duration(seconds: 1),
-        showFadingOnlyWhenScrolling: true,
-        fadingEdgeStartFraction: 0.1,
-        fadingEdgeEndFraction: 0.1,
-        numberOfRounds: 1,
-        startPadding: 10.0,
-        accelerationDuration: Duration(seconds: 1),
-        accelerationCurve: Curves.linear,
-        decelerationDuration: Duration(milliseconds: 500),
-        decelerationCurve: Curves.easeOut,
-        onDone: () {
-          print('Marquee is Done');
-          setState(() {
-            marqueeCompleted = true;
-            marqueeColor = Colors.blue;
-          });
-        });
-  }
-}
-
-Widget _buildComplexMarquee() {
-  return Marquee(
-    text: localWeather.data.nearestArea[0].areaName[0].value +
-        " " +
-        localWeather.data.nearestArea[0].country[0].value +
-        ' The weather outside is frightful. Let it snow, Let it Snow, Let it Snow',
-
-    style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 40,
-        //    backgroundColor: Colors.white30,
-        color: Colors.white), // Color(0xFFBEC2CB)),
-    scrollAxis: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    blankSpace: 20.0,
-    velocity: 100.0,
-    pauseAfterRound: Duration(seconds: 1),
-    showFadingOnlyWhenScrolling: true,
-    fadingEdgeStartFraction: 0.1,
-    fadingEdgeEndFraction: 0.1,
-    // numberOfRounds: 3,
-    startPadding: 10.0,
-    accelerationDuration: Duration(seconds: 1),
-    accelerationCurve: Curves.linear,
-    decelerationDuration: Duration(milliseconds: 500),
-    decelerationCurve: Curves.easeOut,
-  );
-}
-
 Widget _wrapWithStuff(Widget child) {
   return Padding(
     padding: EdgeInsets.all(16.0),
-    child: Container(height: 120.0, color: Colors.transparent, child: child),
+    child: Container(height: 120.0, color: Colors.white10, child: child),
   );
 }
 

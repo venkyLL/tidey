@@ -253,11 +253,11 @@ getWeatherLine(String stringDay, int day) {
       spacer +
       "Lo " +
       localWeather.data.weather[day].mintempF +
-      " \u2109" +
+      "\u00B0F" + //\u2109
       spacer +
       "High " +
       weatherData.data.weather[day].maxtempF +
-      " \u2109" +
+      "\u00B0F" +
       spacer +
       "Humidity " +
       localWeather.data.weather[day].hourly[0].humidity +
