@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
@@ -246,6 +247,22 @@ const kTextSettingSize = 20.0;
 const kTextSettingsStyle =
     TextStyle(fontSize: kTextSettingSize, color: Colors.white);
 const kIconSettingSize = 40.0;
+
+var kMarqueeTextstyle = GoogleFonts.notoSans(
+  // color: Color(0xFF00022E),
+  color: Colors.white,
+  // backgroundColor: Colors.white10,
+  fontSize: 24,
+//    fontWeight: FontWeight.bold
+);
+
+//TextStyle(
+//    fontWeight: FontWeight.bold,
+//    fontSize: 24,
+//    GoogleFonts.,
+//    backgroundColor: Colors.white10,
+//    color: Color(0xFF00022E));
+
 const kClockTextStyle = TextStyle(
   fontSize: 45,
   color: Colors.white,

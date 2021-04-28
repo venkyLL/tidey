@@ -290,11 +290,15 @@ class LandScapeSwapper extends StatelessWidget {
 //            duration: const Duration(seconds: 2));
         return DialRow(
             gaugeType1: ImageGaugeNew(
-                imageName: "sunset1.gif",
-                textLabel: localWeather.data.weather[0].astronomy[0].sunrise),
+              imageName: "sunset1.gif",
+              textLabel: localWeather.data.weather[0].astronomy[0].sunrise,
+              textBackgroundColor: Colors.transparent,
+            ),
             gaugeType2: ImageGaugeNew(
-                imageName: "sunset2.gif",
-                textLabel: localWeather.data.weather[0].astronomy[0].sunset));
+              imageName: "sunset2.gif",
+              textLabel: localWeather.data.weather[0].astronomy[0].sunset,
+              textBackgroundColor: Colors.transparent,
+            ));
         break;
 
       case 2:
@@ -346,6 +350,7 @@ class LandScapeSwapper extends StatelessWidget {
                   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
               textColor: Colors.black,
+              textBackgroundColor: Colors.transparent,
             ),
             gaugeType2: CompassGauge2());
       case 5:
@@ -494,6 +499,7 @@ class LandscapeTimerWidget extends StatelessWidget {
       counter = (counter + 1) % 6;
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
+
       return LandScapeSwapper();
     });
   }
@@ -515,18 +521,15 @@ class PortraitTimerWidget extends StatelessWidget {
 Widget buildMarquee() {
   return Marquee(
     text: marqueeString,
-    style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 24,
-        //    backgroundColor: Colors.white30,
-        color: Colors.white),
+    style: kMarqueeTextstyle,
     scrollAxis: Axis.horizontal,
     velocity: 100.0,
     showFadingOnlyWhenScrolling: true,
     fadingEdgeStartFraction: 0.1,
     fadingEdgeEndFraction: 0.1,
     crossAxisAlignment: CrossAxisAlignment.start,
-    pauseAfterRound: Duration(seconds: 1),
+    pauseAfterRound: Duration(seconds: 2),
+    numberOfRounds: 3,
     blankSpace: 20.0,
     startPadding: 10.0,
     accelerationDuration: Duration(seconds: 1),

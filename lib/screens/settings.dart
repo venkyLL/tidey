@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
@@ -9,6 +10,7 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'SettingsScreen';
@@ -61,22 +63,6 @@ class _settingsScreenState extends State<SettingsScreen> {
           },
           child: ListView(
             children: [
-//              Container(
-//                height: 70,
-//                width: double.infinity,
-//                color: Colors.white60,
-//                child: Align(
-//                  alignment: Alignment.bottomLeft,
-//                  child: Padding(
-//                    padding: const EdgeInsets.only(left: 10.0, bottom: 8),
-//                    child: Text("Configuration",
-//                        style: TextStyle(
-//                          //   backgroundColor: Colors.grey,
-//                          fontSize: 20,
-//                        )),
-//                  ),
-//                ),
-//              ),
               MenuListTile(
                 title: "Set Location",
                 icon: Icons.location_on,
@@ -92,7 +78,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                 thickness: 5,
               ),
               MenuListTile(
-                title: "Refresh Weather Data (network access required)",
+                title: "Refresh Weather Data ",
                 icon: Icons.refresh,
                 onTap: () => {getMyLocation()},
               ),
@@ -246,6 +232,27 @@ class _settingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               MenuListTile(
+                title: "Tell a friend about Tidey",
+                icon: Icons.share,
+                onTap: () => {
+                  Share.share(
+                      'Download the Tidey app its an awesome Marine Weather Clock',
+                      subject: 'Check Out Tidey Marine Weather Clock')
+                },
+              ),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTile(
+                  title: "Contact Us",
+                  icon: Icons.email,
+                  onTap: () => {sendemail()}),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTile(
                 title: "About",
                 icon: Icons.info_outline_rounded,
                 onTap: () => {
@@ -384,6 +391,16 @@ class _settingsScreenState extends State<SettingsScreen> {
     await localWeatherService.getLocalWeatherData();
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
+  }
+
+  sendemail() async {
+    const url =
+        'mailto:support@amberjacklabs.com?subject=Hi from Tidey\'s #1 Fan&body=Hello';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch email';
+    }
   }
 }
 

@@ -76,13 +76,13 @@ class _TempGaugeState extends State<TempGauge> {
 //                              color: Color(0xff000000), fontSize: 16)))),
               GaugeAnnotation(
                   angle: 90,
-                  positionFactor: 0.8,
+                  positionFactor: 0.85,
                   widget: Container(
                     child: const Text(
-                      'Hi Lo Temp',
+                      'Temp\nHi & Lo',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                           color: const Color(0xFF3366CC)),
                     ),
                   ))
