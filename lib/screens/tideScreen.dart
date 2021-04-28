@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +17,12 @@ import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+Color marqueeColor = Colors.transparent;
+bool marqueeCompleted = false;
+
 class TideScreen extends StatelessWidget {
   static const String id = 'TideScreen';
+
 //  final String passedValue;
   @override
   Widget build(BuildContext context) {
@@ -111,8 +117,21 @@ class _LandScapeModeState extends State<LandScapeMode> {
   }
 }
 
-class LandscapeView extends StatelessWidget {
+class LandscapeView extends StatefulWidget {
   @override
+  _LandscapeViewState createState() => _LandscapeViewState();
+}
+
+class _LandscapeViewState extends State<LandscapeView> {
+  Timer ted;
+
+  int currentTransitionTime = 0;
+  @override
+  void initState() {
+    super.initState();
+    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -122,20 +141,68 @@ class LandscapeView extends StatelessWidget {
             ClockRow(),
           ],
         ),
-        Container(
-          color: Colors.transparent,
-          width: ScreenSize.safeBlockHorizontal * 100,
-          height: ScreenSize.marqueeHeight,
-          child: ListView(
-            padding: EdgeInsets.only(top: 50.0),
-            children: [
-              buildMarquee(),
-              // _buildComplexMarquee(),
-            ].map(_wrapWithStuff).toList(),
-          ),
-        ),
+        !marqueeCompleted
+            ? Container(
+                color: marqueeColor,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight,
+                child: ListView(
+                  padding: EdgeInsets.only(top: 50.0),
+                  children: [
+                    buildMarquee(),
+                    // _buildComplexMarquee(),
+                  ].map(_wrapWithStuff).toList(),
+                ),
+              )
+            : Container(
+                color: Colors.transparent,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight),
       ],
     );
+  }
+
+  pollForChanges() {}
+
+  Widget buildMarquee() {
+    return Marquee(
+        text: marqueeString,
+        style: kMarqueeTextstyle,
+        scrollAxis: Axis.horizontal,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        blankSpace: 20.0,
+        velocity: 200.0,
+        pauseAfterRound: Duration(seconds: 1),
+        showFadingOnlyWhenScrolling: true,
+        fadingEdgeStartFraction: 0.1,
+        fadingEdgeEndFraction: 0.1,
+        numberOfRounds: 1,
+      //  startPadding: 10.0,
+        accelerationDuration: Duration(seconds: 1),
+        accelerationCurve: Curves.linear,
+        decelerationDuration: Duration(milliseconds: 500),
+        decelerationCurve: Curves.easeOut,
+        onDone: () {
+          setState(() {
+            marqueeCompleted = true;
+            //   marqueeColor = Colors.blue;
+          });
+        }
+//    scrollAxis: Axis.horizontal,
+//    velocity: 300.0,
+//    showFadingOnlyWhenScrolling: true,
+//    fadingEdgeStartFraction: 0.1,
+//    fadingEdgeEndFraction: 0.1,
+//    crossAxisAlignment: CrossAxisAlignment.start,
+//    pauseAfterRound: Duration(seconds: 1),
+//    numberOfRounds: 1,
+//    blankSpace: 20.0,
+//    startPadding: 10.0,
+//    accelerationDuration: Duration(seconds: 1),
+//    accelerationCurve: Curves.linear,
+//    decelerationDuration: Duration(milliseconds: 500),
+//    decelerationCurve: Curves.easeOut,
+        );
   }
 }
 
@@ -491,7 +558,31 @@ class PortraitSwapper extends StatelessWidget {
   }
 }
 
-class LandscapeTimerWidget extends StatelessWidget {
+class LandscapeTimerWidget extends StatefulWidget {
+  @override
+  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
+}
+
+class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
+  Timer ted;
+
+  int currentTransitionTime = 0;
+  @override
+  void initState() {
+    super.initState();
+    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+  }
+
+  _bobX(Timer timer) {
+    if (currentTransitionTime != userSettings.transitionTime) {
+      setState(() {
+        currentTransitionTime = userSettings.transitionTime;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
@@ -518,26 +609,41 @@ class PortraitTimerWidget extends StatelessWidget {
   }
 }
 
-Widget buildMarquee() {
-  return Marquee(
-    text: marqueeString,
-    style: kMarqueeTextstyle,
-    scrollAxis: Axis.horizontal,
-    velocity: 100.0,
-    showFadingOnlyWhenScrolling: true,
-    fadingEdgeStartFraction: 0.1,
-    fadingEdgeEndFraction: 0.1,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    pauseAfterRound: Duration(seconds: 2),
-    numberOfRounds: 3,
-    blankSpace: 20.0,
-    startPadding: 10.0,
-    accelerationDuration: Duration(seconds: 1),
-    accelerationCurve: Curves.linear,
-    decelerationDuration: Duration(milliseconds: 500),
-    decelerationCurve: Curves.easeOut,
-    // blankSpace: 20.0,
-  );
+class displayMarquee extends StatefulWidget {
+  @override
+  _displayMarqueeState createState() => _displayMarqueeState();
+}
+
+class _displayMarqueeState extends State<displayMarquee> {
+  @override
+  Widget build(BuildContext context) {
+    return Marquee(
+        text:
+            "ABC DEF GHI JKL MNO P QRS TUV now I have said my ABCs tell me what youthink of me",
+        // marqueeString,
+        style: kMarqueeTextstyle,
+        scrollAxis: Axis.horizontal,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        blankSpace: 20.0,
+        velocity: 300.0,
+        pauseAfterRound: Duration(seconds: 1),
+        showFadingOnlyWhenScrolling: true,
+        fadingEdgeStartFraction: 0.1,
+        fadingEdgeEndFraction: 0.1,
+        numberOfRounds: 1,
+        startPadding: 10.0,
+        accelerationDuration: Duration(seconds: 1),
+        accelerationCurve: Curves.linear,
+        decelerationDuration: Duration(milliseconds: 500),
+        decelerationCurve: Curves.easeOut,
+        onDone: () {
+          print('Marquee is Done');
+          setState(() {
+            marqueeCompleted = true;
+            marqueeColor = Colors.blue;
+          });
+        });
+  }
 }
 
 Widget _buildComplexMarquee() {

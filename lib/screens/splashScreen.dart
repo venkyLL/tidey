@@ -242,7 +242,7 @@ getMarqueeString() {
       DateFormat('EEEE').format(localWeather.data.weather[2].date), 0);
   String day4 = getWeatherLine(
       DateFormat('EEEE').format(localWeather.data.weather[3].date), 0);
-  return tides + day1 + day2 + day3 + day4;
+  return day1 + day2 + day3 + day4;
 }
 
 getWeatherLine(String stringDay, int day) {

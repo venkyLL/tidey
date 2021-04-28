@@ -251,9 +251,9 @@ const kTextSettingsStyle =
 const kIconSettingSize = 40.0;
 
 var kMarqueeTextstyle = GoogleFonts.notoSans(
-  // color: Color(0xFF00022E),
-  color: Colors.white,
-  // backgroundColor: Colors.white10,
+  color: Color(0xFF00022E),
+//  color: Colors.white,
+  backgroundColor: Colors.white10,
   fontSize: 24,
 //    fontWeight: FontWeight.bold
 );
