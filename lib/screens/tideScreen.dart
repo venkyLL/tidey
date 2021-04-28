@@ -133,32 +133,37 @@ class _LandscapeViewState extends State<LandscapeView> {
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            LandscapeTimerWidget(),
-            ClockRow(),
-          ],
-        ),
-        !marqueeCompleted
-            ? Container(
-                color: marqueeColor,
-                width: ScreenSize.safeBlockHorizontal * 100,
-                height: ScreenSize.marqueeHeight,
-                child: ListView(
-                  padding: EdgeInsets.only(top: 50.0),
-                  children: [
-                    buildMarquee(),
-                    // _buildComplexMarquee(),
-                  ].map(_wrapWithStuff).toList(),
-                ),
-              )
-            : Container(
-                color: Colors.transparent,
-                width: ScreenSize.safeBlockHorizontal * 100,
-                height: ScreenSize.marqueeHeight),
-      ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, SettingsScreen.id);
+      },
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              LandscapeTimerWidget(),
+              ClockRow(),
+            ],
+          ),
+          !marqueeCompleted
+              ? Container(
+                  color: marqueeColor,
+                  width: ScreenSize.safeBlockHorizontal * 100,
+                  height: ScreenSize.marqueeHeight,
+                  child: ListView(
+                    padding: EdgeInsets.only(top: 50.0),
+                    children: [
+                      buildMarquee(),
+                      // _buildComplexMarquee(),
+                    ].map(_wrapWithStuff).toList(),
+                  ),
+                )
+              : Container(
+                  color: Colors.transparent,
+                  width: ScreenSize.safeBlockHorizontal * 100,
+                  height: ScreenSize.marqueeHeight),
+        ],
+      ),
     );
   }
 
@@ -172,11 +177,11 @@ class _LandscapeViewState extends State<LandscapeView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         blankSpace: 20.0,
         velocity: 100.0,
-        pauseAfterRound: Duration(seconds: 1),
+        //  pauseAfterRound: Duration(seconds: 1),
         showFadingOnlyWhenScrolling: true,
         fadingEdgeStartFraction: 0.1,
         fadingEdgeEndFraction: 0.1,
-        numberOfRounds: 1,
+        numberOfRounds: 2,
         //  startPadding: 10.0,
         accelerationDuration: Duration(seconds: 1),
         accelerationCurve: Curves.linear,
@@ -612,7 +617,7 @@ class PortraitTimerWidget extends StatelessWidget {
 Widget _wrapWithStuff(Widget child) {
   return Padding(
     padding: EdgeInsets.all(16.0),
-    child: Container(height: 120.0, color: Colors.white10, child: child),
+    child: Container(height: 120.0, color: Colors.transparent, child: child),
   );
 }
 
