@@ -132,7 +132,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-String spacer = " \u2022\u2022\u2022\u2022 ";
+//String spacer = " \u2022\u2022\u2022\u2022 ";
+String spacer = "  \u2022  ";
 getMarqueeString() {
   // String spacer = "\u2015\u2015\u2015\u2015";
 

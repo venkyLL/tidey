@@ -48,6 +48,8 @@ DateTime globalCompassValueLastReadAt;
 UserSettings userSettings = UserSettings();
 const kDefaultTransitionTime = 10;
 
+var daysSinceDataLoad = 0;
+
 class UserSettings {
   bool chimeOn;
   bool chimeDoNotDisturb;
