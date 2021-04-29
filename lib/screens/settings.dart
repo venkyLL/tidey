@@ -23,6 +23,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   int _sliding = userSettings.imperialUnits ? 0 : 1;
   String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
   SharedPreferences prefs;
+  bool _chimeEnabled = userSettings.chimeOn;
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -86,44 +87,44 @@ class _settingsScreenState extends State<SettingsScreen> {
                 height: 10,
                 thickness: 5,
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.straighten,
-                  size: kIconSettingSize,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  "Select Untis",
-                  style: kTextSettingsStyle,
-                ),
-                trailing: CupertinoSlidingSegmentedControl(
-                    children: {
-                      0: Text(
-                        'Imperial',
-                        style: TextStyle(fontSize: kTextSettingSize),
-                      ),
-                      1: Text(
-                        'Metric',
-                        style: TextStyle(fontSize: kTextSettingSize),
-                      ),
-                    },
-                    backgroundColor: Colors.white30,
-                    groupValue: _sliding,
-                    onValueChanged: (newValue) {
-                      setState(() {
-                        _sliding = newValue;
-                        _sliding == 0
-                            ? userSettings.imperialUnits = true
-                            : userSettings.imperialUnits = false;
-                        prefs.setBool(
-                            'imperialUnits', userSettings.imperialUnits);
-                      });
-                    }),
-              ),
-              Divider(
-                height: 10,
-                thickness: 5,
-              ),
+//              ListTile(
+//                leading: Icon(
+//                  Icons.straighten,
+//                  size: kIconSettingSize,
+//                  color: Colors.white,
+//                ),
+//                title: Text(
+//                  "Select Untis",
+//                  style: kTextSettingsStyle,
+//                ),
+//                trailing: CupertinoSlidingSegmentedControl(
+//                    children: {
+//                      0: Text(
+//                        'Imperial',
+//                        style: TextStyle(fontSize: kTextSettingSize),
+//                      ),
+//                      1: Text(
+//                        'Metric',
+//                        style: TextStyle(fontSize: kTextSettingSize),
+//                      ),
+//                    },
+//                    backgroundColor: Colors.white30,
+//                    groupValue: _sliding,
+//                    onValueChanged: (newValue) {
+//                      setState(() {
+//                        _sliding = newValue;
+//                        _sliding == 0
+//                            ? userSettings.imperialUnits = true
+//                            : userSettings.imperialUnits = false;
+//                        prefs.setBool(
+//                            'imperialUnits', userSettings.imperialUnits);
+//                      });
+//                    }),
+//              ),
+//              Divider(
+//                height: 10,
+//                thickness: 5,
+//              ),
               MenuListTileWithSwitch(
                   title: (userSettings.chimeOn)
                       ? "Ship Bell (Enabled)"
@@ -132,54 +133,64 @@ class _settingsScreenState extends State<SettingsScreen> {
                   icon: Icons.notifications,
                   onTap: () {
                     setState(() {
-                      userSettings.chimeOn = !userSettings.chimeOn;
+                      _chimeEnabled =
+                          userSettings.chimeOn = !userSettings.chimeOn;
+                      _chimeEnabled = userSettings.chimeOn;
                       print("Selected " + userSettings.chimeOn.toString());
                       prefs.setBool('chimeOn', userSettings.chimeOn);
                     });
                   }),
-              MenuListTileWithSwitch(
-                  title: (userSettings.chimeDoNotDisturb)
-                      ? "Sleep Mode (Enabled)"
-                      : "Sleep at Night",
-                  value: userSettings.chimeDoNotDisturb,
-                  icon: Icons.notifications_paused,
-                  onTap: () {
-                    setState(() {
-                      userSettings.chimeDoNotDisturb =
-                          !userSettings.chimeDoNotDisturb;
-                      print("Selected " +
-                          userSettings.chimeDoNotDisturb.toString());
-                      prefs.setBool(
-                          'doNotDisturb', userSettings.chimeDoNotDisturb);
-                    });
-                  }),
-              Divider(
-                height: 10,
-                thickness: 5,
+              Visibility(
+                visible: _chimeEnabled,
+                child: Column(
+                  children: [
+                    MenuListTileWithSwitch(
+                        title: (userSettings.chimeDoNotDisturb)
+                            ? "Sleep Mode (Enabled)"
+                            : "Sleep at Night",
+                        value: userSettings.chimeDoNotDisturb,
+                        icon: Icons.notifications_paused,
+                        onTap: () {
+                          setState(() {
+                            userSettings.chimeDoNotDisturb =
+                                !userSettings.chimeDoNotDisturb;
+                            print("Selected " +
+                                userSettings.chimeDoNotDisturb.toString());
+                            prefs.setBool(
+                                'doNotDisturb', userSettings.chimeDoNotDisturb);
+                          });
+                        }),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuListTile(
+                      title: "Bell Ring Schedule (${selectedRingMode})",
+                      icon: Icons.notifications_active,
+                      onTap: () => {
+                        showMaterialScrollPicker(
+                            headerColor: kAppBlueColor,
+                            maxLongSide: 400,
+                            context: context,
+                            title: "Select Bell Ring Schedule",
+                            items: ringOptions,
+                            selectedValue: selectedRingMode,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedRingMode = value;
+                              });
+                              userSettings.chimeSelected =
+                                  chimeTypeStringToEnum[value];
+                              print("Selected " +
+                                  userSettings.chimeSelected.toString());
+                              prefs.setString('chimeSelected', value);
+                            })
+                      },
+                    ),
+                  ],
+                ),
               ),
-              MenuListTile(
-                title: "Bell Ring Schedule (${selectedRingMode})",
-                icon: Icons.notifications_active,
-                onTap: () => {
-                  showMaterialScrollPicker(
-                      headerColor: kAppBlueColor,
-                      maxLongSide: 400,
-                      context: context,
-                      title: "Select Bell Ring Schedule",
-                      items: ringOptions,
-                      selectedValue: selectedRingMode,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedRingMode = value;
-                        });
-                        userSettings.chimeSelected =
-                            chimeTypeStringToEnum[value];
-                        print("Selected " +
-                            userSettings.chimeSelected.toString());
-                        prefs.setString('chimeSelected', value);
-                      })
-                },
-              ),
+
 //
               Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -264,7 +275,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                           packageInfo.version +
                           "Build " +
                           packageInfo.buildNumber +
-                          "\n\nDeveloped by Amberjack Labs"),
+                          "\n\nDeveloped by Amberjack Labs\n"),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {

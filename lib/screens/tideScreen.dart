@@ -221,6 +221,11 @@ class _LandscapeViewState extends State<LandscapeView> {
     timer = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
   }
 
+  @override
+  void dispose() {
+    timer.cancel();
+  }
+
   _bobX(Timer timer) {
     if (startMarquee) {
       setState(() {
@@ -670,6 +675,11 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
     // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
 
     ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+  }
+
+  @override
+  void dispose() {
+    ted.cancel();
   }
 
   _bobX(Timer timer) {
