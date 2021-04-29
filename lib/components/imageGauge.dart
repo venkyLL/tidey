@@ -73,7 +73,7 @@ class ImageGaugeNew extends StatelessWidget {
       this.fontSize = 24,
       this.textPosition = 67,
       this.backgroundColor = Colors.black,
-      this.bezelColor = const Color(0xFF999999),
+      this.bezelColor = kBezelColor, // = Color(0xFF999999),
       this.bezelWidth = 5,
       this.imageInset = 30,
       this.innerLineColor = const Color(0xFF999999)});

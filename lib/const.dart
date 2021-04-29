@@ -249,9 +249,11 @@ const kTextSettingSize = 20.0;
 const kTextSettingsStyle =
     TextStyle(fontSize: kTextSettingSize, color: Colors.white);
 const kIconSettingSize = 40.0;
+const kBezelColor = Color(0xFF999999);
+const kMarqueTextColor = Color(0xFF00022E);
 
 var kMarqueeTextstyle = GoogleFonts.notoSans(
-  color: Color(0xFF00022E),
+  color: kMarqueTextColor,
 //  color: Colors.white,
   backgroundColor: Colors.white10,
   fontSize: 24,

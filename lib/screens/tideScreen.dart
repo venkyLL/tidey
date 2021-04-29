@@ -20,6 +20,8 @@ import 'package:timer_builder/timer_builder.dart';
 Color marqueeColor = Colors.transparent;
 bool marqueeCompleted = false;
 
+enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+
 class TideScreen extends StatelessWidget {
   static const String id = 'TideScreen';
 
@@ -36,33 +38,19 @@ class TideScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           //  backgroundColor: Color(0x44000000),
           elevation: 0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, SettingsScreen.id);
-            },
-            child: Icon(
-              Icons.settings, // add custom icons also
-            ),
-          ),
-          actions: <Widget>[
-//          Padding(
-//              padding: EdgeInsets.only(right: 20.0),
-//              child: GestureDetector(
-//                onTap: () {},
-//                child: Icon(
-//                  Icons.search,
-//                  size: 26.0,
-//                ),
-//              )),
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, TodayScreen.id);
-                  },
-                  child: Icon(Icons.chevron_right),
-                )),
-          ],
+          leading: menu(),
+//          GestureDetector(
+//            onTap: () {
+//              menu();
+//              // Navigator.pushNamed(context, SettingsScreen.id);
+//            },
+//            child: Icon(
+//              Icons.waves, // add custom icons also
+//            ),
+//          ),
+//          actions: <Widget>[
+//            menu(),
+          //   ],
         ),
         body: SwipeGestureRecognizer(
           onSwipeRight: () {
@@ -83,6 +71,105 @@ class TideScreen extends StatelessWidget {
             },
           ),
         ));
+  }
+
+  // This is the type used by the popup menu below.
+
+// This menu button widget updates a _selection field (of type WhyFarther,
+// not shown here).
+
+}
+
+class menu extends StatelessWidget {
+  const menu({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      child: Icon(
+        Icons.waves,
+        color: kBezelColor, //kMarqueTextColor,
+      ),
+//              shape: Border(
+//                top: BorderSide(color: Colors.black, width: 10.0),
+//                bottom: BorderSide(color: Colors.black, width: 10.0),
+//                left: BorderSide(color: Colors.black, width: 10.0),
+//                right: BorderSide(color: Colors.black, width: 10.0),
+//              ),
+      elevation: 3.2,
+      offset: Offset(50, 30),
+      onSelected: (int result) {
+        switch (result) {
+          case 1:
+            {
+              Navigator.pushNamed(context, TodayScreen.id);
+            }
+            break;
+
+          case 2:
+            {
+              (MediaQuery.of(context).orientation == Orientation.landscape)
+                  ? startMarquee = true
+                  : showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            // title: Text("Marquee "),
+                            content: Text(
+                                "Marquee is only available in Landscape Mode"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Text("okay"),
+                              ),
+                            ],
+                          ));
+            }
+            break;
+          case 3:
+            {
+              Navigator.pushNamed(context, SettingsScreen.id);
+            }
+            break;
+
+          default:
+            {
+              //statements;
+            }
+            break;
+        }
+
+//                setState(() {
+//                //  _selection = result;
+//                });
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+        const PopupMenuItem(
+          value: 1,
+          child: Text('View Forecast'),
+        ),
+        PopupMenuItem(
+          value: 2,
+          child: (MediaQuery.of(context).orientation == Orientation.landscape)
+              ? Text('Start Marquee')
+              : Text(
+                  'Start Marquee',
+                  style: TextStyle(color: kBezelColor),
+                ),
+
+          enabled:
+              (MediaQuery.of(context).orientation == Orientation.landscape),
+          //  enabled: f // (MediaQuery.of(context).orientation == Orientation.portrait)
+        ),
+        const PopupMenuItem(
+          value: 3,
+          child: Text('Settings'),
+        ),
+      ],
+    );
   }
 }
 
@@ -122,52 +209,57 @@ class LandscapeView extends StatefulWidget {
   _LandscapeViewState createState() => _LandscapeViewState();
 }
 
-class _LandscapeViewState extends State<LandscapeView> {
-  Timer ted;
+bool startMarquee = false;
 
-  int currentTransitionTime = 0;
+class _LandscapeViewState extends State<LandscapeView> {
+  Timer timer;
+
+  //int currentTransitionTime = 0;
   @override
   void initState() {
     super.initState();
-    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+    timer = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+  }
+
+  _bobX(Timer timer) {
+    if (startMarquee) {
+      setState(() {
+        marqueeCompleted = false;
+      });
+    }
   }
 
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, SettingsScreen.id);
-      },
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              LandscapeTimerWidget(),
-              ClockRow(),
-            ],
-          ),
-          !marqueeCompleted
-              ? Container(
-                  color: marqueeColor,
-                  width: ScreenSize.safeBlockHorizontal * 100,
-                  height: ScreenSize.marqueeHeight,
-                  child: ListView(
-                    padding: EdgeInsets.only(top: 50.0),
-                    children: [
-                      buildMarquee(),
-                      // _buildComplexMarquee(),
-                    ].map(_wrapWithStuff).toList(),
-                  ),
-                )
-              : Container(
-                  color: Colors.transparent,
-                  width: ScreenSize.safeBlockHorizontal * 100,
-                  height: ScreenSize.marqueeHeight),
-        ],
-      ),
+    return Column(
+      children: [
+        Stack(
+          children: [
+            LandscapeTimerWidget(),
+            ClockRow(),
+          ],
+        ),
+        !marqueeCompleted
+            ? Container(
+                color: marqueeColor,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight,
+                child: ListView(
+                  padding: EdgeInsets.only(top: 50.0),
+                  children: [
+                    buildMarquee(),
+                    // _buildComplexMarquee(),
+                  ].map(_wrapWithStuff).toList(),
+                ),
+              )
+            : Container(
+                color: Colors.transparent,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight),
+      ],
     );
   }
 
-  pollForChanges() {}
+  //pollForChanges() {}
 
   Widget buildMarquee() {
     return Marquee(
