@@ -71,6 +71,9 @@ class _HelpScreenState extends State<HelpScreen> {
                   "What is ships bell watch code?",
                   "Unlike civil clock bells, the strikes of a ship's bell do not accord to the number of the hour. Instead, there are eight bells, one for each half-hour of a four-hour watch. In the age of sailing, watches were timed with a 30-minute hourglass. Bells would be struck every time the glass was turned, and in a pattern of pairs for easier counting, with any odd bells at the end of the sequence.  While it takes a little getting used to after a short while it becomes easier to determine the time with this code rather than a traditional grandfather clock schedule.\n  " +
                       "\n     Traditional Schedule\n    4:00 8:00 12:00 = 8 Bells\n    4:30 8:30 12:30 = 1 Bell\n    5:00 9:00 1:00 = 2 Bells\n    5:30 9:30 1:30 = 3 Bells\n    6:00 10:00 2:00 = 4 Bells\n    6:30 10:30 2:30 = 5 Bells\n    7:00 11:00 3:00 = 6 Bells\n    7:30 11:30 3:30 = 7 Bells "),
+              helpTile(context, "Why does Tidey need my Location Data?",
+                  "Tidey uses location data to get the local weather and tides.  Tidey does not store your location data."),
+              helpTile(context, "Privacy Policy", " ")
             ],
           ),
         ),
