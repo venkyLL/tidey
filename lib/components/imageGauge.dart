@@ -69,7 +69,7 @@ class ImageGaugeNew extends StatelessWidget {
       {this.imageName,
       this.textLabel = "",
       this.textColor = Colors.white,
-      this.textBackgroundColor = Colors.white30,
+      this.textBackgroundColor = Colors.transparent,
       this.fontSize = 24,
       this.textPosition = 67,
       this.backgroundColor = Colors.black,

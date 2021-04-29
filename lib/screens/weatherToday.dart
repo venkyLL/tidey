@@ -35,6 +35,10 @@ class _TodayScreenState extends State<TodayScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.transparent),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         //      title: Text(
 //          'Today\'s Weather\n' +
 //              localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
@@ -43,25 +47,25 @@ class _TodayScreenState extends State<TodayScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: <Widget>[
+//        actions: <Widget>[
+////          Padding(
+////              padding: EdgeInsets.only(right: 20.0),
+////              child: GestureDetector(
+////                onTap: () {},
+////                child: Icon(
+////                  Icons.search,
+////                  size: 26.0,
+////                ),
+////              )),
 //          Padding(
 //              padding: EdgeInsets.only(right: 20.0),
 //              child: GestureDetector(
-//                onTap: () {},
-//                child: Icon(
-//                  Icons.search,
-//                  size: 26.0,
-//                ),
+//                onTap: () {
+//                  Navigator.pushNamed(context, ForecastScreen.id);
+//                },
+//                child: Icon(Icons.chevron_right),
 //              )),
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, ForecastScreen.id);
-                },
-                child: Icon(Icons.chevron_right),
-              )),
-        ],
+//        ],
       ),
       body:
 //      Column  (

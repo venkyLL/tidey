@@ -5,6 +5,7 @@ import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/screens/help.dart';
 import 'package:tidey/screens/webWeather.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
@@ -24,6 +25,14 @@ class _settingsScreenState extends State<SettingsScreen> {
   String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
   SharedPreferences prefs;
   bool _chimeEnabled = userSettings.chimeOn;
+  bool _sleepTimerEnabled = userSettings.chimeDoNotDisturb;
+  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
+  bool _alarmOn = userSettings.alarmOn;
+  bool _chimeDoNotDisturb = userSettings.chimeDoNotDisturb;
+  TimeOfDay _sleepTime = userSettings.sleepTime;
+  TimeOfDay _wakeTime = userSettings.sleepTime;
+  TimeOfDay _alarmTime = userSettings.sleepTime;
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -39,6 +48,10 @@ class _settingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: kHeadingColor,
         //  backgroundColor: Color(0x44000000),
         //elevation: 0,
@@ -87,6 +100,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                 height: 10,
                 thickness: 5,
               ),
+
 //              ListTile(
 //                leading: Icon(
 //                  Icons.straighten,
@@ -133,8 +147,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                   icon: Icons.notifications,
                   onTap: () {
                     setState(() {
-                      _chimeEnabled =
-                          userSettings.chimeOn = !userSettings.chimeOn;
+                      userSettings.chimeOn = !userSettings.chimeOn;
                       _chimeEnabled = userSettings.chimeOn;
                       print("Selected " + userSettings.chimeOn.toString());
                       prefs.setBool('chimeOn', userSettings.chimeOn);
@@ -142,56 +155,114 @@ class _settingsScreenState extends State<SettingsScreen> {
                   }),
               Visibility(
                 visible: _chimeEnabled,
-                child: Column(
-                  children: [
-                    MenuListTileWithSwitch(
-                        title: (userSettings.chimeDoNotDisturb)
-                            ? "Sleep Mode (Enabled)"
-                            : "Sleep at Night",
-                        value: userSettings.chimeDoNotDisturb,
-                        icon: Icons.notifications_paused,
-                        onTap: () {
-                          setState(() {
-                            userSettings.chimeDoNotDisturb =
-                                !userSettings.chimeDoNotDisturb;
-                            print("Selected " +
-                                userSettings.chimeDoNotDisturb.toString());
-                            prefs.setBool(
-                                'doNotDisturb', userSettings.chimeDoNotDisturb);
-                          });
-                        }),
-                    Divider(
-                      height: 10,
-                      thickness: 5,
-                    ),
-                    MenuListTile(
-                      title: "Bell Ring Schedule (${selectedRingMode})",
-                      icon: Icons.notifications_active,
-                      onTap: () => {
-                        showMaterialScrollPicker(
-                            headerColor: kAppBlueColor,
-                            maxLongSide: 400,
-                            context: context,
-                            title: "Select Bell Ring Schedule",
-                            items: ringOptions,
-                            selectedValue: selectedRingMode,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedRingMode = value;
-                              });
-                              userSettings.chimeSelected =
-                                  chimeTypeStringToEnum[value];
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Column(
+                    children: [
+                      MenuListTileWithSwitch(
+                          title: (userSettings.chimeDoNotDisturb)
+                              ? "Sleep Mode (Enabled)"
+                              : "Sleep at Night",
+                          value: userSettings.chimeDoNotDisturb,
+                          icon: Icons.notifications_paused,
+                          onTap: () {
+                            setState(() {
+                              userSettings.chimeDoNotDisturb =
+                                  !userSettings.chimeDoNotDisturb;
+                              _chimeDoNotDisturb =
+                                  userSettings.chimeDoNotDisturb;
                               print("Selected " +
-                                  userSettings.chimeSelected.toString());
-                              prefs.setString('chimeSelected', value);
-                            })
-                      },
-                    ),
-                  ],
+                                  userSettings.chimeDoNotDisturb.toString());
+                              prefs.setBool('doNotDisturb',
+                                  userSettings.chimeDoNotDisturb);
+                            });
+                          }),
+                      Visibility(
+                        visible: _chimeDoNotDisturb,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: MenuListTile(
+                            title:
+                                "Wake Time (" + _wakeTime.format(context) + ")",
+                            //  icon: Icons.alarm,
+                            onTap: () => {_selectWakeTime()},
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: _chimeDoNotDisturb,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: MenuListTile(
+                            title: "Set Sleep Time (" +
+                                _sleepTime.format(context) +
+                                ")",
+                            //  icon: Icons.alarm,
+                            onTap: () => {_selectSleepTime()},
+                          ),
+                        ),
+                      ),
+                      MenuListTile(
+                        title: "Bell Ring Schedule (${selectedRingMode})",
+                        icon: Icons.notifications_active,
+                        onTap: () => {
+                          showMaterialScrollPicker(
+                              headerColor: kAppBlueColor,
+                              maxLongSide: 400,
+                              context: context,
+                              title: "Select Bell Ring Schedule",
+                              items: ringOptions,
+                              selectedValue: selectedRingMode,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedRingMode = value;
+                                });
+                                userSettings.chimeSelected =
+                                    chimeTypeStringToEnum[value];
+                                print("Selected " +
+                                    userSettings.chimeSelected.toString());
+                                prefs.setString('chimeSelected', value);
+                              })
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTileWithSwitch(
+                  title: (userSettings.alarmOn)
+                      ? "Alarm (Enabled)"
+                      : "Alarm (Disabled)",
+                  value: userSettings.alarmOn,
+                  icon: Icons.notifications,
+                  onTap: () {
+                    setState(() {
+                      userSettings.alarmOn = !userSettings.alarmOn;
+                      _alarmOn = userSettings.alarmOn;
+                      print("Selected " + userSettings.alarmOn.toString());
+                      //    prefs.setBool('alarmOn', userSettings.alarmOn);
+                    });
+                  }),
+              Visibility(
+                visible: _alarmOn,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: MenuListTile(
+                    title: "Alarm (" + _alarmTime.format(context) + ")",
+                    icon: Icons.alarm,
+                    onTap: () => {_selectAlarmTime()},
+                  ),
                 ),
               ),
 
-//
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
@@ -295,23 +366,7 @@ class _settingsScreenState extends State<SettingsScreen> {
               MenuListTile(
                 title: "Help",
                 icon: Icons.help,
-                onTap: () => {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: Text("Help"),
-                      content: Text("Aint no help for you!"),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Text("okay"),
-                        ),
-                      ],
-                    ),
-                  )
-                },
+                onTap: () => {Navigator.pushNamed(context, HelpScreen.id)},
               ),
               Divider(
                 height: 10,
@@ -345,6 +400,42 @@ class _settingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _selectAlarmTime() async {
+    final TimeOfDay newTime = await showTimePicker(
+      context: context,
+      initialTime: _alarmTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        _alarmTime = newTime;
+      });
+    }
+  }
+
+  void _selectWakeTime() async {
+    final TimeOfDay newTime = await showTimePicker(
+      context: context,
+      initialTime: _wakeTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        _wakeTime = newTime;
+      });
+    }
+  }
+
+  void _selectSleepTime() async {
+    final TimeOfDay newTime = await showTimePicker(
+      context: context,
+      initialTime: _sleepTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        _sleepTime = newTime;
+      });
+    }
   }
 
   AlertDialog buildAlertDialog(BuildContext context) {
@@ -412,76 +503,5 @@ class _settingsScreenState extends State<SettingsScreen> {
     } else {
       throw 'Could not launch email';
     }
-  }
-}
-
-class MenuListTile extends StatelessWidget {
-  final String title;
-  final VoidCallback onTap;
-  final IconData icon;
-
-  const MenuListTile({Key key, this.title, this.onTap, this.icon})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        size: kIconSettingSize,
-        color: Colors.white,
-      ),
-      title: Text(
-        title,
-        style: kTextSettingsStyle,
-      ),
-      trailing: const Icon(
-        Icons.chevron_right,
-        size: kIconSettingSize,
-        color: Colors.white,
-      ),
-      onTap: onTap,
-    );
-  }
-}
-
-class MenuListTileWithSwitch extends StatelessWidget {
-  final String title;
-  final VoidCallback onTap;
-  final bool value;
-  final IconData icon;
-
-  const MenuListTileWithSwitch({
-    Key key,
-    this.title,
-    this.onTap,
-    this.value,
-    this.icon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        size: kIconSettingSize,
-        color: Colors.white,
-      ),
-      title: Text(
-        title,
-        style: kTextSettingsStyle,
-      ),
-      trailing: Container(
-        height: 24,
-        width: 48,
-        child: CupertinoSwitch(
-          value: value ?? false,
-          onChanged: (_) {
-            onTap();
-          },
-        ),
-      ),
-      onTap: onTap,
-    );
   }
 }

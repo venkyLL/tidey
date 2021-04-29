@@ -34,6 +34,10 @@ class _ForecastScreenState extends State<ForecastScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.transparent),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         // title: const Text('Weekly Forecast'),
         centerTitle: true,
         backgroundColor: Colors.transparent,

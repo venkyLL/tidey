@@ -88,10 +88,13 @@ class menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      color: Colors.black12, // kMarqueTextColor,
       child: Icon(
         Icons.waves,
         color: kBezelColor, //kMarqueTextColor,
       ),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))),
 //              shape: Border(
 //                top: BorderSide(color: Colors.black, width: 10.0),
 //                bottom: BorderSide(color: Colors.black, width: 10.0),
@@ -149,12 +152,15 @@ class menu extends StatelessWidget {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
         const PopupMenuItem(
           value: 1,
-          child: Text('View Forecast'),
+          child: Text(
+            'View Forecast',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         PopupMenuItem(
           value: 2,
           child: (MediaQuery.of(context).orientation == Orientation.landscape)
-              ? Text('Start Marquee')
+              ? Text('Start Marquee', style: TextStyle(color: Colors.white))
               : Text(
                   'Start Marquee',
                   style: TextStyle(color: kBezelColor),
@@ -166,7 +172,7 @@ class menu extends StatelessWidget {
         ),
         const PopupMenuItem(
           value: 3,
-          child: Text('Settings'),
+          child: Text('Settings', style: TextStyle(color: Colors.white)),
         ),
       ],
     );
@@ -223,6 +229,7 @@ class _LandscapeViewState extends State<LandscapeView> {
 
   @override
   void dispose() {
+    super.dispose();
     timer.cancel();
   }
 
@@ -679,6 +686,7 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
 
   @override
   void dispose() {
+    super.dispose();
     ted.cancel();
   }
 

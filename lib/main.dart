@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tidey/screens/forecast.dart';
+import 'package:tidey/screens/help.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       ForecastScreen.id: (context) => ForecastScreen(),
       SettingsScreen.id: (context) => SettingsScreen(),
       TodayScreen.id: (context) => TodayScreen(),
+      HelpScreen.id: (context) => HelpScreen(),
     });
   }
 }

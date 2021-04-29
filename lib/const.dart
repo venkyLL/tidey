@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
@@ -55,6 +56,10 @@ class UserSettings {
   bool chimeDoNotDisturb;
   ChimeType chimeSelected;
 //  String _chimeSelectedString;
+  bool alarmOn = true;
+  TimeOfDay alarmTime = TimeOfDay(hour: 7, minute: 20);
+  TimeOfDay sleepTime = TimeOfDay(hour: 7, minute: 20);
+  TimeOfDay wakeTime = TimeOfDay(hour: 7, minute: 20);
   bool imperialUnits;
   int transitionTime;
 
@@ -629,5 +634,76 @@ class EnumValues<T> {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }
     return reverseMap;
+  }
+}
+
+class MenuListTile extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  final IconData icon;
+
+  const MenuListTile({Key key, this.title, this.onTap, this.icon})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        size: kIconSettingSize,
+        color: Colors.white,
+      ),
+      title: Text(
+        title,
+        style: kTextSettingsStyle,
+      ),
+      trailing: const Icon(
+        Icons.chevron_right,
+        size: kIconSettingSize,
+        color: Colors.transparent,
+      ),
+      onTap: onTap,
+    );
+  }
+}
+
+class MenuListTileWithSwitch extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  final bool value;
+  final IconData icon;
+
+  const MenuListTileWithSwitch({
+    Key key,
+    this.title,
+    this.onTap,
+    this.value,
+    this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        size: kIconSettingSize,
+        color: Colors.white,
+      ),
+      title: Text(
+        title,
+        style: kTextSettingsStyle,
+      ),
+      trailing: Container(
+        height: 24,
+        width: 48,
+        child: CupertinoSwitch(
+          value: value ?? false,
+          onChanged: (_) {
+            onTap();
+          },
+        ),
+      ),
+      onTap: onTap,
+    );
   }
 }
