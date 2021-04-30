@@ -136,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
 getMarqueeString() {
   String tides = " ";
-  if (tideDataExists) {
+  if (globalWeather.tideDataExists) {
     tides = globalWeather.dailyWeather[0].tideMarquee;
 //    for (var i = 0;
 //        i < weatherData.data.weather[0].tides[0].tideData.length;

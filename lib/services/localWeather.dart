@@ -744,15 +744,15 @@ class LocalWeatherService {
       localWeather = LocalWeather.fromJson(response.data);
       // weatherData = MarineWeather.fromJson(weatherMap);
 
-      localWeatherExists = false;
-      localHourlyExists = false;
+      globalWeather.localWeatherExists = false;
+      globalWeather.localHourlyExists = false;
 
       if (localWeather.data.weather.length != 0) {
-        localWeatherExists = true;
+        globalWeather.localWeatherExists = true;
         populateGlobalWeather();
 
         if (localWeather.data.weather[0].hourly.length != 0) {
-          localHourlyExists = true;
+          globalWeather.localHourlyExists = true;
         }
       }
       print("Map complete");
@@ -765,8 +765,8 @@ class LocalWeatherService {
 
       return;
     } catch (e) {
-      localWeatherExists = false;
-      localHourlyExists = false;
+      globalWeather.localWeatherExists = false;
+      globalWeather.localHourlyExists = false;
       print("error found");
       print(e);
     }
@@ -800,7 +800,7 @@ class LocalWeatherService {
         globalWeather.dailyWeather[i].moonIllumination =
             localWeather.data.weather[i].astronomy[0].moonIllumination;
       }
-      if (marineHourlyExists && i == 0) {
+      if (globalWeather.marineHourlyExists && i == 0) {
         globalWeather.dailyWeather[i].waterTemp =
             weatherData.data.weather[0].hourly[0].waterTempF;
         globalWeather.dailyWeather[i].waveHt =
@@ -812,7 +812,7 @@ class LocalWeatherService {
             globalWeather.dailyWeather[i].waveHt +
             globalWeather.dailyWeather[i].waveDirection);
       }
-      if (tideDataExists && i == 0) {
+      if (globalWeather.tideDataExists && i == 0) {
         globalWeather.dailyWeather[i].tideMarquee = "";
 
         for (var k = 0;
@@ -935,7 +935,7 @@ class LocalWeatherService {
         globalWeather.dailyWeather[i].hourly[j - 1].visibility =
             localWeather.data.weather[i].hourly[j].visibilityMiles;
 
-        if (marineHourlyExists && i == 0) {
+        if (globalWeather.marineHourlyExists && i == 0) {
           globalWeather.dailyWeather[0].hourly[j - 1].waveHt =
               weatherData.data.weather[0].hourly[j - 1].swellHeightFt;
           globalWeather.dailyWeather[i].hourly[j - 1].waveDirection =

@@ -479,20 +479,20 @@ class WeatherService {
       // weatherData = MarineWeather.fromJson(weatherMap);
 
       print("Map complete");
-      marineWeatherExists = true;
-      marineHourlyExists = true;
-      tideDataExists = true;
-      marineAstronomyExists = true;
+      globalWeather.marineWeatherExists = true;
+      globalWeather.marineHourlyExists = true;
+      globalWeather.tideDataExists = true;
+      globalWeather.marineAstronomyExists = true;
       if (weatherData.data.weather.length == 0) {
-        marineWeatherExists = false;
+        globalWeather.marineWeatherExists = false;
         if (weatherData.data.weather[0].tides.length == 0) {
-          tideDataExists = false;
+          globalWeather.tideDataExists = false;
         }
         if (weatherData.data.weather[0].hourly.length == 0) {
-          marineHourlyExists = false;
+          globalWeather.marineHourlyExists = false;
         }
         if (weatherData.data.weather[0].astronomy.length == 0) {
-          marineAstronomyExists = false;
+          globalWeather.marineAstronomyExists = false;
         }
       }
 //      print(weatherData.data.weather[0].tides[0].tideData[0].tideTime);
@@ -504,10 +504,10 @@ class WeatherService {
       return;
     } catch (e) {
       print("error found");
-      marineWeatherExists = false;
-      marineHourlyExists = false;
-      tideDataExists = false;
-      marineAstronomyExists = false;
+      globalWeather.marineWeatherExists = false;
+      globalWeather.marineHourlyExists = false;
+      globalWeather.tideDataExists = false;
+      globalWeather.marineAstronomyExists = false;
       print(e);
     }
   }

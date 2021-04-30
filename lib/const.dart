@@ -87,18 +87,18 @@ class UserSettings {
 //  }
 }
 
-bool marineWeatherExists = false;
-bool tideDataExists = false;
-bool marineHourlyExists = false;
-bool marineAstronomyExists = false;
-bool localWeatherExists = false;
-bool localHourlyExists = false;
-
 TideyWeather globalWeather = TideyWeather();
+//venky globaleWeather.dailyWeather[0].tides[0-n]
 
 class TideyWeather {
   HourlyWeather currentCondition = null;
   List<WeatherDay> dailyWeather = [WeatherDay()];
+  bool marineWeatherExists = false;
+  bool tideDataExists = false;
+  bool marineHourlyExists = false;
+  bool marineAstronomyExists = false;
+  bool localWeatherExists = false;
+  bool localHourlyExists = false;
 }
 
 class WeatherDay {
@@ -121,7 +121,7 @@ class WeatherDay {
   String waveDirection = "";
   String airQuality = "";
   String humidity = "";
- // IconData currentWeatherIcon = WeatherIcons.day_sunny;
+  // IconData currentWeatherIcon = WeatherIcons.day_sunny;
   String weatherCode = "";
   String weatherConditionDesc = "";
   String chanceOfRain = "";
@@ -145,7 +145,7 @@ class HourlyWeather {
   String waveDirection = "";
   String airQuality = "";
   String humidity = "";
- // BoxedIcon currentWeatherIcon = BoxedIcon(WeatherIcons.day_sunny);
+  // BoxedIcon currentWeatherIcon = BoxedIcon(WeatherIcons.day_sunny);
   String weatherCode = "";
   String weatherConditionDesc = "";
   String chanceOfRain = "";

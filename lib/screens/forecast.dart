@@ -65,7 +65,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: (!localHourlyExists)
+          child: (!globalWeather.localHourlyExists)
               ? Container(
                   alignment: Alignment.center,
                   height: 200,
