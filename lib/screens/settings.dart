@@ -254,10 +254,11 @@ class _settingsScreenState extends State<SettingsScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: MenuListTile(
-                            title:
-                                "Wake Time (" + _wakeTime.format(context) + ")",
+                            title: "Set Sleep Time (" +
+                                _sleepTime.format(context) +
+                                ")",
                             //  icon: Icons.alarm,
-                            onTap: () => {_selectWakeTime()},
+                            onTap: () => {_selectSleepTime()},
                           ),
                         ),
                       ),
@@ -266,11 +267,10 @@ class _settingsScreenState extends State<SettingsScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: MenuListTile(
-                            title: "Set Sleep Time (" +
-                                _sleepTime.format(context) +
-                                ")",
+                            title:
+                                "Wake Time (" + _wakeTime.format(context) + ")",
                             //  icon: Icons.alarm,
-                            onTap: () => {_selectSleepTime()},
+                            onTap: () => {_selectWakeTime()},
                           ),
                         ),
                       ),
