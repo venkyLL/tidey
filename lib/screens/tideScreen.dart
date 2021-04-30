@@ -8,7 +8,6 @@ import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/directionAndSpeedGauge.dart';
-import 'package:tidey/components/dsGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
@@ -52,6 +51,13 @@ class TideScreen extends StatelessWidget {
 //            menu(),
           //   ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            menu();
+          },
+          child: const Icon(Icons.waves, color: kBezelColor),
+          backgroundColor: Colors.black26,
+        ),
         body: SwipeGestureRecognizer(
           onSwipeRight: () {
             Navigator.pushNamed(context, SettingsScreen.id);
@@ -59,16 +65,21 @@ class TideScreen extends StatelessWidget {
           onSwipeLeft: () {
             Navigator.pushNamed(context, TodayScreen.id);
           },
-          child: OrientationBuilder(
-            builder: (context, orientation) {
-              //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
-//         //   }
-              if (orientation == Orientation.portrait) {
-                return PortraitMode();
-              } else {
-                return LandScapeMode();
-              }
+          child: GestureDetector(
+            onTap: () {
+              menu();
             },
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
+//         //   }
+                if (orientation == Orientation.portrait) {
+                  return PortraitMode();
+                } else {
+                  return LandScapeMode();
+                }
+              },
+            ),
           ),
         ));
   }
@@ -188,10 +199,11 @@ class _LandScapeModeState extends State<LandScapeMode> {
   HourlyDataSource hourlyDataSource;
   @override
   void initState() {
+    super.initState();
     hourlyDataSource =
-        HourlyDataSource(hourlyData: weatherData.data.weather[0].hourly);
-    print("Number of hourly records is " +
-        weatherData.data.weather[0].hourly.length.toString());
+        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
+    //print("Number of hourly records is " +
+    //    weatherData.data.weather[0].hourly.length.toString());
   }
 
   @override
@@ -439,13 +451,13 @@ class LandScapeSwapper extends StatelessWidget {
       case 0:
         return DialRow(
           gaugeType1: TempGauge(
-              high: double.parse(localWeather.data.weather[0].maxtempF),
-              low: double.parse(localWeather.data.weather[0].mintempF),
+              high: double.parse(globalWeather.dailyWeather[0].highTemp),
+              low: double.parse(globalWeather.dailyWeather[0].lowTemp),
               conditionIcon: weatherDayIconMap[
-                  localWeather.data.weather[0].hourly[0].weatherCode]),
+                  globalWeather.dailyWeather[0].hourly[0].weatherCode]),
           gaugeType2: BarometerGauge(
-            current: double.parse(
-                weatherData.data.weather[0].hourly[0].pressureInches),
+            current:
+                double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
             change: getBarometerChange(),
           ),
         );
@@ -467,12 +479,12 @@ class LandScapeSwapper extends StatelessWidget {
         return DialRow(
             gaugeType1: ImageGaugeNew(
               imageName: "sunset1.gif",
-              textLabel: localWeather.data.weather[0].astronomy[0].sunrise,
+              textLabel: globalWeather.dailyWeather[0].sunrise,
               textBackgroundColor: Colors.transparent,
             ),
             gaugeType2: ImageGaugeNew(
               imageName: "sunset2.gif",
-              textLabel: localWeather.data.weather[0].astronomy[0].sunset,
+              textLabel: globalWeather.dailyWeather[0].sunset,
               textBackgroundColor: Colors.transparent,
             ));
         break;
@@ -487,11 +499,11 @@ class LandScapeSwapper extends StatelessWidget {
           gaugeType2: ImageGaugeNew(
               imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
-              textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
+              textLabel: globalWeather.dailyWeather[0].moonPhase +
                   "\nRise: " +
-                  localWeather.data.weather[0].astronomy[0].moonrise +
+                  globalWeather.dailyWeather[0].moonrise +
                   "\nSet:" +
-                  localWeather.data.weather[0].astronomy[0].moonset,
+                  globalWeather.dailyWeather[0].moonset,
               textPosition: 40,
               textBackgroundColor: Colors.transparent,
               fontSize: 20),
@@ -502,17 +514,16 @@ class LandScapeSwapper extends StatelessWidget {
         return DialRow(
           gaugeType1: DirectionAndSpeedGauge(
             gaugeDirection:
-                weatherData.data.weather[0].hourly[0].winddir16Point,
-            gaugeValue: double.parse(
-                weatherData.data.weather[0].hourly[0].windspeedMiles),
+                globalWeather.dailyWeather[0].hourly[0].windDirection,
+            gaugeValue: // 8.0,
+                double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
           ),
           gaugeType2: DirectionAndSpeedGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
-            gaugeDirection:
-                weatherData.data.weather[0].hourly[0].swellDir16Point,
-            gaugeValue: double.parse(
-                weatherData.data.weather[0].hourly[0].swellHeightFt),
+            gaugeDirection: globalWeather.dailyWeather[0].windDirection,
+            gaugeValue: // 5.0,
+                double.parse(globalWeather.dailyWeather[0].waveHt),
             gaugeMax: 10,
             gaugeInterval: 1,
           ),
@@ -523,7 +534,8 @@ class LandScapeSwapper extends StatelessWidget {
             gaugeType1: ImageGaugeNew(
               imageName: "water.gif",
               textLabel: "Water " +
-                  weatherData.data.weather[0].hourly[0].waterTempF +
+                  globalWeather.dailyWeather[0].waterTemp +
+                  //   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
               textColor: Colors.black,
               textBackgroundColor: Colors.transparent,
@@ -557,13 +569,12 @@ class PortraitSwapper extends StatelessWidget {
       case 0:
         return PortraitDialRow(
           gaugeType1: TempGauge(
-              high: double.parse(localWeather.data.weather[0].maxtempF),
-              low: double.parse(localWeather.data.weather[0].mintempF),
-              conditionIcon: weatherDayIconMap[
-                  localWeather.data.weather[0].hourly[0].weatherCode]),
+              high: double.parse(globalWeather.dailyWeather[0].highTemp),
+              low: double.parse(globalWeather.dailyWeather[0].lowTemp),
+              conditionIcon:
+                  weatherDayIconMap[globalWeather.dailyWeather[0].weatherCode]),
           gaugeType2: BarometerGauge(
-            current: double.parse(
-                weatherData.data.weather[0].hourly[0].pressureInches),
+            current: double.parse(globalWeather.dailyWeather[0].pressure),
             change: getBarometerChange(),
           ),
         );
@@ -585,13 +596,13 @@ class PortraitSwapper extends StatelessWidget {
         return PortraitDialRow(
             gaugeType1: ImageGaugeNew(
               imageName: "sunset1.gif",
-              textLabel: localWeather.data.weather[0].astronomy[0].sunrise,
+              textLabel: globalWeather.dailyWeather[0].sunrise,
               textPosition: 60,
             ),
             gaugeType2: ImageGaugeNew(
                 imageName: "sunset2.gif",
                 textPosition: 60,
-                textLabel: localWeather.data.weather[0].astronomy[0].sunset));
+                textLabel: globalWeather.dailyWeather[0].sunset));
         break;
 
       case 2:
@@ -604,11 +615,11 @@ class PortraitSwapper extends StatelessWidget {
           gaugeType2: ImageGaugeNew(
               imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
-              textLabel: localWeather.data.weather[0].astronomy[0].moonPhase +
+              textLabel: globalWeather.dailyWeather[0].moonPhase +
                   "\nRise: " +
-                  localWeather.data.weather[0].astronomy[0].moonrise +
+                  globalWeather.dailyWeather[0].moonrise +
                   "\nSet:" +
-                  localWeather.data.weather[0].astronomy[0].moonset,
+                  globalWeather.dailyWeather[0].moonset,
               textPosition: 40,
               textBackgroundColor: Colors.transparent,
               fontSize: 20),
@@ -617,22 +628,20 @@ class PortraitSwapper extends StatelessWidget {
 
       case 3:
         return PortraitDialRow(
-          gaugeType1: DSGauge(
-//            gaugeDirection:
-//                weatherData.data.weather[0].hourly[0].winddir16Point,
-//            gaugeValue: double.parse(
-//                weatherData.data.weather[0].hourly[0].windspeedMiles),
-              ),
-          gaugeType2: DSGauge(
-//            gaugeType: "Waves",
-//            gaugeUnit: "ft",
-//            gaugeDirection:
-//                weatherData.data.weather[0].hourly[0].swellDir16Point,
-//            gaugeValue: double.parse(
-//                weatherData.data.weather[0].hourly[0].swellHeightFt),
-//            gaugeMax: 10,
-//            gaugeInterval: 1,
-              ),
+          gaugeType1: DirectionAndSpeedGauge(
+            gaugeDirection:
+                globalWeather.dailyWeather[0].hourly[0].windDirection,
+            gaugeValue:
+                double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
+          ),
+          gaugeType2: DirectionAndSpeedGauge(
+            gaugeType: "Waves",
+            gaugeUnit: "ft",
+            gaugeDirection: globalWeather.dailyWeather[0].waveDirection,
+            gaugeValue: double.parse(globalWeather.dailyWeather[0].waveHt),
+            gaugeMax: 10,
+            gaugeInterval: 1,
+          ),
         );
         break;
       case 4:
@@ -640,7 +649,7 @@ class PortraitSwapper extends StatelessWidget {
             gaugeType1: ImageGaugeNew(
               imageName: "water.gif",
               textLabel: "Water " +
-                  weatherData.data.weather[0].hourly[0].waterTempF +
+                  globalWeather.dailyWeather[0].waterTemp +
                   " \u2109",
               textColor: Colors.black,
               textPosition: 50,

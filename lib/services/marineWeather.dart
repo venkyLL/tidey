@@ -6,6 +6,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:tidey/const.dart';
 
+//bool marineWeatherExists = false;
+//bool tideDataExists = false;
+//bool marineHourlyExists = false;
+//bool marineAstronomyExists = false;
+
 MarineWeather marineWeatherFromJson(String str) =>
     MarineWeather.fromJson(json.decode(str));
 
@@ -473,23 +478,36 @@ class WeatherService {
       weatherData = MarineWeather.fromJson(response.data);
       // weatherData = MarineWeather.fromJson(weatherMap);
 
-      print("Hello Map");
-
-//   //   final locations = (response.data)
-//          .cast<Map<String, dynamic>>()
-//          .map((e) => Weather.fromJson(e));
-      //  MarineWeather marineWeatherFromJson(String str) => MarineWeather.fromJson(json.decode(weatherMap));
-
       print("Map complete");
-      print(weatherData.data.weather[0].tides[0].tideData[0].tideTime);
-      for (var myTide in weatherData.data.weather[0].tides[0].tideData) {
-        print("About to print");
-        print(myTide.toJson());
+      marineWeatherExists = true;
+      marineHourlyExists = true;
+      tideDataExists = true;
+      marineAstronomyExists = true;
+      if (weatherData.data.weather.length == 0) {
+        marineWeatherExists = false;
+        if (weatherData.data.weather[0].tides.length == 0) {
+          tideDataExists = false;
+        }
+        if (weatherData.data.weather[0].hourly.length == 0) {
+          marineHourlyExists = false;
+        }
+        if (weatherData.data.weather[0].astronomy.length == 0) {
+          marineAstronomyExists = false;
+        }
       }
+//      print(weatherData.data.weather[0].tides[0].tideData[0].tideTime);
+//      for (var myTide in weatherData.data.weather[0].tides[0].tideData) {
+//        print("About to print");
+//        print(myTide.toJson());
+//      }
 
       return;
     } catch (e) {
       print("error found");
+      marineWeatherExists = false;
+      marineHourlyExists = false;
+      tideDataExists = false;
+      marineAstronomyExists = false;
       print(e);
     }
   }

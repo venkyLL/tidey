@@ -32,6 +32,8 @@ class _settingsScreenState extends State<SettingsScreen> {
   TimeOfDay _sleepTime = userSettings.sleepTime;
   TimeOfDay _wakeTime = userSettings.sleepTime;
   TimeOfDay _alarmTime = userSettings.sleepTime;
+  bool _useCurrentPosition = userSettings.useCurrentPosition;
+  final _formKey = GlobalKey<FormState>();
 
   void initState() {
     // TODO: implement initState
@@ -77,11 +79,78 @@ class _settingsScreenState extends State<SettingsScreen> {
           },
           child: ListView(
             children: [
-              MenuListTile(
-                title: "Set Location",
-                icon: Icons.location_on,
-                onTap: () => {},
+              MenuListTileWithSwitch(
+                  title: (userSettings.useCurrentPosition)
+                      ? "Location Use Current Position (Enabled)"
+                      : "Location Use Current Position(Disabled)",
+                  value: userSettings.chimeOn,
+                  icon: Icons.map,
+                  onTap: () {
+                    setState(() {
+                      userSettings.useCurrentPosition =
+                          !userSettings.useCurrentPosition;
+                      _useCurrentPosition = userSettings.useCurrentPosition;
+                      //     prefs.setBool('chimeOn', userSettings.chimeOn);
+                    });
+                  }),
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Container(
+                        width: 300,
+                        child: TextFormField(
+                            decoration: InputDecoration(
+                              // prefix:
+                              //    Text("Enter Latitude", style: kTextSettingsStyle),
+                              labelText: "Enter Latitude",
+                              labelStyle: kTextSettingsStyle,
+
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 2.0),
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                              hintText: 'between -90 and 90',
+                            ),
+                            textAlign: TextAlign.left,
+                            keyboardType: TextInputType.number,
+                            validator: (text) {
+                              if (text == null) {
+                                return null;
+                              }
+                              final n = num.tryParse(text);
+                              if (n == null) {
+                                return 'Error: Latitude must be a number between -90 and 90';
+                              }
+                              if (n < -90 || n > 90) {
+                                return 'Error: Latitude must be a number between -90 and 90';
+                              }
+                              return null;
+                            }),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          // TODO submit
+                        }
+                      },
+                      child:
+                          Text('Submit', style: TextStyle(color: Colors.black)),
+                    )
+                  ],
+                ),
               ),
+//              TextField(
+//                decoration: InputDecoration(
+//                    labelText: "Enter Latitude",
+//                    hintText: ("Must be between -90 and 90)")),
+//                keyboardType: TextInputType.number,
+//              ),
               MenuListTile(
                 title: "View Current Weather on Web",
                 icon: Icons.cloud_circle_outlined,

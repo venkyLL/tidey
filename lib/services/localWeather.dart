@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:tidey/const.dart';
 
 class LocalWeather {
@@ -743,25 +744,250 @@ class LocalWeatherService {
       localWeather = LocalWeather.fromJson(response.data);
       // weatherData = MarineWeather.fromJson(weatherMap);
 
-      print("Hello Map");
+      localWeatherExists = false;
+      localHourlyExists = false;
 
-//   //   final locations = (response.data)
-//          .cast<Map<String, dynamic>>()
-//          .map((e) => Weather.fromJson(e));
-      //  MarineWeather marineWeatherFromJson(String str) => MarineWeather.fromJson(json.decode(weatherMap));
+      if (localWeather.data.weather.length != 0) {
+        localWeatherExists = true;
+        populateGlobalWeather();
 
-      print("Map complete");
-      print(localWeather.data.weather[0]);
-      for (var weatherDesc
-          in localWeather.data.weather[0].hourly[0].weatherDesc) {
-        print("About to print");
-        print(weatherDesc.toJson());
+        if (localWeather.data.weather[0].hourly.length != 0) {
+          localHourlyExists = true;
+        }
       }
+      print("Map complete");
+//      print(localWeather.data.weather[0]);
+//      for (var weatherDesc
+//          in localWeather.data.weather[0].weatherDesc) {
+//        print("About to print");
+//        print(weatherDesc.toJson());
+//      }
 
       return;
     } catch (e) {
+      localWeatherExists = false;
+      localHourlyExists = false;
       print("error found");
       print(e);
     }
+  }
+
+  populateGlobalWeather() {
+    globalWeather.dailyWeather = [];
+
+    //  String start = "Today\s";
+    for (var i = 0; i < localWeather.data.weather.length; i++) {
+      print("About to add weather $i");
+      globalWeather.dailyWeather.add(WeatherDay());
+      if (i != 0) {
+        globalWeather.dailyWeather[i].dayString =
+            DateFormat('EEEE').format(localWeather.data.weather[i].date);
+      } else {
+        globalWeather.dailyWeather[i].dayString = "Today";
+      }
+      globalWeather.dailyWeather[i].date = localWeather.data.weather[i].date;
+      if (localWeather.data.weather[i].astronomy.length != 0) {
+        globalWeather.dailyWeather[i].sunrise =
+            localWeather.data.weather[i].astronomy[0].sunrise;
+        globalWeather.dailyWeather[i].sunset =
+            localWeather.data.weather[i].astronomy[0].sunrise;
+        globalWeather.dailyWeather[i].moonrise =
+            localWeather.data.weather[i].astronomy[0].sunrise;
+        globalWeather.dailyWeather[i].moonset =
+            localWeather.data.weather[i].astronomy[0].sunrise;
+        globalWeather.dailyWeather[i].moonPhase =
+            localWeather.data.weather[i].astronomy[0].moonPhase;
+        globalWeather.dailyWeather[i].moonIllumination =
+            localWeather.data.weather[i].astronomy[0].moonIllumination;
+      }
+      if (marineHourlyExists && i == 0) {
+        globalWeather.dailyWeather[i].waterTemp =
+            weatherData.data.weather[0].hourly[0].waterTempF;
+        globalWeather.dailyWeather[i].waveHt =
+            weatherData.data.weather[0].hourly[0].swellHeightFt;
+        globalWeather.dailyWeather[i]
+          ..waveDirection =
+              weatherData.data.weather[0].hourly[0].swellDir16Point;
+        print("Zee Waves " +
+            globalWeather.dailyWeather[i].waveHt +
+            globalWeather.dailyWeather[i].waveDirection);
+      }
+      if (tideDataExists && i == 0) {
+        globalWeather.dailyWeather[i].tideMarquee = "";
+
+        for (var k = 0;
+            k < weatherData.data.weather[0].tides[0].tideData.length;
+            k++) {
+          print("TideAdd $k");
+          globalWeather.dailyWeather[i].tides.add(TideElement());
+          globalWeather.dailyWeather[i].tides[k].tideType =
+              weatherData.data.weather[0].tides[0].tideData[k].tideType;
+          globalWeather.dailyWeather[i].tides[k].tideDateTime = (DateTime.parse(
+              weatherData.data.weather[0].tides[0].tideData[k].tideDateTime));
+
+          globalWeather.dailyWeather[i].tides[k].tideHeightFt = (double.parse(
+                      weatherData
+                          .data.weather[0].tides[0].tideData[k].tideHeightMt) /
+                  3.28084)
+              .toStringAsFixed(2);
+          globalWeather.dailyWeather[i].tides[k].tideHeight = (double.parse(
+                  weatherData
+                      .data.weather[0].tides[0].tideData[k].tideHeightMt) /
+              3.28084);
+          globalWeather.dailyWeather[i].tides[k].tideTime =
+              weatherData.data.weather[0].tides[0].tideData[k].tideDateTime;
+
+          String StartString = "Tides: First ";
+          if (k > 1) {
+            StartString = "Tides: Second ";
+          }
+          globalWeather.dailyWeather[i].tideMarquee =
+              globalWeather.dailyWeather[i].tideMarquee +
+                  StartString +
+                  weatherData.data.weather[0].tides[0].tideData[k].tideType
+                      .toLowerCase() +
+                  " tide " +
+                  (double.parse(weatherData.data.weather[0].tides[0].tideData[k]
+                              .tideHeightMt) /
+                          3.28084)
+                      .toStringAsFixed(2) +
+                  "ft@ " +
+                  DateFormat('hh:mma').format(DateTime.parse(weatherData
+                      .data.weather[0].tides[0].tideData[k].tideDateTime)) +
+                  marqueeSpacer;
+        }
+      }
+      globalWeather.dailyWeather[i].highTemp =
+          localWeather.data.weather[i].maxtempF;
+      globalWeather.dailyWeather[i].lowTemp =
+          localWeather.data.weather[i].mintempF;
+
+      if (localWeather.data.weather[i].hourly.length != 0) {
+        globalWeather.dailyWeather[i].pressure =
+            localWeather.data.weather[i].hourly[0].pressureInches;
+        globalWeather.dailyWeather[i].windSpeed =
+            localWeather.data.weather[i].hourly[0].windspeedMiles;
+        globalWeather.dailyWeather[i].windDirection =
+            localWeather.data.weather[i].hourly[0].winddir16Point;
+        print("ZeeWind" +
+            globalWeather.dailyWeather[i].windSpeed +
+            " " +
+            globalWeather.dailyWeather[i].windDirection);
+        globalWeather.dailyWeather[i].windGust =
+            localWeather.data.weather[i].hourly[0].windGustMiles;
+
+        globalWeather.dailyWeather[i].airQuality = airQuality[
+            localWeather.data.weather[i].hourly[0].airQuality.usEpaIndex];
+        globalWeather.dailyWeather[i].humidity =
+            localWeather.data.weather[i].hourly[0].visibilityMiles;
+//        globalWeather.dailyWeather[i].currentWeatherIcon = getWeatherIconBox(
+//            time: "0900",
+//            code: localWeather.data.weather[i].hourly[0].weatherCode);
+        globalWeather.dailyWeather[i].weatherCode =
+            localWeather.data.weather[i].hourly[0].weatherCode;
+        globalWeather.dailyWeather[i].weatherConditionDesc =
+            localWeather.data.weather[i].hourly[0].weatherDesc[0].value;
+        globalWeather.dailyWeather[i].chanceOfRain =
+            localWeather.data.weather[i].hourly[0].chanceofrain;
+        globalWeather.dailyWeather[i].cloudCover =
+            localWeather.data.weather[i].hourly[0].cloudcover;
+        globalWeather.dailyWeather[i].visibility =
+            localWeather.data.weather[i].hourly[0].visibilityMiles;
+        globalWeather.dailyWeather[i].marquee =
+            getWeatherLine(globalWeather.dailyWeather[i].dayString, i);
+        //   print("MadeAMarquee =\n$globalWeather.dailyWeather[i].marquee");
+      } //  The 0 element in hourly array is dayly summary
+      for (var j = 1; j < localWeather.data.weather[i].hourly.length; j++) {
+        print("HourAdd $j");
+        globalWeather.dailyWeather[i].hourly.add(HourlyWeather());
+        globalWeather.dailyWeather[i].hourly[j - 1].timeofDay =
+            timeMap[localWeather.data.weather[i].hourly[j].time];
+
+        globalWeather.dailyWeather[i].hourly[j - 1].timeString =
+            hourFmt[localWeather.data.weather[i].hourly[j].time];
+        globalWeather.dailyWeather[i].hourly[j - 1].temp =
+            localWeather.data.weather[i].hourly[j].tempF;
+        globalWeather.dailyWeather[i].hourly[j - 1].pressure =
+            localWeather.data.weather[i].hourly[j].pressureInches;
+        globalWeather.dailyWeather[i].hourly[j - 1].windSpeed =
+            localWeather.data.weather[i].hourly[j].windspeedMiles;
+        globalWeather.dailyWeather[i].hourly[j - 1].windDirection =
+            localWeather.data.weather[i].hourly[j].winddir16Point;
+        globalWeather.dailyWeather[i].hourly[j - 1].windGust =
+            localWeather.data.weather[i].hourly[j].windGustMiles;
+
+        globalWeather.dailyWeather[i].hourly[j - 1].airQuality = airQuality[
+            localWeather.data.weather[i].hourly[j].airQuality.usEpaIndex];
+        globalWeather.dailyWeather[i].hourly[j - 1].humidity =
+            localWeather.data.weather[i].hourly[j].visibilityMiles;
+//        globalWeather.dailyWeather[i].hourly[j - 1].currentWeatherIcon =
+//            getWeatherIconBox(
+//                time: localWeather.data.weather[i].hourly[j].time,
+//                code: localWeather.data.weather[i].hourly[0].weatherCode);
+        globalWeather.dailyWeather[i].hourly[j - 1].weatherCode =
+            localWeather.data.weather[i].hourly[j].weatherCode;
+        globalWeather.dailyWeather[i].hourly[j - 1].weatherConditionDesc =
+            localWeather.data.weather[i].hourly[j].weatherDesc[0].value;
+        globalWeather.dailyWeather[i].hourly[j - 1].chanceOfRain =
+            localWeather.data.weather[i].hourly[j].chanceofrain;
+        globalWeather.dailyWeather[i].hourly[j - 1].cloudCover =
+            localWeather.data.weather[i].hourly[j].cloudcover;
+        globalWeather.dailyWeather[i].hourly[j - 1].visibility =
+            localWeather.data.weather[i].hourly[j].visibilityMiles;
+
+        if (marineHourlyExists && i == 0) {
+          globalWeather.dailyWeather[0].hourly[j - 1].waveHt =
+              weatherData.data.weather[0].hourly[j - 1].swellHeightFt;
+          globalWeather.dailyWeather[i].hourly[j - 1].waveDirection =
+              weatherData.data.weather[0].hourly[j - 1].swellDir16Point;
+        }
+      }
+    }
+  }
+
+  getWeatherLine(String stringDay, int day) {
+    return ("     " +
+        stringDay +
+        " Weather:    " +
+        localWeather.data.weather[day].hourly[0].weatherDesc[0].value +
+        marqueeSpacer +
+        "Lo " +
+        localWeather.data.weather[day].mintempF +
+        "\u00B0F" + //\u2109
+        marqueeSpacer +
+        "High " +
+        weatherData.data.weather[day].maxtempF +
+        "\u00B0F" +
+        marqueeSpacer +
+        "Humidity " +
+        localWeather.data.weather[day].hourly[0].humidity +
+        "%" +
+        marqueeSpacer +
+        "Barometric Pressure " +
+        localWeather.data.weather[day].hourly[0].pressureInches +
+        "in" +
+        marqueeSpacer +
+        "Chance of Rain " +
+        localWeather.data.weather[day].hourly[0].chanceofrain +
+        "%" +
+        marqueeSpacer +
+        "Cloud Cover " +
+        localWeather.data.weather[day].hourly[0].cloudcover +
+        "%" +
+        marqueeSpacer +
+        "Wind Speed " +
+        localWeather.data.weather[day].hourly[0].windspeedMiles +
+        "(mph) gusting to " +
+        localWeather.data.weather[day].hourly[0].windGustMiles +
+        marqueeSpacer +
+        "Visibility " +
+        localWeather.data.weather[day].hourly[0].visibilityMiles +
+        " miles" +
+        marqueeSpacer +
+        "Air Quality  " +
+        airQuality[
+            localWeather.data.weather[day].hourly[0].airQuality.usEpaIndex] +
+        marqueeSpacer +
+        "           ");
   }
 }

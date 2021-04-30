@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:tidey/const.dart';
-import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class ForecastScreen extends StatefulWidget {
@@ -20,13 +19,19 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
   @override
   void initState() {
+    super.initState();
     weatherDataSource =
-        WeatherDataSource(weatherData: weatherData.data.weather);
+        WeatherDataSource(weatherData: globalWeather.dailyWeather);
     print("Number of hourly records is " +
         weatherDataSource._weatherData.length.toString());
     Timer(Duration(seconds: userSettings.transitionTime), () {
       Navigator.of(context).pop();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -60,72 +65,82 @@ class _ForecastScreenState extends State<ForecastScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: Column(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                height: 200,
-                child: Text('Weekly Forecast', style: kTableTitleTextStyle),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: SfDataGrid(
-                    source: weatherDataSource,
-                    columnWidthMode: ColumnWidthMode.fill,
-                    columns: <GridColumn>[
-                      GridTextColumn(
-                          columnName: 'Day',
-                          label: Container(
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              color: kTitleBoxColor,
-                              child: Text(
-                                'Day',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Condition',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Condition',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Deescription',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Description',
-                                style: kTableTextStyle,
-                                overflow: TextOverflow.ellipsis,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Temp',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Temp',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Wind',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Wind',
-                                style: kTableTextStyle,
-                              ))),
-                    ],
+          child: (!localHourlyExists)
+              ? Container(
+                  alignment: Alignment.center,
+                  height: 200,
+                  child: Text(
+                      'Local Weather Not Available\nPlease Check Network Connections',
+                      style: kTableTitleTextStyle,
+                      textAlign: TextAlign.center),
+                )
+              : Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 200,
+                      child:
+                          Text('Weekly Forecast', style: kTableTitleTextStyle),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: SfDataGrid(
+                          source: weatherDataSource,
+                          columnWidthMode: ColumnWidthMode.fill,
+                          columns: <GridColumn>[
+                            GridTextColumn(
+                                columnName: 'Day',
+                                label: Container(
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    color: kTitleBoxColor,
+                                    child: Text(
+                                      'Day',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Condition',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Condition',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Deescription',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Description',
+                                      style: kTableTextStyle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Temp',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Temp',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Wind',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Wind',
+                                      style: kTableTextStyle,
+                                    ))),
+                          ],
 //                  stackedHeaderRows: <StackedHeaderRow>[
 //                    StackedHeaderRow(cells: [
 //                      StackedHeaderCell(
@@ -148,11 +163,11 @@ class _ForecastScreenState extends State<ForecastScreen> {
 ////                            child: Center(child: Text('Product Details'))))
 //                    ])
 //                  ],
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -162,7 +177,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
 // BoxedIcon((WeatherIcons.sunset), color: Colors.white)
 class WeatherDataSource extends DataGridSource {
   /// Creates the weather data source class with required details.
-  WeatherDataSource({List<Weather> weatherData}) {
+  WeatherDataSource({List<WeatherDay> weatherData}) {
     _weatherData = weatherData
         .map<DataGridRow>(
           (e) => DataGridRow(cells: [
@@ -173,21 +188,19 @@ class WeatherDataSource extends DataGridSource {
                 value: getWeatherIcon(code: e.hourly[0].weatherCode)),
             DataGridCell<String>(
                 columnName: 'Description',
-                value: e.hourly[0].weatherDesc[0].value),
+                value: e.hourly[0].weatherConditionDesc),
             //  BoxedIcon((WeatherIcons.day_cloudy), color: Colors.blue)),
             DataGridCell<String>(
-                columnName: 'temp', value: e.hourly[0].tempF + " \u2109"),
+                columnName: 'temp', value: e.hourly[0].temp + " \u2109"),
             //    DataGridCell<String>(
             //      columnName: 'code', value: e.cloudcover + "%"),
 
             DataGridCell<String>(
                 columnName: 'wind',
-                value: e.hourly[0].windspeedMiles +
-                    " " +
-                    e.hourly[0].winddir16Point),
+                value: e.hourly[0].windSpeed + " " + e.hourly[0].windDirection),
             DataGridCell<String>(
                 columnName: 'Description',
-                value: e.hourly[0].weatherDesc[0].value),
+                value: e.hourly[0].weatherConditionDesc),
           ]),
         )
         .toList();
@@ -211,7 +224,7 @@ class WeatherDataSource extends DataGridSource {
 //  }
 
   DataGridRowAdapter buildRow(DataGridRow row) {
-    print("Creating a row");
+    //  print("Creating a row");
 
     return DataGridRowAdapter(color: Colors.white30, cells: [
       Container(

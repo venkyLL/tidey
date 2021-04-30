@@ -62,6 +62,11 @@ class UserSettings {
   TimeOfDay wakeTime = TimeOfDay(hour: 7, minute: 20);
   bool imperialUnits;
   int transitionTime;
+  bool useCurrentPosition = true;
+  double manualLat = 26.7747;
+  double manualLong = -77.3296;
+
+// Variables to store if there is weather data in list
 
 //  void set chimeSelected(ChimeType chimeSelected) {
 //    _chimeSelected = chimeSelected;
@@ -80,6 +85,89 @@ class UserSettings {
 //  String get chimeSelectedString {
 //    return _chimeSelectedString;
 //  }
+}
+
+bool marineWeatherExists = false;
+bool tideDataExists = false;
+bool marineHourlyExists = false;
+bool marineAstronomyExists = false;
+bool localWeatherExists = false;
+bool localHourlyExists = false;
+
+TideyWeather globalWeather = TideyWeather();
+
+class TideyWeather {
+  HourlyWeather currentCondition = null;
+  List<WeatherDay> dailyWeather = [WeatherDay()];
+}
+
+class WeatherDay {
+  DateTime date = DateTime.now();
+  String dayString = "";
+  String sunrise = "";
+  String sunset = "";
+  String moonrise = "";
+  String moonset = "";
+  String moonPhase = "";
+  String moonIllumination = "";
+  String waterTemp = "";
+  String pressure = "";
+  String highTemp = "";
+  String lowTemp = "";
+  String windSpeed = "";
+  String windDirection = "";
+  String windGust = "";
+  String waveHt = "";
+  String waveDirection = "";
+  String airQuality = "";
+  String humidity = "";
+ // IconData currentWeatherIcon = WeatherIcons.day_sunny;
+  String weatherCode = "";
+  String weatherConditionDesc = "";
+  String chanceOfRain = "";
+  String cloudCover = "";
+  String visibility = "";
+  String marquee = "";
+  String tideMarquee = "";
+  List<TideElement> tides = [];
+  List<HourlyWeather> hourly = [];
+}
+
+class HourlyWeather {
+  String timeString = "";
+  TimeOfDay timeofDay = TimeOfDay(hour: 7, minute: 15);
+  String temp = "";
+  String pressure = "";
+  String windSpeed = "";
+  String windDirection = "";
+  String windGust = "";
+  String waveHt = "";
+  String waveDirection = "";
+  String airQuality = "";
+  String humidity = "";
+ // BoxedIcon currentWeatherIcon = BoxedIcon(WeatherIcons.day_sunny);
+  String weatherCode = "";
+  String weatherConditionDesc = "";
+  String chanceOfRain = "";
+  String cloudCover = "";
+  String tideHtFt = "";
+  String tideDirection = "";
+  String visibility = "";
+}
+
+class TideElement {
+  String tideTime = "";
+  String tideHeightFt = "";
+  double tideHeight = 0.0;
+  DateTime tideDateTime = DateTime.now();
+  String tideType = "";
+
+//  TideElement({
+//    this.tideTime,
+//    this.tideHeightMt,
+//    this.tideDateTime,
+//    this.tideType,
+//  });
 }
 
 //global bell constants
@@ -131,6 +219,16 @@ const hourFmt = {
   "1500": "3PM",
   "1800": "6PM",
   "2100": "9PM"
+};
+const timeMap = {
+  '0': TimeOfDay(hour: 0, minute: 0),
+  '300': TimeOfDay(hour: 03, minute: 0),
+  "600": TimeOfDay(hour: 06, minute: 0),
+  '900': TimeOfDay(hour: 09, minute: 0),
+  "1200": TimeOfDay(hour: 12, minute: 0),
+  "1500": TimeOfDay(hour: 15, minute: 0),
+  "1800": TimeOfDay(hour: 18, minute: 0),
+  "2100": TimeOfDay(hour: 21, minute: 0)
 };
 Map<String, IconData> weatherDayIconMap = {
   "395": WeatherIcons.snow,
@@ -256,7 +354,7 @@ const kTextSettingsStyle =
 const kIconSettingSize = 40.0;
 const kBezelColor = Color(0xFF999999);
 const kMarqueTextColor = Color(0xFF00022E);
-
+const marqueeSpacer = "  \u2022  ";
 var kMarqueeTextstyle = GoogleFonts.notoSans(
   color: kMarqueTextColor,
 //  color: Colors.white,

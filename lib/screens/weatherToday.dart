@@ -6,7 +6,6 @@ import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/forecast.dart';
-import 'package:tidey/services/marineWeather.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class TodayScreen extends StatefulWidget {
@@ -20,14 +19,20 @@ class _TodayScreenState extends State<TodayScreen> {
 
   @override
   void initState() {
+    super.initState();
     hourlyDataSource =
-        HourlyDataSource(hourlyData: weatherData.data.weather[0].hourly);
+        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
     print("Number of hourly records is " +
         weatherData.data.weather[0].hourly.length.toString());
     Timer(Duration(seconds: userSettings.transitionTime), () {
       // 5s over, navigate to a new page
       Navigator.pushReplacementNamed(context, ForecastScreen.id);
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -39,33 +44,11 @@ class _TodayScreenState extends State<TodayScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.transparent),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        //      title: Text(
-//          'Today\'s Weather\n' +
-//              localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
-//          textAlign: TextAlign.center,
-        //      ),
+
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-//        actions: <Widget>[
-////          Padding(
-////              padding: EdgeInsets.only(right: 20.0),
-////              child: GestureDetector(
-////                onTap: () {},
-////                child: Icon(
-////                  Icons.search,
-////                  size: 26.0,
-////                ),
-////              )),
-//          Padding(
-//              padding: EdgeInsets.only(right: 20.0),
-//              child: GestureDetector(
-//                onTap: () {
-//                  Navigator.pushNamed(context, ForecastScreen.id);
-//                },
-//                child: Icon(Icons.chevron_right),
-//              )),
-//        ],
+//
       ),
       body:
 //      Column  (
@@ -87,81 +70,86 @@ class _TodayScreenState extends State<TodayScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: Column(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                height: 200,
-                child: Text(
-                    'Today\'s Weather\n' +
-                        localWeather
-                            .data.weather[0].hourly[0].weatherDesc[0].value,
-                    style: kTableTitleTextStyle,
-                    textAlign: TextAlign.center),
-              ),
-//            zeClock(),
-//            SizedBox(
-//              height: 20,
-//            ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: SfDataGrid(
-                    source: hourlyDataSource,
-                    columnWidthMode: ColumnWidthMode.fill,
-                    columns: <GridColumn>[
-                      GridTextColumn(
-                          columnName: 'Hour',
-                          label: Container(
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              color: kTitleBoxColor,
-                              child: Text(
-                                'Hour',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Condition',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Condition',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Temp',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Temp',
-                                style: kTableTextStyle,
-                                overflow: TextOverflow.ellipsis,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Wind',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Wind',
-                                style: kTableTextStyle,
-                              ))),
-                      GridTextColumn(
-                          columnName: 'Wave',
-                          label: Container(
-                              color: kTitleBoxColor,
-                              padding: EdgeInsets.all(2.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Waves',
-                                style: kTableTextStyle,
-                              ))),
-                    ],
+          child: (!marineHourlyExists)
+              ? Container(
+                  alignment: Alignment.center,
+                  height: 200,
+                  child: Text(
+                      'Local Weather Not Available\nPlease Check Network Connections',
+                      style: kTableTitleTextStyle,
+                      textAlign: TextAlign.center),
+                )
+              : Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 200,
+                      child: Text(
+                          'Today\'s Weather\n' +
+                              globalWeather.dailyWeather[0].hourly[0]
+                                  .weatherConditionDesc,
+                          style: kTableTitleTextStyle,
+                          textAlign: TextAlign.center),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: SfDataGrid(
+                          source: hourlyDataSource,
+                          columnWidthMode: ColumnWidthMode.fill,
+                          columns: <GridColumn>[
+                            GridTextColumn(
+                                columnName: 'Hour',
+                                label: Container(
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    color: kTitleBoxColor,
+                                    child: Text(
+                                      'Hour',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Condition',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Condition',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Temp',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Temp',
+                                      style: kTableTextStyle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Wind',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Wind',
+                                      style: kTableTextStyle,
+                                    ))),
+                            GridTextColumn(
+                                columnName: 'Wave',
+                                label: Container(
+                                    color: kTitleBoxColor,
+                                    padding: EdgeInsets.all(2.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Waves',
+                                      style: kTableTextStyle,
+                                    ))),
+                          ],
 //                  stackedHeaderRows: <StackedHeaderRow>[
 //                    StackedHeaderRow(cells: [
 //                      StackedHeaderCell(
@@ -184,11 +172,11 @@ class _TodayScreenState extends State<TodayScreen> {
 ////                            child: Center(child: Text('Product Details'))))
 //                    ])
 //                  ],
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
 //          SizedBox(
@@ -223,26 +211,23 @@ class _TodayScreenState extends State<TodayScreen> {
 // BoxedIcon((WeatherIcons.sunset), color: Colors.white)
 class HourlyDataSource extends DataGridSource {
   /// Creates the weather data source class with required details.
-  HourlyDataSource({List<Hourly> hourlyData}) {
+  HourlyDataSource({List<HourlyWeather> hourlyData}) {
     _hourlyData = hourlyData
         .map<DataGridRow>(
           (e) => DataGridRow(cells: [
-            DataGridCell<String>(columnName: 'time', value: hourFmt[e.time]),
+            DataGridCell<String>(columnName: 'time', value: e.timeString),
             DataGridCell<BoxedIcon>(
                 columnName: 'condition',
-                value: getWeatherIcon(time: e.time, code: e.weatherCode)),
+                value: getWeatherIcon(time: e.timeString, code: e.weatherCode)),
             //     BoxedIcon((WeatherIcons.day_cloudy), color: Colors.blue)),
-            DataGridCell<String>(
-                columnName: 'temp', value: e.tempF + " \u2109"),
+            DataGridCell<String>(columnName: 'temp', value: e.temp + " \u2109"),
             //    DataGridCell<String>(
             //      columnName: 'code', value: e.cloudcover + "%"),
 
             DataGridCell<String>(
-                columnName: 'wind',
-                value: e.windspeedMiles + " " + e.winddir16Point),
+                columnName: 'wind', value: e.windSpeed + " " + e.windDirection),
             DataGridCell<String>(
-                columnName: 'wave',
-                value: e.swellHeightFt + " " + e.swellDir16Point),
+                columnName: 'wave', value: e.waveHt + " " + e.waveDirection),
           ]),
         )
         .toList();
@@ -266,7 +251,7 @@ class HourlyDataSource extends DataGridSource {
 //  }
 
   DataGridRowAdapter buildRow(DataGridRow row) {
-    print("Creating a row");
+    //   print("Creating a row");
 
     return DataGridRowAdapter(color: Colors.white30, cells: [
       Container(
