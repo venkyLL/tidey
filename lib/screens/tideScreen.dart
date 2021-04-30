@@ -37,22 +37,12 @@ class TideScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           //  backgroundColor: Color(0x44000000),
           elevation: 0,
+          // Venky This works
           leading: menu(),
-//          GestureDetector(
-//            onTap: () {
-//              menu();
-//              // Navigator.pushNamed(context, SettingsScreen.id);
-//            },
-//            child: Icon(
-//              Icons.waves, // add custom icons also
-//            ),
-//          ),
-//          actions: <Widget>[
-//            menu(),
-          //   ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            print("TOuched Fab");
             menu();
           },
           child: const Icon(Icons.waves, color: kBezelColor),
@@ -67,6 +57,7 @@ class TideScreen extends StatelessWidget {
           },
           child: GestureDetector(
             onTap: () {
+              print("Touched everywhere");
               menu();
             },
             child: OrientationBuilder(
