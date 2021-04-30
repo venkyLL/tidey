@@ -93,56 +93,59 @@ class _settingsScreenState extends State<SettingsScreen> {
                       //     prefs.setBool('chimeOn', userSettings.chimeOn);
                     });
                   }),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Container(
-                        width: 300,
-                        child: TextFormField(
-                            decoration: InputDecoration(
-                              // prefix:
-                              //    Text("Enter Latitude", style: kTextSettingsStyle),
-                              labelText: "Enter Latitude",
-                              labelStyle: kTextSettingsStyle,
+              Visibility(
+                visible: !_useCurrentPosition,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Container(
+                          width: 300,
+                          child: TextFormField(
+                              decoration: InputDecoration(
+                                // prefix:
+                                //    Text("Enter Latitude", style: kTextSettingsStyle),
+                                labelText: "Enter Latitude",
+                                labelStyle: kTextSettingsStyle,
 
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 2.0),
-                                borderRadius: BorderRadius.circular(25.0),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.white, width: 2.0),
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                hintText: 'between -90 and 90',
                               ),
-                              hintText: 'between -90 and 90',
-                            ),
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.number,
-                            validator: (text) {
-                              if (text == null) {
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.number,
+                              validator: (text) {
+                                if (text == null) {
+                                  return null;
+                                }
+                                final n = num.tryParse(text);
+                                if (n == null) {
+                                  return 'Error: Latitude must be a number between -90 and 90';
+                                }
+                                if (n < -90 || n > 90) {
+                                  return 'Error: Latitude must be a number between -90 and 90';
+                                }
                                 return null;
-                              }
-                              final n = num.tryParse(text);
-                              if (n == null) {
-                                return 'Error: Latitude must be a number between -90 and 90';
-                              }
-                              if (n < -90 || n > 90) {
-                                return 'Error: Latitude must be a number between -90 and 90';
-                              }
-                              return null;
-                            }),
+                              }),
+                        ),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          // TODO submit
-                        }
-                      },
-                      child:
-                          Text('Submit', style: TextStyle(color: Colors.black)),
-                    )
-                  ],
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            // TODO submit
+                          }
+                        },
+                        child: Text('Submit',
+                            style: TextStyle(color: Colors.black)),
+                      )
+                    ],
+                  ),
                 ),
               ),
 //              TextField(
