@@ -238,18 +238,18 @@ class _LandscapeViewState extends State<LandscapeView> {
   }
 
   _bobX(Timer timer) {
-    print("Should be checking for marquee" +
-        DateTime.now().getMinutes.toString());
+    // print("Should be checking for marquee" +
+    DateTime.now().getMinutes.toString();
 
     if (DateTime.now().getMinutes == 34) {
-      print("Should be starting Marquee");
-      if (bellLastRungDateTime.addMinutes(1).isPast) {
-        bellLastRungDateTime = DateTime.now();
-        print("Should be starting Marquee2");
-        setState(() {
-          marqueeCompleted = false;
-        });
-      } //has the bell already rung for this hour
+      //  print("Should be starting Marquee");
+//      if (bellLastRungDateTime.addMinutes(1).isPast) {
+//        bellLastRungDateTime = DateTime.now();
+//        print("Should be starting Marquee2");
+//        setState(() {
+//          marqueeCompleted = false;
+//        });
+//      } //has the bell already rung for this hour
     }
     if (startMarquee) {
       setState(() {
