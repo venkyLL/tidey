@@ -971,7 +971,12 @@ class LocalWeatherService {
         print("Yea Yo");
         weather = weather = globalWeather.dailyWeather[i].marquee;
       }
-      marqueeString = tides + weather;
+      marqueeString =
+          "                                                                     " +
+              "                                                             " +
+              tides +
+              weather +
+              "  ";
     }
   }
 

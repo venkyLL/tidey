@@ -64,6 +64,7 @@ class UserSettings {
   TimeOfDay alarmTime = TimeOfDay(hour: 7, minute: 20);
   final keyAlarmTimeHour = "alarmTimeHour";
   final keyAlarmTimeMin = "alarmTimeMin";
+  int countDownTimer = 0;
   TimeOfDay sleepTime = TimeOfDay(hour: 7, minute: 20);
   final keySleepTimeHour = "sleepTmeHour";
   final keySleepTimeMin = "sleepTmeMin";
@@ -355,10 +356,10 @@ const kHeadingColor = Color(0xFFAAAAAA);
 const kPrimaryColor = Colors.indigo;
 const kAppBlueColor = Color(0xFF3366CC);
 const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);
-const kTextSettingSize = 20.0;
+const kTextSettingSize = 15.0;
 const kTextSettingsStyle =
     TextStyle(fontSize: kTextSettingSize, color: Colors.white);
-const kIconSettingSize = 40.0;
+const kIconSettingSize = 30.0;
 const kBezelColor = Color(0xFF999999);
 const kMarqueTextColor = Color(0xFF00022E);
 const marqueeSpacer = "  \u2022  ";
@@ -494,7 +495,8 @@ class ScreenSize {
     marqueeHeight = clockTop;
 
     // gaugeBottom =
-    //   (safeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
+    //   (s
+    //   afeBlockVertical * 100) - gaugeSize - gaugeTop - marqueeHeight;
     //  gaugeBottom = ((clockTop * 2) + clockSize) - (gaugeSize + (gaugeTop)) - 150;
     gaugeBottom = clockTop + clockSize - gaugeSize - gaugeTop;
     gauge1TopLeft = Offset(0, gaugeTop);

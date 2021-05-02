@@ -223,7 +223,7 @@ bool startMarquee = false;
 
 class _LandscapeViewState extends State<LandscapeView> {
   Timer timer;
-  DateTime bellLastRungDateTime;
+  DateTime bellLastRungDateTime = DateTime.now();
   //int currentTransitionTime = 0;
   @override
   void initState() {
@@ -241,20 +241,26 @@ class _LandscapeViewState extends State<LandscapeView> {
     // print("Should be checking for marquee" +
     DateTime.now().getMinutes.toString();
 
-    if (DateTime.now().getMinutes == 34) {
+    if (DateTime.now().getMinutes == 00) {
       //  print("Should be starting Marquee");
-//      if (bellLastRungDateTime.addMinutes(1).isPast) {
-//        bellLastRungDateTime = DateTime.now();
-//        print("Should be starting Marquee2");
-//        setState(() {
-//          marqueeCompleted = false;
-//        });
-//      } //has the bell already rung for this hour
-    }
-    if (startMarquee) {
-      setState(() {
-        marqueeCompleted = false;
-      });
+      DateTime myDate = bellLastRungDateTime.addMinutes(1);
+      if (bellLastRungDateTime.addMinutes(1).isPast) {
+        bellLastRungDateTime = DateTime.now();
+        print("Should be starting Marquee2");
+        setState(() {
+          marqueeCompleted = false;
+          startMarquee = true;
+        });
+      } //has the bell already rung for this hour
+    } else {
+      if (startMarquee) {
+        print("Setting MarqueeCompled = false");
+        setState(() {
+          startMarquee = false;
+          marqueeCompleted = false;
+        });
+      }
+      ;
 
       // are we at the top of the hour
 
@@ -315,6 +321,7 @@ class _LandscapeViewState extends State<LandscapeView> {
         onDone: () {
           setState(() {
             marqueeCompleted = true;
+
             //   marqueeColor = Colors.blue;
           });
         }

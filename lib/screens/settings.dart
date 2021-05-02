@@ -21,6 +21,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _settingsScreenState extends State<SettingsScreen> {
   double _currentSliderValue = userSettings.transitionTime.toDouble();
+  double _countDownSliderValue = 5;
   int _sliding = userSettings.imperialUnits ? 0 : 1;
   String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
   SharedPreferences prefs;
@@ -481,6 +482,52 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.av_timer,
+                            size: kIconSettingSize,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            " Timer (" +
+                                _countDownSliderValue.round().toString() +
+                                ")",
+                            style: kTextSettingsStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0),
+                      child: Row(
+                        children: [
+                          Text("0", style: kTextSettingsStyle),
+                          Slider(
+                            value: _countDownSliderValue,
+                            min: 0,
+                            max: 120,
+                            divisions: 120,
+                            label: _countDownSliderValue.round().toString(),
+                            onChanged: (double value) {
+                              setState(() {
+                                _countDownSliderValue = value;
+                                userSettings.countDownTimer = value.round();
+                              });
+                            },
+                          ),
+                          Text("120 Minutes", style: kTextSettingsStyle),
+                        ],
+                      ),
+                    ),
+
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
                     MenuListTileWithSwitch(
                         title: (userSettings.alarmOn)
                             ? "Alarm (Enabled)"
@@ -500,7 +547,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                     Visibility(
                       visible: _alarmOn,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: const EdgeInsets.only(left: 25.0),
                         child: MenuListTile(
                           title: "Alarm (" + _alarmTime.format(context) + ")",
                           icon: Icons.alarm,
@@ -525,9 +572,17 @@ class _settingsScreenState extends State<SettingsScreen> {
                           Text(
                             " Seconds between Screens (" +
                                 _currentSliderValue.round().toString() +
-                                ")     5",
+                                ")",
                             style: kTextSettingsStyle,
                           ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Row(
+                        children: [
+                          Text("5", style: kTextSettingsStyle),
                           Slider(
                             value: _currentSliderValue,
                             min: 5,
