@@ -89,181 +89,44 @@ class _zeClockSyncState extends State<zeClockSync> {
 
   /// Returns the gauge clock
   SfRadialGauge _buildMyClock() {
-    return SfRadialGauge(
-      axes: <RadialAxis>[
-        /// Renders inner axis and positioned it using CenterX and
-        /// CenterY properties and reduce the radius using radiusFactor
-        RadialAxis(
-//            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
-            startAngle: 270,
-            endAngle: 270,
-            minimum: 0,
-            maximum: 12,
-            showFirstLabel: false,
-            interval: 1,
-            radiusFactor: 0.8,
-            //  labelsPosition: ElementsPosition.outside,
-            labelOffset: 0.1,
-            offsetUnit: GaugeSizeUnit.factor,
-            minorTicksPerInterval: 4,
-            tickOffset: 0.03,
-            minorTickStyle: MinorTickStyle(
-                length: 0.06, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
-            majorTickStyle: MajorTickStyle(
-                length: 0.1, lengthUnit: GaugeSizeUnit.factor, thickness: 1.5),
-            axisLabelStyle: GaugeTextStyle(fontSize: 10, color: Colors.white),
-            axisLineStyle: AxisLineStyle(
-                thickness: 0.025,
-                thicknessUnit: GaugeSizeUnit.factor,
-                color: Colors.black38),
-            pointers: <GaugePointer>[
-              MarkerPointer(
-                markerHeight: 20,
-                markerWidth: 20,
-                markerType: MarkerType.triangle,
-                markerOffset: 20,
-                value: globalNextLowTidePointerValue,
-                enableAnimation: true,
-                animationType: AnimationType.linear,
-                color: Colors.red,
-              ),
-              MarkerPointer(
-                markerHeight: 20,
-                markerWidth: 20,
-                markerType: MarkerType.text,
-                markerOffset: -30,
-                value: globalNextLowTidePointerValue,
-                enableAnimation: true,
-                animationType: AnimationType.linear,
-                text: globalNextLowTideHeightInFeet > 1000
-                    ? "DataFailure"
-                    : (globalNextLowTideHeightInFeet > 0
-                        ? "+" +
-                            globalNextLowTideHeightInFeet.toStringAsFixed(1) +
-                            " ft"
-                        : globalNextLowTideHeightInFeet.toStringAsFixed(1) +
-                            " ft"),
-                textStyle: GaugeTextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.red),
-              ),
-//                  color: Colors.red),
-              MarkerPointer(
-                markerHeight: 20,
-                markerWidth: 20,
-                markerType: MarkerType.text,
-                markerOffset: -40,
-                value: globalNextHighTidePointerValue,
-                enableAnimation: true,
-                animationType: AnimationType.linear,
-                text: globalNextHighTideHeightInFeet > 1000
-                    ? "DataFailure"
-                    : (globalNextHighTideHeightInFeet > 0
-                        ? "+" +
-                            globalNextHighTideHeightInFeet.toStringAsFixed(1) +
-                            " ft"
-                        : globalNextHighTideHeightInFeet.toStringAsFixed(1) +
-                            " ft"),
-                textStyle: GaugeTextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.green),
-              ),
-//                  color: Colors.red),
-
-              MarkerPointer(
-                markerHeight: 20,
-                markerWidth: 20,
-                markerType: MarkerType.triangle,
-                markerOffset: 20,
-                value: globalNextHighTidePointerValue,
-                enableAnimation: true,
-                animationType: AnimationType.linear,
-                color: Colors.green,
-              ),
-              NeedlePointer(
-                  needleLength: 0.6,
-                  lengthUnit: GaugeSizeUnit.factor,
-                  needleStartWidth: 1,
-                  needleEndWidth: 2,
-                  value: _value.hour >= 12
-                      ? _value.hour - 12.0 + _value.minute / 60.0
-//                      : _value.hour == 0 && _value.minute == 0
-//                          ? 12.0
-                      : _value.hour + _value.minute / 60.0,
-                  needleColor: _needleColor,
-                  knobStyle: KnobStyle(knobRadius: 0)),
-              NeedlePointer(
-                  needleLength: 0.85,
-                  lengthUnit: GaugeSizeUnit.factor,
-                  needleStartWidth: 0.5,
-                  needleEndWidth: 1.5,
-                  value: _value.minute / 60.0 * 12.0 +
-                      (_value.second / 60.0 * 0.2),
-                  knobStyle: KnobStyle(
-                      color: const Color(0xFF00A8B5),
-                      sizeUnit: GaugeSizeUnit.factor,
-                      knobRadius: 0.05),
-                  needleColor: _needleColor),
-              NeedlePointer(
-                  needleLength: 0.9,
-                  lengthUnit: GaugeSizeUnit.factor,
-                  enableAnimation: true,
-                  animationType: AnimationType.bounceOut,
-                  needleStartWidth: 0.8,
-                  needleEndWidth: 0.8,
-                  value: _value.second == 0 ? 12 : _value.second / 60.0 * 12.0,
-                  needleColor: const Color(0xFF00A8B5),
-                  tailStyle: TailStyle(
-                      width: 0.8,
-                      length: 0.2,
-                      lengthUnit: GaugeSizeUnit.factor,
-                      color: const Color(0xFF00A8B5)),
-                  knobStyle: KnobStyle(
-                      knobRadius: 0.03,
-                      sizeUnit: GaugeSizeUnit.factor,
-                      color: Colors.white)),
-            ]),
-        RadialAxis(
-            startAngle: 270,
-            endAngle: 270,
-            radiusFactor: 0.3,
-            minimum: 0,
-            maximum: 80,
-            pointers: <GaugePointer>[
-              //      MarkerPointer(
+    return SfRadialGauge(axes: <RadialAxis>[
+      RadialAxis(
+          startAngle: 270,
+          endAngle: 270,
+          radiusFactor: 0.3,
+          minimum: 0,
+          maximum: 80,
+          pointers: <GaugePointer>[
+            //      MarkerPointer(
 //                    value: dirMap[gaugeDirection],
 //                    markerType: MarkerType.triangle,
 //                    markerWidth: 30,
 //                    markerHeight: 20,
 //                    markerOffset: 40,
 //                    color: Color(0xFFF67280)),
-              NeedlePointer(
-                value: 200, // dirMap[gaugeDirection],
-                lengthUnit: GaugeSizeUnit.factor,
-                needleLength: 0.5,
-                needleEndWidth: ScreenSize.small ? 5 : 10,
-                gradient: const LinearGradient(colors: <Color>[
-                  Color(0xFFFF6B78),
-                  Color(0xFFFF6B78),
-                  Color(0xFFE20A22),
-                  Color(0xFFE20A22)
-                ], stops: <double>[
-                  0,
-                  0.5,
-                  0.5,
-                  1
-                ]),
-                knobStyle: KnobStyle(
-                    borderColor: const Color(0xFFF67280),
-                    borderWidth: 0.0,
-                    color: Colors.white,
-                    sizeUnit: GaugeSizeUnit.factor,
-                    knobRadius: 0.05),
-              )
+            NeedlePointer(
+              value: 200, // dirMap[gaugeDirection],
+              lengthUnit: GaugeSizeUnit.factor,
+              needleLength: 0.5,
+              needleEndWidth: ScreenSize.small ? 5 : 10,
+              gradient: const LinearGradient(colors: <Color>[
+                Color(0xFFFF6B78),
+                Color(0xFFFF6B78),
+                Color(0xFFE20A22),
+                Color(0xFFE20A22)
+              ], stops: <double>[
+                0,
+                0.5,
+                0.5,
+                1
+              ]),
+              knobStyle: KnobStyle(
+                  borderColor: const Color(0xFFF67280),
+                  borderWidth: 0.0,
+                  color: Colors.white,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  knobRadius: 0.05),
+            )
 //                NeedlePointer(
 //                    value: dirMap[gaugeDirection],
 //                    needleLength: 0.9,
@@ -289,25 +152,161 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                        color: Colors.white,
 //                        sizeUnit: GaugeSizeUnit.factor,
 //                        knobRadius: 0.05)),
-            ],
-            axisLineStyle: AxisLineStyle(
-                thicknessUnit: GaugeSizeUnit.factor,
-                thickness: 0.1,
-                color: const Color(0xFF3366CC)),
-            interval: 10,
-            canRotateLabels: true,
-            axisLabelStyle: GaugeTextStyle(
-                fontSize: ScreenSize.small ? 10 : 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-            minorTicksPerInterval: 0,
-            majorTickStyle: MajorTickStyle(
-                thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
-            showLabels: true,
-            labelOffset: 10,
-            onLabelCreated: _handleLabelCreated),
-      ],
-    );
+          ],
+          axisLineStyle: AxisLineStyle(
+              thicknessUnit: GaugeSizeUnit.factor,
+              thickness: 0.1,
+              color: const Color(0xFF3366CC)),
+          interval: 10,
+          canRotateLabels: true,
+          axisLabelStyle: GaugeTextStyle(
+              fontSize: ScreenSize.small ? 10 : 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
+          minorTicksPerInterval: 0,
+          majorTickStyle: MajorTickStyle(
+              thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
+          showLabels: true,
+          labelOffset: 10,
+          onLabelCreated: _handleLabelCreated),
+
+      /// Renders inner axis and positioned it using CenterX and
+      /// CenterY properties and reduce the radius using radiusFactor
+      RadialAxis(
+//            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
+          startAngle: 270,
+          endAngle: 270,
+          minimum: 0,
+          maximum: 12,
+          showFirstLabel: false,
+          interval: 1,
+          radiusFactor: 0.8,
+          //  labelsPosition: ElementsPosition.outside,
+          labelOffset: 0.1,
+          offsetUnit: GaugeSizeUnit.factor,
+          minorTicksPerInterval: 4,
+          tickOffset: 0.03,
+          minorTickStyle: MinorTickStyle(
+              length: 0.06, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
+          majorTickStyle: MajorTickStyle(
+              length: 0.1, lengthUnit: GaugeSizeUnit.factor, thickness: 1.5),
+          axisLabelStyle: GaugeTextStyle(fontSize: 10, color: Colors.white),
+          axisLineStyle: AxisLineStyle(
+              thickness: 0.025,
+              thicknessUnit: GaugeSizeUnit.factor,
+              color: Colors.black38),
+          pointers: <GaugePointer>[
+            MarkerPointer(
+              markerHeight: 20,
+              markerWidth: 20,
+              markerType: MarkerType.triangle,
+              markerOffset: 20,
+              value: globalNextLowTidePointerValue,
+              enableAnimation: true,
+              animationType: AnimationType.linear,
+              color: Colors.red,
+            ),
+            MarkerPointer(
+              markerHeight: 20,
+              markerWidth: 20,
+              markerType: MarkerType.text,
+              markerOffset: -30,
+              value: globalNextLowTidePointerValue,
+              enableAnimation: true,
+              animationType: AnimationType.linear,
+              text: globalNextLowTideHeightInFeet > 1000
+                  ? "DataFailure"
+                  : (globalNextLowTideHeightInFeet > 0
+                      ? "+" +
+                          globalNextLowTideHeightInFeet.toStringAsFixed(1) +
+                          " ft"
+                      : globalNextLowTideHeightInFeet.toStringAsFixed(1) +
+                          " ft"),
+              textStyle: GaugeTextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.red),
+            ),
+//                  color: Colors.red),
+            MarkerPointer(
+              markerHeight: 20,
+              markerWidth: 20,
+              markerType: MarkerType.text,
+              markerOffset: -40,
+              value: globalNextHighTidePointerValue,
+              enableAnimation: true,
+              animationType: AnimationType.linear,
+              text: globalNextHighTideHeightInFeet > 1000
+                  ? "DataFailure"
+                  : (globalNextHighTideHeightInFeet > 0
+                      ? "+" +
+                          globalNextHighTideHeightInFeet.toStringAsFixed(1) +
+                          " ft"
+                      : globalNextHighTideHeightInFeet.toStringAsFixed(1) +
+                          " ft"),
+              textStyle: GaugeTextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.green),
+            ),
+//                  color: Colors.red),
+
+            MarkerPointer(
+              markerHeight: 20,
+              markerWidth: 20,
+              markerType: MarkerType.triangle,
+              markerOffset: 20,
+              value: globalNextHighTidePointerValue,
+              enableAnimation: true,
+              animationType: AnimationType.linear,
+              color: Colors.green,
+            ),
+            NeedlePointer(
+                needleLength: 0.6,
+                lengthUnit: GaugeSizeUnit.factor,
+                needleStartWidth: 1,
+                needleEndWidth: 2,
+                value: _value.hour >= 12
+                    ? _value.hour - 12.0 + _value.minute / 60.0
+//                      : _value.hour == 0 && _value.minute == 0
+//                          ? 12.0
+                    : _value.hour + _value.minute / 60.0,
+                needleColor: _needleColor,
+                knobStyle: KnobStyle(knobRadius: 0)),
+            NeedlePointer(
+                needleLength: 0.85,
+                lengthUnit: GaugeSizeUnit.factor,
+                needleStartWidth: 0.5,
+                needleEndWidth: 1.5,
+                value:
+                    _value.minute / 60.0 * 12.0 + (_value.second / 60.0 * 0.2),
+                knobStyle: KnobStyle(
+                    color: const Color(0xFF00A8B5),
+                    sizeUnit: GaugeSizeUnit.factor,
+                    knobRadius: 0.05),
+                needleColor: _needleColor),
+            NeedlePointer(
+                needleLength: 0.9,
+                lengthUnit: GaugeSizeUnit.factor,
+                enableAnimation: true,
+                animationType: AnimationType.bounceOut,
+                needleStartWidth: 0.8,
+                needleEndWidth: 0.8,
+                value: _value.second == 0 ? 12 : _value.second / 60.0 * 12.0,
+                needleColor: const Color(0xFF00A8B5),
+                tailStyle: TailStyle(
+                    width: 0.8,
+                    length: 0.2,
+                    lengthUnit: GaugeSizeUnit.factor,
+                    color: const Color(0xFF00A8B5)),
+                knobStyle: KnobStyle(
+                    knobRadius: 0.03,
+                    sizeUnit: GaugeSizeUnit.factor,
+                    color: Colors.white)),
+          ]),
+    ]);
   }
 
 //  double _value = 0;
