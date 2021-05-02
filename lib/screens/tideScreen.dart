@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_date/dart_date.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -191,8 +192,8 @@ class _LandScapeModeState extends State<LandScapeMode> {
   @override
   void initState() {
     super.initState();
-    hourlyDataSource =
-        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
+//    hourlyDataSource =
+//        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
     //print("Number of hourly records is " +
     //    weatherData.data.weather[0].hourly.length.toString());
   }
@@ -222,7 +223,7 @@ bool startMarquee = false;
 
 class _LandscapeViewState extends State<LandscapeView> {
   Timer timer;
-
+  DateTime bellLastRungDateTime;
   //int currentTransitionTime = 0;
   @override
   void initState() {
@@ -237,10 +238,26 @@ class _LandscapeViewState extends State<LandscapeView> {
   }
 
   _bobX(Timer timer) {
+    print("Should be checking for marquee" +
+        DateTime.now().getMinutes.toString());
+
+    if (DateTime.now().getMinutes == 34) {
+      print("Should be starting Marquee");
+      if (bellLastRungDateTime.addMinutes(1).isPast) {
+        bellLastRungDateTime = DateTime.now();
+        print("Should be starting Marquee2");
+        setState(() {
+          marqueeCompleted = false;
+        });
+      } //has the bell already rung for this hour
+    }
     if (startMarquee) {
       setState(() {
         marqueeCompleted = false;
       });
+
+      // are we at the top of the hour
+
     }
   }
 
@@ -249,7 +266,8 @@ class _LandscapeViewState extends State<LandscapeView> {
       children: [
         Stack(
           children: [
-            LandscapeTimerWidget(),
+            VenkySwap(),
+            // LandscapeTimerWidget(),
             ClockRow(),
           ],
         ),
@@ -533,6 +551,108 @@ List<Widget> gaugeSequenceList = [
       ))
 ];
 
+class VenkySwap extends StatefulWidget {
+  VenkySwap({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _VenkySwapState createState() => _VenkySwapState();
+}
+
+class _VenkySwapState extends State<VenkySwap> {
+  int _counter = 0;
+  bool animationSwitcher = false;
+  AnimationController controller;
+  List<Widget> myWidgetList;
+  Widget myFirstWidget = gaugeSequenceList[0];
+  Widget mySecondWidget = gaugeSequenceList[1];
+
+  @override
+  void initState() {
+    super.initState();
+
+    Timer myTimer =
+        Timer.periodic(const Duration(milliseconds: 3000), _updateData);
+  }
+
+  void _updateData(Timer timer) {
+    counter = (counter + 1) % (gaugeSequenceList.length);
+    setState(() {
+      animationSwitcher = !animationSwitcher;
+    });
+    if (animationSwitcher) {
+      // you need this funky method because animationCrossFade goes back and forth between one image and the other
+      // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+      myFirstWidget = gaugeSequenceList[counter];
+    } else {
+      mySecondWidget = gaugeSequenceList[counter];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    return Center(
+      child: AnimatedCrossFade(
+        duration: const Duration(milliseconds: 1500),
+        firstChild: myFirstWidget,
+        secondChild: mySecondWidget,
+        crossFadeState: animationSwitcher
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+      ),
+    );
+  }
+}
+
+class LandscapeTimerWidget extends StatefulWidget {
+  @override
+  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
+}
+
+class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
+  Timer ted;
+
+  int currentTransitionTime = 0;
+  @override
+  void initState() {
+    super.initState();
+    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ted.cancel();
+  }
+
+  _bobX(Timer timer) {
+    if (currentTransitionTime != userSettings.transitionTime) {
+      setState(() {
+        currentTransitionTime = userSettings.transitionTime;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
+        builder: (context) {
+      counter = (counter + 1) % 6;
+      if (globalWeather.weatherAPIError) {
+        counter = 5;
+      }
+      // counter = 4;
+      // counter == 0 ? counter = 1 : counter = 0;
+
+      return LandScapeSwapper2();
+    });
+  }
+}
+
 class LandscapeSwapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -776,53 +896,6 @@ class PortraitSwapper extends StatelessWidget {
 //    return counter == 0
 //        ? buildMyTideTable()
 //        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
-  }
-}
-
-class LandscapeTimerWidget extends StatefulWidget {
-  @override
-  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
-}
-
-class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
-  Timer ted;
-
-  int currentTransitionTime = 0;
-  @override
-  void initState() {
-    super.initState();
-    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
-
-    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    ted.cancel();
-  }
-
-  _bobX(Timer timer) {
-    if (currentTransitionTime != userSettings.transitionTime) {
-      setState(() {
-        currentTransitionTime = userSettings.transitionTime;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
-        builder: (context) {
-      counter = (counter + 1) % 6;
-      if (globalWeather.weatherAPIError) {
-        counter = 5;
-      }
-      // counter = 4;
-      // counter == 0 ? counter = 1 : counter = 0;
-
-      return LandScapeSwapper2();
-    });
   }
 }
 
