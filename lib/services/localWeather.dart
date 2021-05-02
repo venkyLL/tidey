@@ -774,6 +774,11 @@ class LocalWeatherService {
 
   populateGlobalWeather() {
     globalWeather.dailyWeather = [];
+    globalWeather.loadDate = DateTime.now();
+    globalWeather.city = localWeather.data.nearestArea[0].areaName[0].value;
+    globalWeather.country = localWeather.data.nearestArea[0].country[0].value;
+    globalWeather.loadDateString =
+        DateFormat('MMMd').format(localWeather.data.weather[0].date);
 
     //  String start = "Today\s";
     for (var i = 0; i < localWeather.data.weather.length; i++) {
@@ -942,6 +947,17 @@ class LocalWeatherService {
               weatherData.data.weather[0].hourly[j - 1].swellDir16Point;
         }
       }
+    }
+    String tides = "";
+    if (globalWeather.tideDataExists) {
+      tides = globalWeather.dailyWeather[0].tideMarquee;
+
+      String weather = "";
+      for (var i = 0; i < globalWeather.dailyWeather.length && i < 5; i++) {
+        print("Yea Yo");
+        weather = weather = globalWeather.dailyWeather[i].marquee;
+      }
+      marqueeString = tides + weather;
     }
   }
 

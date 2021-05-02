@@ -24,70 +24,163 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
 
-    getMyLocation();
-    getProfileData();
+    initAll();
+    // getProfileData();
   }
 
   void getProfileData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    userSettings.chimeOn = prefs.getBool('chimeOn');
-    if (userSettings.chimeOn == null) {
-      print("Chime not found");
-      prefs.setBool('chimeOn', true);
-      userSettings.chimeOn = true;
-    } else {
-      print("Chime On Found" + userSettings.chimeOn.toString());
-      // globalChimeOn = chimeOn;
-    }
+    userSettings.chimeOn =
+        readBoolFromLocal(prefs, userSettings.keyChimeOn, true);
+    userSettings.chimeDoNotDisturb =
+        readBoolFromLocal(prefs, userSettings.keyChimeDoNotDisturb, true);
+    userSettings.imperialUnits =
+        readBoolFromLocal(prefs, userSettings.keyImperialUnits, true);
+    userSettings.transitionTime =
+        readIntFromLocal(prefs, userSettings.keyTransitionTime, 10);
+    String chimeSelectedString = readStringFromLocal(prefs,
+        userSettings.keyChimeSelected, chimeTypeEnumtoString[ChimeType.single]);
+    userSettings.chimeSelected = chimeTypeStringToEnum[chimeSelectedString];
+    userSettings.alarmOn =
+        readBoolFromLocal(prefs, userSettings.keyAlarmOn, false);
 
-    userSettings.chimeDoNotDisturb = prefs.getBool('doNotDisturb');
-    if (userSettings.chimeDoNotDisturb == null) {
-      print("Do not Disturb not found");
-      prefs.setBool('doNotDisturb', true);
-      userSettings.chimeDoNotDisturb = true;
-    } else {
-      print("Yes Do not disturb Found" +
-          userSettings.chimeDoNotDisturb.toString());
-      // globalChimeOn = chimeOn;
-    }
-    userSettings.imperialUnits = prefs.getBool('imperialUnits');
-    if (userSettings.imperialUnits == null) {
-      print("Imperial Units not found");
-      prefs.setBool('imperialUnits', true);
-      userSettings.imperialUnits = true;
-    } else {
-      print("Yes Imperial Units Found" + userSettings.imperialUnits.toString());
-      // globalChimeOn = chimeOn;
-    }
-    userSettings.transitionTime = prefs.getInt('transitionTime');
-    if (userSettings.transitionTime == null) {
-      print("Transition Time not found");
-      prefs.setInt('transitionTime', kDefaultTransitionTime);
-      userSettings.transitionTime = kDefaultTransitionTime;
-    } else {
-      print("Yes Transition Time Found " +
-          userSettings.transitionTime.toString());
-      // globalChimeOn = chimeOn;
-    }
+    int hour = readIntFromLocal(prefs, userSettings.keyAlarmTimeHour, 7);
+    int min = readIntFromLocal(prefs, userSettings.keyAlarmTimeMin, 30);
+    userSettings.alarmTime = TimeOfDay(hour: hour, minute: min);
 
-    String chimeSelectedString = prefs.getString('chimeSelected');
-    if (chimeSelectedString == null) {
-      print("Chime Selected Not Found");
-      prefs.setString('chimeSelected', chimeTypeEnumtoString[ChimeType.single]);
-      userSettings.chimeSelected = ChimeType.single;
-    } else {
-      print("Found " + chimeSelectedString);
-      userSettings.chimeSelected = chimeTypeStringToEnum[chimeSelectedString];
-      print("Yes Chime Selected Found" + userSettings.chimeSelected.toString());
+    hour = readIntFromLocal(prefs, userSettings.keySleepTimeHour, 22);
+    min = readIntFromLocal(prefs, userSettings.keySleepTimeMin, 0);
+    userSettings.sleepTime = TimeOfDay(hour: hour, minute: min);
+    hour = readIntFromLocal(prefs, userSettings.keyWakeTimeHour, 22);
+    min = readIntFromLocal(prefs, userSettings.keyWakeTimeMin, 0);
+    userSettings.wakeTime = TimeOfDay(hour: hour, minute: min);
+    userSettings.useCurrentPosition =
+        readBoolFromLocal(prefs, userSettings.keyUseCurrentPosition, true);
+    userSettings.manualLat =
+        readDoubleFromLocal(prefs, userSettings.keyManualLat, 26.7747);
+    userSettings.manualLong =
+        readDoubleFromLocal(prefs, userSettings.keyManualLong, -77.3296);
 
+    //   userSettings.chimeOn = prefs.getBool('chimeOn');
+//    if (userSettings.chimeOn == null) {
+//      print("Chime not found");
+//      prefs.setBool('chimeOn', true);
+//      userSettings.chimeOn = true;
+//    } else {
+//      print("Chime On Found" + userSettings.chimeOn.toString());
+//      // globalChimeOn = chimeOn;
+//    }
+
+//    if (userSettings.chimeDoNotDisturb == null) {
+//      print("Do not Disturb not found");
+//      prefs.setBool('doNotDisturb', true);
+//      userSettings.chimeDoNotDisturb = true;
+//    } else {
+//      print("Yes Do not disturb Found" +
+//          userSettings.chimeDoNotDisturb.toString());
+//      // globalChimeOn = chimeOn;
+//    }
+//    userSettings.imperialUnits = prefs.getBool('imperialUnits');
+//    if (userSettings.imperialUnits == null) {
+//      print("Imperial Units not found");
+//      prefs.setBool('imperialUnits', true);
+//      userSettings.imperialUnits = true;
+//    } else {
+//      print("Yes Imperial Units Found" + userSettings.imperialUnits.toString());
+//      // globalChimeOn = chimeOn;
+//    }
+//    userSettings.transitionTime = prefs.getInt('transitionTime');
+//    if (userSettings.transitionTime == null) {
+//      print("Transition Time not found");
+//      prefs.setInt('transitionTime', kDefaultTransitionTime);
+//      userSettings.transitionTime = kDefaultTransitionTime;
+//    } else {
+//      print("Yes Transition Time Found " +
+//          userSettings.transitionTime.toString());
+//      // globalChimeOn = chimeOn;
+//    }
+
+//    String chimeSelectedString = prefs.getString('chimeSelected');
+//    if (chimeSelectedString == null) {
+//      print("Chime Selected Not Found");
+//      prefs.setString('chimeSelected', chimeTypeEnumtoString[ChimeType.single]);
+//      userSettings.chimeSelected = ChimeType.single;
+//    } else {
+//      print("Found " + chimeSelectedString);
+//      userSettings.chimeSelected = chimeTypeStringToEnum[chimeSelectedString];
+//      print("Yes Chime Selected Found" + userSettings.chimeSelected.toString());
+//
+//      // globalChimeOn = chimeOn;
+//    }
+  }
+
+  String readStringFromLocal(
+      SharedPreferences prefs, String settingKey, String defaultValue) {
+    String valueRead;
+    valueRead = prefs.getString(settingKey);
+    if (valueRead == null) {
+      print(" $settingKey not found");
+      prefs.setString(settingKey, defaultValue);
+      return defaultValue;
+    } else {
+      print("$settingKey Found $valueRead.ttoString()");
+      return valueRead;
+    }
+  }
+
+  double readDoubleFromLocal(
+      SharedPreferences prefs, String settingKey, double defaultValue) {
+    double valueRead;
+    valueRead = prefs.getDouble(settingKey);
+    if (valueRead == null) {
+      print(" $settingKey not found");
+      prefs.setDouble(settingKey, defaultValue);
+      return defaultValue;
+    } else {
+      print("$settingKey Found $valueRead.ttoString()");
+      return valueRead;
+    }
+  }
+
+  int readIntFromLocal(
+      SharedPreferences prefs, String settingKey, int defaultValue) {
+    int valueRead;
+    valueRead = prefs.getInt(settingKey);
+    if (valueRead == null) {
+      print(" $settingKey not found");
+      prefs.setInt(settingKey, defaultValue);
+      return defaultValue;
+    } else {
+      print("$settingKey Found $valueRead.ttoString()");
+      return valueRead;
+    }
+  }
+
+  bool readBoolFromLocal(
+      SharedPreferences prefs, String settingKey, bool defaultValue) {
+    bool valueRead;
+    valueRead = prefs.getBool(settingKey);
+    if (valueRead == null) {
+      print(" $settingKey not found");
+      prefs.setBool(settingKey, defaultValue);
+      return defaultValue;
+    } else {
+      print("$settingKey Found $valueRead.ttoString()");
+      return valueRead;
       // globalChimeOn = chimeOn;
     }
   }
 
-  void getMyLocation() async {
+  void initAll() async {
+    await getProfileData();
     Location location = Location();
-    await location.getCurrentLocation();
+    if (userSettings.useCurrentPosition) {
+      await location.getCurrentLocation();
+    } else {
+      globalLatitude = userSettings.manualLat.toString();
+      globalLongitude = userSettings.manualLong.toString();
+    }
 
     packageInfo = await PackageInfo.fromPlatform();
 
@@ -98,11 +191,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WeatherService weatherService = WeatherService();
     await weatherService.getMarineData();
-
+// Note need to run weather service before local weather to correctly populate
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
 
-    marqueeString = getMarqueeString();
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
     Navigator.pushReplacementNamed(context, TideScreen.id);
@@ -131,95 +223,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-//String spacer = " \u2022\u2022\u2022\u2022 ";
-
-getMarqueeString() {
-  String tides = " ";
-  if (globalWeather.tideDataExists) {
-    tides = globalWeather.dailyWeather[0].tideMarquee;
-//    for (var i = 0;
-//        i < weatherData.data.weather[0].tides[0].tideData.length;
-//        i++) {
-//      String StartString = "Tides: First ";
-//      if (i > 1) {
-//        StartString = "Tides: Second ";
-//      }
-//      tides = tides +
-//          StartString +
-//          weatherData.data.weather[0].tides[0].tideData[i].tideType
-//              .toLowerCase() +
-//          " tide " +
-//          (double.parse(weatherData
-//                      .data.weather[0].tides[0].tideData[i].tideHeightMt) /
-//                  3.28084)
-//              .toStringAsFixed(2) +
-//          "ft@ " +
-//          DateFormat('hh:mma').format(DateTime.parse(
-//              weatherData.data.weather[0].tides[0].tideData[i].tideDateTime)) +
-//          marqueeSpacer;
-//    }
-  }
-
-  String weather = "";
-  for (var i = 0; i < globalWeather.dailyWeather.length && i < 5; i++) {
-    print("Yea Yo");
-    weather = weather = globalWeather.dailyWeather[i].marquee;
-  }
-
-//  for (var i = 0; i < localWeather.data.weather.length && i < 5; i++) {
-//    String start = "Today\s";
-//    if (i != 0) {
-//      start = DateFormat('EEEE').format(localWeather.data.weather[i].date);
-//    }
-//    weather += getWeatherLine(start, i);
-//  }
-
-  return weather + tides;
-}
-//
-//getWeatherLine(String stringDay, int day) {
-//  return ("     " +
-//      stringDay +
-//      " Weather:    " +
-//      localWeather.data.weather[day].hourly[0].weatherDesc[0].value +
-//      marqueeSpacer +
-//      "Lo " +
-//      localWeather.data.weather[day].mintempF +
-//      "\u00B0F" + //\u2109
-//      marqueeSpacer +
-//      "High " +
-//      weatherData.data.weather[day].maxtempF +
-//      "\u00B0F" +
-//      marqueeSpacer +
-//      "Humidity " +
-//      localWeather.data.weather[day].hourly[0].humidity +
-//      "%" +
-//      marqueeSpacer +
-//      "Barometric Pressure " +
-//      localWeather.data.weather[day].hourly[0].pressureInches +
-//      "in" +
-//      marqueeSpacer +
-//      "Chance of Rain " +
-//      localWeather.data.weather[day].hourly[0].chanceofrain +
-//      "%" +
-//      marqueeSpacer +
-//      "Cloud Cover " +
-//      localWeather.data.weather[day].hourly[0].cloudcover +
-//      "%" +
-//      marqueeSpacer +
-//      "Wind Speed " +
-//      localWeather.data.weather[day].hourly[0].windspeedMiles +
-//      "(mph) gusting to " +
-//      localWeather.data.weather[day].hourly[0].windGustMiles +
-//      marqueeSpacer +
-//      "Visibility " +
-//      localWeather.data.weather[day].hourly[0].visibilityMiles +
-//      " miles" +
-//      marqueeSpacer +
-//      "Air Quality  " +
-//      airQuality[
-//          localWeather.data.weather[day].hourly[0].airQuality.usEpaIndex] +
-//      marqueeSpacer +
-//      "           ");
-//}

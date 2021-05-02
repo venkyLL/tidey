@@ -6,21 +6,24 @@ class Location {
   double longitude;
 
   Future<void> getCurrentLocation() async {
-    print("in getCurrentLocation");
-    try {
+    print("in getCurrentLocation , useCurrent Location = " +
+        userSettings.useCurrentPosition.toString());
+    if (userSettings.useCurrentPosition) {
+      try {
 //      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
-      print("before await getCurrentLocation");
+        print("before await getCurrentLocation");
 
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low);
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.low);
 
-      print(" after getCurrentLocation");
+        print(" after getCurrentLocation");
 
-      globalLatitude = position.latitude.toString();
-      globalLongitude = position.longitude.toString();
-      print("returning latitude is $globalLatitude");
-    } catch (e) {
-      print("my getCurrentLocation error is $e");
+        globalLatitude = position.latitude.toString();
+        globalLongitude = position.longitude.toString();
+        print("returning latitude is $globalLatitude");
+      } catch (e) {
+        print("my getCurrentLocation error is $e");
+      }
     }
   }
 }

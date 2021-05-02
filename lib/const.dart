@@ -47,44 +47,45 @@ double globalCompassDirection;
 DateTime globalCompassValueLastReadAt;
 
 UserSettings userSettings = UserSettings();
+
 const kDefaultTransitionTime = 10;
 
 var daysSinceDataLoad = 0;
 
 class UserSettings {
   bool chimeOn;
+  final keyChimeOn = "chimeOn";
   bool chimeDoNotDisturb;
+  final keyChimeDoNotDisturb = "chimeDoNotDisturb";
   ChimeType chimeSelected;
-//  String _chimeSelectedString;
+  final keyChimeSelected = "chimeSelected";
   bool alarmOn = true;
+  final keyAlarmOn = "alarmOn";
   TimeOfDay alarmTime = TimeOfDay(hour: 7, minute: 20);
+  final keyAlarmTimeHour = "alarmTimeHour";
+  final keyAlarmTimeMin = "alarmTimeMin";
   TimeOfDay sleepTime = TimeOfDay(hour: 7, minute: 20);
+  final keySleepTimeHour = "sleepTmeHour";
+  final keySleepTimeMin = "sleepTmeMin";
   TimeOfDay wakeTime = TimeOfDay(hour: 7, minute: 20);
+  final keyWakeTimeHour = "wakeTimeHour";
+  final keyWakeTimeMin = "wakeTimeMin";
   bool imperialUnits;
+  final keyImperialUnits = "imperialUnits";
   int transitionTime;
+  final keyTransitionTime = "transitionTime";
   bool useCurrentPosition = true;
+  final keyUseCurrentPosition = "userCurrentPosition";
   double manualLat = 26.7747;
+  final keyManualLat = "manualLat";
   double manualLong = -77.3296;
+  final keyManualLong = "manualLong";
+}
 
-// Variables to store if there is weather data in list
-
-//  void set chimeSelected(ChimeType chimeSelected) {
-//    _chimeSelected = chimeSelected;
-//    chimeSelectedString = chimeTypeEnumtoString[chimeSelected];
-//  }
-//
-//  ChimeType get chimeSelected {
-//    return _chimeSelected;
-//  }
-//
-//  void set chimeSelectedString(String chimeSelectedString) {
-//    _chimeSelectedString = chimeSelectedString;
-//    chimeSelected = chimeTypeStringToEnum[chimeSelected];
-//  }
-//
-//  String get chimeSelectedString {
-//    return _chimeSelectedString;
-//  }
+class BoolKey {
+  bool value;
+  String storageKey;
+  BoolKey(this.value, this.storageKey);
 }
 
 TideyWeather globalWeather = TideyWeather();
@@ -99,6 +100,10 @@ class TideyWeather {
   bool marineAstronomyExists = false;
   bool localWeatherExists = false;
   bool localHourlyExists = false;
+  DateTime loadDate;
+  String loadDateString = '';
+  String city;
+  String country;
 }
 
 class WeatherDay {

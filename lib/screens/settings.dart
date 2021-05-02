@@ -26,20 +26,29 @@ class _settingsScreenState extends State<SettingsScreen> {
   SharedPreferences prefs;
   bool _chimeEnabled = userSettings.chimeOn;
   bool _sleepTimerEnabled = userSettings.chimeDoNotDisturb;
-  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
   bool _alarmOn = userSettings.alarmOn;
   bool _chimeDoNotDisturb = userSettings.chimeDoNotDisturb;
   TimeOfDay _sleepTime = userSettings.sleepTime;
-  TimeOfDay _wakeTime = userSettings.sleepTime;
-  TimeOfDay _alarmTime = userSettings.sleepTime;
+  TimeOfDay _wakeTime = userSettings.wakeTime;
+  TimeOfDay _alarmTime = userSettings.alarmTime;
   bool _useCurrentPosition = userSettings.useCurrentPosition;
+  String _city = globalWeather.city;
   final _formKey = GlobalKey<FormState>();
+  //var myController = TextEditingController();
 
   void initState() {
     // TODO: implement initState
     super.initState();
 
     openPerfs();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    // myController.dispose();
+    super.dispose();
   }
 
   void openPerfs() async {
@@ -79,18 +88,46 @@ class _settingsScreenState extends State<SettingsScreen> {
           },
           child: ListView(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Most Recent Weather Report From\n" +
+                      _city +
+                      ", " +
+                      globalWeather.country +
+                      "\n" +
+                      globalWeather.loadDateString,
+                  style: kTextSettingsStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+              MenuListTile(
+                title: "Refresh Weather Data ",
+                icon: Icons.refresh,
+                onTap: () => {getMyLocation()},
+              ),
+              Divider(
+                height: 10,
+                thickness: 5,
+              ),
+
               MenuListTileWithSwitch(
                   title: (userSettings.useCurrentPosition)
-                      ? "Location Use Current Position (Enabled)"
-                      : "Location Use Current Position(Disabled)",
-                  value: userSettings.chimeOn,
-                  icon: Icons.map,
+                      ? "Use Current Location (Enabled)"
+                      : "Use Current Location (Disabled)",
+                  value: userSettings.useCurrentPosition,
+                  icon: Icons.location_on,
                   onTap: () {
                     setState(() {
                       userSettings.useCurrentPosition =
                           !userSettings.useCurrentPosition;
                       _useCurrentPosition = userSettings.useCurrentPosition;
-                      //     prefs.setBool('chimeOn', userSettings.chimeOn);
+                      prefs.setBool(userSettings.keyUseCurrentPosition,
+                          userSettings.useCurrentPosition);
                     });
                   }),
               Visibility(
@@ -103,42 +140,153 @@ class _settingsScreenState extends State<SettingsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Container(
-                          width: 300,
-                          child: TextFormField(
-                              decoration: InputDecoration(
-                                // prefix:
-                                //    Text("Enter Latitude", style: kTextSettingsStyle),
-                                labelText: "Enter Latitude",
-                                labelStyle: kTextSettingsStyle,
-
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.white, width: 2.0),
-                                  borderRadius: BorderRadius.circular(25.0),
-                                ),
-                                hintText: 'between -90 and 90',
+                          // width: ScreenSize.screenWidth - 20,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 180,
+                                child: Text("Enter Latitude:     ",
+                                    style: kTextSettingsStyle),
                               ),
-                              textAlign: TextAlign.left,
-                              keyboardType: TextInputType.number,
-                              validator: (text) {
-                                if (text == null) {
-                                  return null;
-                                }
-                                final n = num.tryParse(text);
-                                if (n == null) {
-                                  return 'Error: Latitude must be a number between -90 and 90';
-                                }
-                                if (n < -90 || n > 90) {
-                                  return 'Error: Latitude must be a number between -90 and 90';
-                                }
-                                return null;
-                              }),
+                              SizedBox(
+                                width: 180,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: TextFormField(
+                                      style: TextStyle(color: Colors.black),
+                                      initialValue:
+                                          userSettings.manualLat.toString(),
+                                      decoration: InputDecoration(
+                                        // border: InputBorder.none,
+                                        filled: true,
+                                        fillColor: Colors.grey[200],
+                                        errorStyle: TextStyle(
+                                            color: Colors.red,
+                                            backgroundColor: Colors.white,
+                                            fontSize: 15),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.white, width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.white, width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                        ),
+
+                                        hintText: '-90 ... 90',
+                                        hoverColor: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (text) {
+                                        userSettings.manualLat =
+                                            double.parse(text);
+                                        prefs.setDouble(
+                                            userSettings.keyManualLat,
+                                            userSettings.manualLat);
+                                        globalLatitude = text;
+                                      },
+                                      validator: (text) {
+                                        if (text == null) {
+                                          return null;
+                                        }
+                                        final n = num.tryParse(text);
+                                        if (n == null) {
+                                          return 'Invalid Latitude';
+                                        }
+                                        if (n < -90 || n > 90) {
+                                          return 'Invalid Latitude';
+                                        }
+                                        return null;
+                                      }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Container(
+                          // width: ScreenSize.screenWidth - 20,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 180,
+                                child: Text("Enter Longitude:  ",
+                                    style: kTextSettingsStyle),
+                              ),
+                              SizedBox(
+                                width: 180,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: TextFormField(
+                                      initialValue:
+                                          userSettings.manualLong.toString(),
+                                      style: TextStyle(color: Colors.black),
+                                      decoration: InputDecoration(
+                                        // border: InputBorder.none,
+                                        filled: true,
+                                        fillColor: Colors.grey[200],
+                                        errorStyle: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 15,
+                                            backgroundColor: Colors.white),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.white, width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.white, width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                        ),
+
+                                        hintText: '-180...180',
+                                        hoverColor: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (text) {
+                                        userSettings.manualLong =
+                                            double.parse(text);
+                                        prefs.setDouble(
+                                            userSettings.keyManualLong,
+                                            userSettings.manualLong);
+                                        globalLongitude = text;
+                                      },
+                                      validator: (text) {
+                                        if (text == null) {
+                                          return null;
+                                        }
+                                        final n = num.tryParse(text);
+                                        if (n == null) {
+                                          return 'Invalid Longitude';
+                                        }
+                                        if (n < -180 || n > 180) {
+                                          return 'Invalid Longitude';
+                                        }
+                                        return null;
+                                      }),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
                             // TODO submit
+
                           }
                         },
                         child: Text('Submit',
@@ -154,19 +302,14 @@ class _settingsScreenState extends State<SettingsScreen> {
 //                    hintText: ("Must be between -90 and 90)")),
 //                keyboardType: TextInputType.number,
 //              ),
-              MenuListTile(
-                title: "View Current Weather on Web",
-                icon: Icons.cloud_circle_outlined,
-                onTap: () => {Navigator.pushNamed(context, WebWeather.id)},
-              ),
               Divider(
                 height: 10,
                 thickness: 5,
               ),
               MenuListTile(
-                title: "Refresh Weather Data ",
-                icon: Icons.refresh,
-                onTap: () => {getMyLocation()},
+                title: "View Current Weather on Web",
+                icon: Icons.cloud_circle_outlined,
+                onTap: () => {Navigator.pushNamed(context, WebWeather.id)},
               ),
               Divider(
                 height: 10,
@@ -222,7 +365,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                       userSettings.chimeOn = !userSettings.chimeOn;
                       _chimeEnabled = userSettings.chimeOn;
                       print("Selected " + userSettings.chimeOn.toString());
-                      prefs.setBool('chimeOn', userSettings.chimeOn);
+                      prefs.setBool(
+                          userSettings.keyChimeOn, userSettings.chimeOn);
                     });
                   }),
               Visibility(
@@ -245,7 +389,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                                   userSettings.chimeDoNotDisturb;
                               print("Selected " +
                                   userSettings.chimeDoNotDisturb.toString());
-                              prefs.setBool('doNotDisturb',
+                              prefs.setBool(userSettings.keyChimeDoNotDisturb,
                                   userSettings.chimeDoNotDisturb);
                             });
                           }),
@@ -293,7 +437,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                                     chimeTypeStringToEnum[value];
                                 print("Selected " +
                                     userSettings.chimeSelected.toString());
-                                prefs.setString('chimeSelected', value);
+                                prefs.setString(
+                                    userSettings.keyChimeSelected, value);
                               })
                         },
                       ),
@@ -316,7 +461,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                       userSettings.alarmOn = !userSettings.alarmOn;
                       _alarmOn = userSettings.alarmOn;
                       print("Selected " + userSettings.alarmOn.toString());
-                      //    prefs.setBool('alarmOn', userSettings.alarmOn);
+                      prefs.setBool(
+                          userSettings.keyAlarmOn, userSettings.alarmOn);
                     });
                   }),
               Visibility(
@@ -360,8 +506,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                         setState(() {
                           _currentSliderValue = value;
                           userSettings.transitionTime = value.round();
-                          prefs.setInt(
-                              'transitionTime', userSettings.transitionTime);
+                          prefs.setInt(userSettings.keyTransitionTime,
+                              userSettings.transitionTime);
                         });
                       },
                     ),
@@ -482,6 +628,9 @@ class _settingsScreenState extends State<SettingsScreen> {
     if (newTime != null) {
       setState(() {
         _alarmTime = newTime;
+        userSettings.alarmTime = _alarmTime;
+        prefs.setInt(userSettings.keyAlarmTimeHour, _alarmTime.hour);
+        prefs.setInt(userSettings.keyAlarmTimeMin, _alarmTime.minute);
       });
     }
   }
@@ -494,6 +643,9 @@ class _settingsScreenState extends State<SettingsScreen> {
     if (newTime != null) {
       setState(() {
         _wakeTime = newTime;
+        userSettings.wakeTime = _wakeTime;
+        prefs.setInt(userSettings.keyWakeTimeHour, _wakeTime.hour);
+        prefs.setInt(userSettings.keyWakeTimeMin, _wakeTime.minute);
       });
     }
   }
@@ -506,6 +658,9 @@ class _settingsScreenState extends State<SettingsScreen> {
     if (newTime != null) {
       setState(() {
         _sleepTime = newTime;
+        userSettings.sleepTime = _sleepTime;
+        prefs.setInt(userSettings.keySleepTimeHour, _sleepTime.hour);
+        prefs.setInt(userSettings.keySleepTimeMin, _sleepTime.minute);
       });
     }
   }
@@ -563,6 +718,9 @@ class _settingsScreenState extends State<SettingsScreen> {
     await weatherService.getMarineData();
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
+    setState(() {
+      _city = globalWeather.city;
+    });
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
   }

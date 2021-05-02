@@ -434,8 +434,113 @@ class DialRow extends StatelessWidget {
 //    firstChild: const Icon(Icons.text_rotate_up, size: 150),
 //    secondChild: const Icon(Icons.text_rotate_vertical, size: 150),
 //  ),
+//class TwoGauges {
+//  Widget gauge1;
+//  Widget gauge2;
+//
+//  TwoGauges() {
+//    this.gauge1;
+//    this.gauge2;
+//  }
+//}
 
-class LandScapeSwapper extends StatelessWidget {
+//List <TwoGauges> gaugleList = [
+//  TwoGauges(
+//    TwoGauges(
+//    BarometerGauge(
+//      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
+//      change: getBarometerChange(),
+//    ),
+//
+//  ),
+//
+//];
+
+List<Widget> gaugeSequenceList = [
+  DialRow(
+    gaugeType1: TempGauge(
+        high: double.parse(globalWeather.dailyWeather[0].highTemp),
+        low: double.parse(globalWeather.dailyWeather[0].lowTemp),
+        conditionIcon: weatherDayIconMap[
+            globalWeather.dailyWeather[0].hourly[0].weatherCode]),
+    gaugeType2: BarometerGauge(
+      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
+      change: getBarometerChange(),
+    ),
+  ),
+  DialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "sunset1.gif",
+        textLabel: globalWeather.dailyWeather[0].sunrise,
+        textBackgroundColor: Colors.transparent,
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "sunset2.gif",
+        textLabel: globalWeather.dailyWeather[0].sunset,
+        textBackgroundColor: Colors.transparent,
+      )),
+  DialRow(
+    gaugeType1: ImageGaugeNew(
+      imageName: getMoonImageName(),
+      innerLineColor: Colors.transparent,
+    ),
+//ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+    gaugeType2: ImageGaugeNew(
+        imageName: "shootingStar.gif",
+        innerLineColor: Colors.transparent,
+        textLabel: globalWeather.dailyWeather[0].moonPhase +
+            "\nRise: " +
+            globalWeather.dailyWeather[0].moonrise +
+            "\nSet:" +
+            globalWeather.dailyWeather[0].moonset,
+        textPosition: 40,
+        textBackgroundColor: Colors.transparent,
+        fontSize: 20),
+  ),
+  DialRow(
+    gaugeType1: DirectionAndSpeedGauge(
+      gaugeDirection: globalWeather.dailyWeather[0].hourly[0].windDirection,
+      gaugeValue: // 8.0,
+          double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
+    ),
+    gaugeType2: DirectionAndSpeedGauge(
+      gaugeType: "Waves",
+      gaugeUnit: "ft",
+      gaugeDirection: globalWeather.dailyWeather[0].windDirection,
+      gaugeValue: // 5.0,
+          double.parse(globalWeather.dailyWeather[0].waveHt),
+      gaugeMax: 10,
+      gaugeInterval: 1,
+    ),
+  ),
+  DialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "water.gif",
+        textLabel: "Water " +
+            globalWeather.dailyWeather[0].waterTemp +
+//   weatherData.data.weather[0].hourly[0].waterTempF +
+            " \u2109",
+        textColor: Colors.black,
+        textBackgroundColor: Colors.transparent,
+      ),
+      gaugeType2: CompassGauge2()),
+  DialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "boat1.jpg",
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "boat2.jpg",
+      ))
+];
+
+class LandscapeSwapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return gaugeSequenceList[counter];
+  }
+}
+
+class LandScapeSwapper2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (counter) {
@@ -544,6 +649,13 @@ class LandScapeSwapper extends StatelessWidget {
       default:
         {
           print("Error");
+          return DialRow(
+              gaugeType1: ImageGaugeNew(
+                imageName: "boat1.jpg",
+              ),
+              gaugeType2: ImageGaugeNew(
+                imageName: "boat2.jpg",
+              ));
         }
         break;
     }
@@ -706,7 +818,7 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
 
-      return LandScapeSwapper();
+      return LandScapeSwapper2();
     });
   }
 }
