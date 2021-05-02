@@ -60,16 +60,17 @@ class _TempGaugeState extends State<TempGauge> {
             showAxisLine: false,
             labelsPosition: ElementsPosition.outside,
             labelOffset: 15,
-            interval: 10,
+            interval: ScreenSize.small ? 10 : 10,
             radiusFactor: 0.9,
             //labelOffset: 8,
             annotations: <GaugeAnnotation>[
               GaugeAnnotation(
                   angle: 90,
-                  positionFactor: 0.1,
+                  positionFactor: 0.3,
                   widget: Container(
                     child: BoxedIcon((conditionIcon),
-                        size: 50, color: const Color(0xFF3366CC)),
+                        size: ScreenSize.small ? 20 : 35,
+                        color: const Color(0xFF3366CC)),
                   )),
 //                      const Text('Temp.°F',
 //                          style: TextStyle(
@@ -78,11 +79,11 @@ class _TempGaugeState extends State<TempGauge> {
                   angle: 90,
                   positionFactor: 0.85,
                   widget: Container(
-                    child: const Text(
+                    child: Text(
                       'Temp\nHi & Lo',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: ScreenSize.small ? 15 : 18,
                           color: const Color(0xFF3366CC)),
                     ),
                   ))
@@ -144,18 +145,18 @@ class _TempGaugeState extends State<TempGauge> {
               MarkerPointer(
                 color: Colors.red,
                 value: high,
-                markerHeight: 20,
-                markerWidth: 20,
+                markerHeight: ScreenSize.small ? 15 : 20,
+                markerWidth: ScreenSize.small ? 10 : 20,
                 markerType: MarkerType.triangle,
-                markerOffset: 40,
+                markerOffset: ScreenSize.small ? 25 : 40,
               ),
               MarkerPointer(
                 color: const Color(0xFF3366CC),
                 value: low,
-                markerHeight: 20,
-                markerWidth: 20,
+                markerHeight: ScreenSize.small ? 15 : 20,
+                markerWidth: ScreenSize.small ? 10 : 20,
                 markerType: MarkerType.triangle,
-                markerOffset: 40,
+                markerOffset: ScreenSize.small ? 25 : 40,
               )
 //              NeedlePointer(
 //                value: 68.5,
@@ -180,7 +181,8 @@ class _TempGaugeState extends State<TempGauge> {
 //                needleColor: const Color(0xFFF8B195),
 //              )
             ],
-            axisLabelStyle: GaugeTextStyle(fontSize: 20, color: Colors.white),
+            axisLabelStyle: GaugeTextStyle(
+                fontSize: ScreenSize.small ? 15 : 20, color: Colors.white),
             majorTickStyle: MajorTickStyle(
                 length: 0.25, lengthUnit: GaugeSizeUnit.factor, thickness: 2),
             minorTickStyle: MinorTickStyle(

@@ -7,7 +7,7 @@ import 'package:marquee/marquee.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
-import 'package:tidey/components/directionAndSpeedGauge.dart';
+import 'package:tidey/components/dsGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
@@ -498,12 +498,12 @@ List<Widget> gaugeSequenceList = [
         fontSize: 20),
   ),
   DialRow(
-    gaugeType1: DirectionAndSpeedGauge(
+    gaugeType1: DSGauge(
       gaugeDirection: globalWeather.dailyWeather[0].hourly[0].windDirection,
       gaugeValue: // 8.0,
           double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
     ),
-    gaugeType2: DirectionAndSpeedGauge(
+    gaugeType2: DSGauge(
       gaugeType: "Waves",
       gaugeUnit: "ft",
       gaugeDirection: globalWeather.dailyWeather[0].windDirection,
@@ -608,13 +608,13 @@ class LandScapeSwapper2 extends StatelessWidget {
 
       case 3:
         return DialRow(
-          gaugeType1: DirectionAndSpeedGauge(
+          gaugeType1: DSGauge(
             gaugeDirection:
                 globalWeather.dailyWeather[0].hourly[0].windDirection,
             gaugeValue: // 8.0,
                 double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
           ),
-          gaugeType2: DirectionAndSpeedGauge(
+          gaugeType2: DSGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
             gaugeDirection: globalWeather.dailyWeather[0].windDirection,
@@ -710,12 +710,12 @@ class PortraitSwapper extends StatelessWidget {
 
       case 2:
         return PortraitDialRow(
-          gaugeType1: ImageGaugeNew(
+          gaugeType2: ImageGaugeNew(
             imageName: getMoonImageName(),
             innerLineColor: Colors.transparent,
           ),
           //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-          gaugeType2: ImageGaugeNew(
+          gaugeType1: ImageGaugeNew(
               imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
               textLabel: globalWeather.dailyWeather[0].moonPhase +
@@ -731,13 +731,13 @@ class PortraitSwapper extends StatelessWidget {
 
       case 3:
         return PortraitDialRow(
-          gaugeType1: DirectionAndSpeedGauge(
+          gaugeType1: DSGauge(
             gaugeDirection:
                 globalWeather.dailyWeather[0].hourly[0].windDirection,
             gaugeValue:
                 double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
           ),
-          gaugeType2: DirectionAndSpeedGauge(
+          gaugeType2: DSGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
             gaugeDirection: globalWeather.dailyWeather[0].waveDirection,
@@ -815,6 +815,9 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
     return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
         builder: (context) {
       counter = (counter + 1) % 6;
+      if (globalWeather.weatherAPIError) {
+        counter = 5;
+      }
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
 
@@ -829,6 +832,9 @@ class PortraitTimerWidget extends StatelessWidget {
     return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
         builder: (context) {
       counter = (counter + 1) % 6;
+      if (globalWeather.weatherAPIError) {
+        counter = 5;
+      }
       // counter = 4;
       // counter == 0 ? counter = 1 : counter = 0;
       return PortraitSwapper();

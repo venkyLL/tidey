@@ -102,6 +102,7 @@ class _zeClockSyncState extends State<zeClockSync> {
             showFirstLabel: false,
             interval: 1,
             radiusFactor: 0.8,
+            //  labelsPosition: ElementsPosition.outside,
             labelOffset: 0.1,
             offsetUnit: GaugeSizeUnit.factor,
             minorTicksPerInterval: 4,
@@ -110,7 +111,7 @@ class _zeClockSyncState extends State<zeClockSync> {
                 length: 0.06, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
             majorTickStyle: MajorTickStyle(
                 length: 0.1, lengthUnit: GaugeSizeUnit.factor, thickness: 1.5),
-            axisLabelStyle: GaugeTextStyle(fontSize: 12, color: Colors.white),
+            axisLabelStyle: GaugeTextStyle(fontSize: 10, color: Colors.white),
             axisLineStyle: AxisLineStyle(
                 thickness: 0.025,
                 thicknessUnit: GaugeSizeUnit.factor,
@@ -226,6 +227,85 @@ class _zeClockSyncState extends State<zeClockSync> {
                       sizeUnit: GaugeSizeUnit.factor,
                       color: Colors.white)),
             ]),
+        RadialAxis(
+            startAngle: 270,
+            endAngle: 270,
+            radiusFactor: 0.3,
+            minimum: 0,
+            maximum: 80,
+            pointers: <GaugePointer>[
+              //      MarkerPointer(
+//                    value: dirMap[gaugeDirection],
+//                    markerType: MarkerType.triangle,
+//                    markerWidth: 30,
+//                    markerHeight: 20,
+//                    markerOffset: 40,
+//                    color: Color(0xFFF67280)),
+              NeedlePointer(
+                value: 200, // dirMap[gaugeDirection],
+                lengthUnit: GaugeSizeUnit.factor,
+                needleLength: 0.5,
+                needleEndWidth: ScreenSize.small ? 5 : 10,
+                gradient: const LinearGradient(colors: <Color>[
+                  Color(0xFFFF6B78),
+                  Color(0xFFFF6B78),
+                  Color(0xFFE20A22),
+                  Color(0xFFE20A22)
+                ], stops: <double>[
+                  0,
+                  0.5,
+                  0.5,
+                  1
+                ]),
+                knobStyle: KnobStyle(
+                    borderColor: const Color(0xFFF67280),
+                    borderWidth: 0.0,
+                    color: Colors.white,
+                    sizeUnit: GaugeSizeUnit.factor,
+                    knobRadius: 0.05),
+              )
+//                NeedlePointer(
+//                    value: dirMap[gaugeDirection],
+//                    needleLength: 0.9,
+//                    needleColor: const Color(0xFFF67280),
+//                    lengthUnit: GaugeSizeUnit.factor,
+//                    needleStartWidth: 0,
+//                    needleEndWidth: 5,
+//                    enableAnimation: true,
+//                    knobStyle: KnobStyle(knobRadius: 0),
+//                    animationType: AnimationType.ease),
+//                NeedlePointer(
+//                    value: gaugeValue,
+//                    needleLength: .9,
+//                    lengthUnit: (GaugeSizeUnit.factor),
+//                    needleColor: const Color(0xFFF67280),
+//                    needleStartWidth: 0,
+//                    needleEndWidth: 8,
+//                    enableAnimation: true,
+//                    animationType: AnimationType.ease,
+//                    knobStyle: KnobStyle(
+//                        borderColor: const Color(0xFFF67280),
+//                        borderWidth: 0.015,
+//                        color: Colors.white,
+//                        sizeUnit: GaugeSizeUnit.factor,
+//                        knobRadius: 0.05)),
+            ],
+            axisLineStyle: AxisLineStyle(
+                thicknessUnit: GaugeSizeUnit.factor,
+                thickness: 0.1,
+                color: const Color(0xFF3366CC)),
+            interval: 10,
+            canRotateLabels: true,
+            axisLabelStyle: GaugeTextStyle(
+                fontSize: ScreenSize.small ? 10 : 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+            minorTicksPerInterval: 0,
+            majorTickStyle: MajorTickStyle(
+                thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
+            showLabels: true,
+            labelOffset: 10,
+            onLabelCreated: _handleLabelCreated),
       ],
     );
   }
@@ -233,4 +313,24 @@ class _zeClockSyncState extends State<zeClockSync> {
 //  double _value = 0;
   DateTime _value = DateTime.now();
   final Color _needleColor = const Color(0xFFFFFFFF);
+}
+
+void _handleLabelCreated(AxisLabelCreatedArgs args) {
+  if (args.text == '80' || args.text == '0') {
+    args.text = 'N';
+  } else if (args.text == '10') {
+    args.text = ScreenSize.small ? ' ' : '';
+  } else if (args.text == '20') {
+    args.text = 'E';
+  } else if (args.text == '30') {
+    args.text = ScreenSize.small ? ' ' : '';
+  } else if (args.text == '40') {
+    args.text = 'S';
+  } else if (args.text == '50') {
+    args.text = ScreenSize.small ? ' ' : '';
+  } else if (args.text == '60') {
+    args.text = 'W';
+  } else if (args.text == '70') {
+    args.text = ScreenSize.small ? ' ' : '';
+  }
 }

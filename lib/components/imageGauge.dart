@@ -147,7 +147,7 @@ class ImageGaugeNew extends StatelessWidget {
                       color: textColor,
                       backgroundColor: textBackgroundColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: fontSize),
+                      fontSize: fontSize * ScreenSize.fs),
                 ),
               ],
             ))

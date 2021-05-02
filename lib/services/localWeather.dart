@@ -707,11 +707,22 @@ class Hourly {
 
 class LocalWeatherService {
   String latLong = '26.7747,-77.3296';
+  String testLatLong = "29.6516, -82.3248";
   getLocalWeatherData() async {
+    globalWeather.weatherAPIError = false;
     print("Hello Local Weather, $globalLatitude, $globalLongitude");
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';
     }
+
+    /*
+    https://api.worldweatheronline.com/premium/v1/weather.ashx
+    ?key=51503debb4b34526a33181926211204&q=26.69 ,-77.29&
+    format=json&
+    num_of_days=5&mca=yes&fx24=yes&includelocation=yes&
+    tp=3&alerts=yes&aqi=yes
+     */
+
 // https://api.worldweatheronline.com/premium/v1/weather.ashx?
 // key=51503debb4b34526a33181926211204&q=26.7747,-77.3296
 // &format=json&
@@ -743,7 +754,7 @@ class LocalWeatherService {
       //   MarineWeather weatherData = MarineWeather();
       localWeather = LocalWeather.fromJson(response.data);
       // weatherData = MarineWeather.fromJson(weatherMap);
-
+      print("Map Complete");
       globalWeather.localWeatherExists = false;
       globalWeather.localHourlyExists = false;
 
@@ -767,6 +778,9 @@ class LocalWeatherService {
     } catch (e) {
       globalWeather.localWeatherExists = false;
       globalWeather.localHourlyExists = false;
+      globalWeather.weatherAPIError = true;
+      marqueeString =
+          "Weather Data Not Loaded Please Check Network Settings or Change Location";
       print("error found");
       print(e);
     }

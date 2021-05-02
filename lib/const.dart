@@ -102,8 +102,10 @@ class TideyWeather {
   bool localHourlyExists = false;
   DateTime loadDate;
   String loadDateString = '';
-  String city;
-  String country;
+  String city = "not Found";
+  String country = "not Found";
+  bool tideAPIError = false;
+  bool weatherAPIError = false;
 }
 
 class WeatherDay {
@@ -116,18 +118,18 @@ class WeatherDay {
   String moonPhase = "";
   String moonIllumination = "";
   String waterTemp = "";
-  String pressure = "";
-  String highTemp = "";
-  String lowTemp = "";
-  String windSpeed = "";
-  String windDirection = "";
-  String windGust = "";
-  String waveHt = "";
-  String waveDirection = "";
-  String airQuality = "";
+  String pressure = "0";
+  String highTemp = "0";
+  String lowTemp = "0";
+  String windSpeed = "0";
+  String windDirection = "N";
+  String windGust = "0";
+  String waveHt = "0";
+  String waveDirection = "N";
+  String airQuality = "0";
   String humidity = "";
   // IconData currentWeatherIcon = WeatherIcons.day_sunny;
-  String weatherCode = "";
+  String weatherCode = "176";
   String weatherConditionDesc = "";
   String chanceOfRain = "";
   String cloudCover = "";
@@ -143,11 +145,11 @@ class HourlyWeather {
   TimeOfDay timeofDay = TimeOfDay(hour: 7, minute: 15);
   String temp = "";
   String pressure = "";
-  String windSpeed = "";
-  String windDirection = "";
+  String windSpeed = "0";
+  String windDirection = "N";
   String windGust = "";
-  String waveHt = "";
-  String waveDirection = "";
+  String waveHt = "0";
+  String waveDirection = "N";
   String airQuality = "";
   String humidity = "";
   // BoxedIcon currentWeatherIcon = BoxedIcon(WeatherIcons.day_sunny);
@@ -465,6 +467,8 @@ class ScreenSize {
   static Offset clockTopLeft;
   static Offset clockBottomRight;
   static double portraitClockSpace;
+  static bool small;
+  static double fs; // FontScaleFactor
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -497,9 +501,13 @@ class ScreenSize {
     gauge1BottomRight = Offset(gaugeSize, gaugeTop + gaugeSize);
     clockTopLeft = Offset(gaugeSize, clockTop);
     clockBottomRight = Offset(gaugeSize + clockSize, clockTop + clockSize);
+
+    small = (min(safeBlockHorizontal, safeBlockVertical) < 5.00);
+    small ? fs = .8 : fs = 1.0;
     print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
+    print("Small Device? $small");
     print("GaugeTop = ${gaugeTop}");
     print("Gauge Size = ${gaugeSize}");
     print("ClockTop = ${clockTop}");
@@ -562,7 +570,7 @@ getBarometerChange() {
 }
 
 String getMoonImageName() {
-  switch (weatherData.data.weather[0].astronomy[0].moonPhase) {
+  switch (globalWeather.dailyWeather[0].moonPhase) {
     case "New Moon":
       {
         return "moon0.png";

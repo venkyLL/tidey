@@ -69,7 +69,7 @@ class _CompassGaugeState extends State<CompassGauge> {
             labelOffset: 0.05,
             maximum: 360,
             minimum: 0,
-            interval: 30,
+            interval: ScreenSize.small ? 90 : 30,
             minorTicksPerInterval: 4,
             axisLabelStyle: GaugeTextStyle(
                 color: const Color(0xFF949494), fontSize: _labelFontSize),
@@ -195,7 +195,7 @@ class _CompassGaugeState extends State<CompassGauge> {
     }
   }
 
-  double _annotationTextSize = 22;
+  double _annotationTextSize = ScreenSize.small ? 15 : 22;
   double _positionFactor = 0.025;
   double _markerHeight = 10;
   double _markerWidth = 15;

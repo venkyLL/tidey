@@ -4,16 +4,28 @@ import 'package:tidey/const.dart';
 
 /// Locals imports
 class DSGauge extends StatefulWidget {
-//  final double current;
-//  final BarometerChange change;
+  final String gaugeType;
+  final String gaugeUnit;
+  final String gaugeDirection;
+  final double gaugeValue;
+  final double gaugeMax;
+  final double gaugeInterval;
 
-//  DSGauge({
-//    this.current = 31.0,
-//    this.change = BarometerChange.flat,
-  // });
+  DSGauge(
+      {this.gaugeType = "Wind",
+      this.gaugeUnit = "mph",
+      this.gaugeDirection = "SSE",
+      this.gaugeValue = 20,
+      this.gaugeMax = 45,
+      this.gaugeInterval = 5});
 
   @override
-  _DSGaugeState createState() => _DSGaugeState();
+  _DSGaugeState createState() => _DSGaugeState(
+      gaugeType: gaugeType,
+      gaugeDirection: gaugeDirection,
+      gaugeValue: gaugeValue,
+      gaugeMax: gaugeMax,
+      gaugeInterval: gaugeInterval);
 }
 
 class _DSGaugeState extends State<DSGauge> {
@@ -84,7 +96,8 @@ class _DSGaugeState extends State<DSGauge> {
           interval: gaugeInterval,
           radiusFactor: 0.9,
           //  showFirstLabel: false,
-          axisLabelStyle: GaugeTextStyle(fontSize: 20, color: Colors.white),
+          axisLabelStyle: GaugeTextStyle(
+              fontSize: ScreenSize.small ? 15 : 20, color: Colors.white),
           minorTicksPerInterval: 0,
           onLabelCreated: _handleAxisLabelCreated,
           showTicks: false,
@@ -135,7 +148,7 @@ class _DSGaugeState extends State<DSGauge> {
                     "\n" + gaugeType + "\n " + gaugeUnit,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: ScreenSize.small ? 15 : 20,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3366CC)),
                   ),
@@ -160,7 +173,7 @@ class _DSGaugeState extends State<DSGauge> {
                 value: dirMap[gaugeDirection],
                 lengthUnit: GaugeSizeUnit.factor,
                 needleLength: 0.5,
-                needleEndWidth: 10,
+                needleEndWidth: ScreenSize.small ? 5 : 10,
                 gradient: const LinearGradient(colors: <Color>[
                   Color(0xFFFF6B78),
                   Color(0xFFFF6B78),
@@ -212,7 +225,9 @@ class _DSGaugeState extends State<DSGauge> {
             interval: 10,
             canRotateLabels: true,
             axisLabelStyle: GaugeTextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: ScreenSize.small ? 10 : 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
             minorTicksPerInterval: 0,
             majorTickStyle: MajorTickStyle(
                 thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
@@ -234,18 +249,18 @@ void _handleLabelCreated(AxisLabelCreatedArgs args) {
   if (args.text == '80' || args.text == '0') {
     args.text = 'N';
   } else if (args.text == '10') {
-    args.text = 'NE';
+    args.text = ScreenSize.small ? ' ' : 'NE';
   } else if (args.text == '20') {
     args.text = 'E';
   } else if (args.text == '30') {
-    args.text = 'SE';
+    args.text = ScreenSize.small ? ' ' : 'SE';
   } else if (args.text == '40') {
     args.text = 'S';
   } else if (args.text == '50') {
-    args.text = 'SW';
+    args.text = ScreenSize.small ? ' ' : 'SW';
   } else if (args.text == '60') {
     args.text = 'W';
   } else if (args.text == '70') {
-    args.text = 'NW';
+    args.text = ScreenSize.small ? ' ' : 'NW';
   }
 }
