@@ -17,14 +17,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Tidey', initialRoute: SplashScreen.id, routes: {
-      SplashScreen.id: (context) => SplashScreen(),
-      TideScreen.id: (context) => TideScreen(),
-      WebWeather.id: (context) => WebWeather(),
-      ForecastScreen.id: (context) => ForecastScreen(),
-      SettingsScreen.id: (context) => SettingsScreen(),
-      TodayScreen.id: (context) => TodayScreen(),
-      HelpScreen.id: (context) => HelpScreen(),
-    });
+    return MaterialApp(
+        title: 'Tidey',
+        debugShowCheckedModeBanner: false,
+        initialRoute: SplashScreen.id,
+        routes: {
+          SplashScreen.id: (context) => SplashScreen(),
+          TideScreen.id: (context) => TideScreen(),
+          WebWeather.id: (context) => WebWeather(),
+          ForecastScreen.id: (context) => ForecastScreen(),
+          SettingsScreen.id: (context) => SettingsScreen(),
+          TodayScreen.id: (context) => TodayScreen(),
+          HelpScreen.id: (context) => HelpScreen(),
+        });
   }
 }

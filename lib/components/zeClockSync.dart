@@ -53,7 +53,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   }
 
   void _updateData(Timer timer) {
-    print("global compass direction is $globalCompassDirection");
+  //  print("global compass direction is $globalCompassDirection");
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();

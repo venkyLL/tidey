@@ -38,22 +38,6 @@ List<String> ringOptions = <String>[
 ];
 
 class _TideScreenState extends State<TideScreen> {
-//  ScrollController scrollController;
-//  bool scrollVisible = true;String speed = 'Ludicrous';
-
-  List<String> menuOptions = <String>[
-    'Settings',
-    'View Weather Table',
-    'Start Marquee',
-  ];
-
-  List<Icon> menuIcons = <Icon>[
-    Icon(Icons.settings),
-    Icon(Icons.wb_sunny),
-    Icon(Icons.view_day),
-    //  BoxedIcon(WeatherIcons.snow),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -70,58 +54,13 @@ class _TideScreenState extends State<TideScreen> {
           //    title: Text(globalLatitude == null ? "Tide" : globalLatitude),
           centerTitle: true,
           backgroundColor: Colors.transparent,
-          //  backgroundColor: Color(0x44000000),
+
           elevation: 0,
-          // Venky This works
-          //   leading: menu(),
         ),
-        floatingActionButton: ExpandableFab(
-          distance: 70.0,
-          children: [
-            ActionButton(
-              onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
-              // _showAction(context, 2),
-              icon: const Icon(Icons.settings),
-            ),
-            ActionButton(
-              onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
-              //   _showAction(context, 0),
-              icon: const Icon(Icons.wb_sunny),
-            ),
-            ActionButton(
-              onPressed: () {
-                (MediaQuery.of(context).orientation == Orientation.landscape)
-                    ? startMarquee = true
-                    : showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                              // title: Text("Marquee "),
-                              content: Text(
-                                  "Marquee is only available in Landscape Mode"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(ctx).pop();
-                                  },
-                                  child: Text("okay"),
-                                ),
-                              ],
-                            ));
-              },
-              // => _showAction(context, 1),
-              icon: const Icon(Icons.view_day),
-            ),
-          ],
-        ),
+        floatingActionButton: FABMenu(),
 
 //        FloatingActionButton(
-//          onPressed: () {
-//            print("TOuched Fab");
-//            menu();
-//          },
-//          child: const Icon(Icons.waves, color: kBezelColor),
-//          backgroundColor: Colors.black26,
-//        ),
+//
         body: SwipeGestureRecognizer(
           onSwipeRight: () {
             Navigator.pushNamed(context, SettingsScreen.id);
@@ -133,140 +72,6 @@ class _TideScreenState extends State<TideScreen> {
             onTap: () {
               print("Touched everywhere");
               _settingModalBottomSheet(context);
-
-//              showCupertinoModalPopup(
-//                  context: context,
-//                  builder: (BuildContext context) => CupertinoActionSheet(
-//                        // title: const Text('Select'),
-//                        // message: const Text('Message'),
-//                        actions: [
-//                          CupertinoActionSheetAction(
-//                            child: Text("Settings",
-//                                style: TextStyle(color: kAppBlueColor)),
-//                            isDefaultAction: true,
-//                            onPressed: () {
-//                              Navigator.pop(context);
-//                              Navigator.pushNamed(context, SettingsScreen.id);
-//                            },
-//                          ),
-//                          CupertinoActionSheetAction(
-//                            child: const Text('View Weather Table',
-//                                style: TextStyle(color: kAppBlueColor)),
-//                            onPressed: () {
-//                              Navigator.pop(context);
-//                              Navigator.pushNamed(context, TodayScreen.id);
-//                            },
-//                          ),
-//                          CupertinoActionSheetAction(
-//                            child: const Text('Start Marquee',
-//                                style: TextStyle(color: kAppBlueColor)),
-//                            onPressed: () {
-//                              Navigator.pop(context);
-//                              {
-//                                (MediaQuery.of(context).orientation ==
-//                                        Orientation.landscape)
-//                                    ? startMarquee = true
-//                                    : showDialog(
-//                                        context: context,
-//                                        builder: (ctx) => AlertDialog(
-//                                              // title: Text("Marquee "),
-//                                              content: Text(
-//                                                  "Marquee is only available in Landscape Mode"),
-//                                              actions: <Widget>[
-//                                                TextButton(
-//                                                  onPressed: () {
-//                                                    Navigator.of(ctx).pop();
-//                                                  },
-//                                                  child: Text("okay"),
-//                                                ),
-//                                              ],
-//                                            ));
-//                              }
-//                            },
-//                          )
-//                        ],
-//                        cancelButton: CupertinoActionSheetAction(
-//                          child: const Text('Cancel'),
-//                          isDestructiveAction: true,
-//                          onPressed: () {
-//                            Navigator.pop(context, 'Cancel');
-//                          },
-//                        ),
-//                      ));
-
-//              showMaterialSelectionPicker(
-//                context: context,
-//                headerColor: kAppBlueColor,
-//                maxLongSide: 300,
-//                title: "Select",
-//                items: menuOptions,
-//                selectedValue: "Light",
-//                icons: menuIcons,
-//                onChanged: (value) {
-//                  print("Value Selected $value");
-//                  // Navigator.pushNamed(context, SettingsScreen.id)
-//                  switch (value) {
-//                    case "Settings":
-//                      {
-//                        Navigator.pushNamed(context, SettingsScreen.id);
-//                      }
-//                      break;
-//
-//                    case "View Weather Table":
-//                      {
-//                        Navigator.pushNamed(context, TodayScreen.id);
-//                      }
-//                      break;
-//
-//                    default:
-//                      {
-//                        print("Woops Value Selected $value");
-//                      }
-//                      break;
-//                  }
-//                  userSettings.chimeSelected = chimeTypeStringToEnum[value];
-//                  print("Selected " + userSettings.chimeSelected.toString());
-//                },
-//              );
-
-//              showMaterialScrollPicker(
-//                headerColor: kAppBlueColor,
-//                maxLongSide: 300,
-//                context: context,
-//                title: "Select",
-//                items: <String>[
-//                  "Settings",
-//                  "View Weather Table",
-//                  "Start Marquee",
-//                ],
-//                selectedValue: "Settings",
-//                onChanged: (value) {
-//                  print("Value Selected $value");
-//                  // Navigator.pushNamed(context, SettingsScreen.id)
-//                  switch (value) {
-//                    case "Settings":
-//                      {
-//                        Navigator.pushNamed(context, SettingsScreen.id);
-//                      }
-//                      break;
-//
-//                    case "View Weather Table":
-//                      {
-//                        Navigator.pushNamed(context, TodayScreen.id);
-//                      }
-//                      break;
-//
-//                    default:
-//                      {
-//                        print("Woops Value Selected $value");
-//                      }
-//                      break;
-//                  }
-//                  userSettings.chimeSelected = chimeTypeStringToEnum[value];
-//                  print("Selected " + userSettings.chimeSelected.toString());
-//                },
-//              );
-              // menu();
             },
             child: Container(
               height: MediaQuery.of(context).size.height,
@@ -285,6 +90,52 @@ class _TideScreenState extends State<TideScreen> {
             ),
           ),
         ));
+  }
+}
+
+class FABMenu extends StatelessWidget {
+  const FABMenu({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpandableFab(
+      distance: 70.0,
+      children: [
+        ActionButton(
+          onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
+          // _showAction(context, 2),
+          icon: const Icon(Icons.settings),
+        ),
+        ActionButton(
+          onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
+          //   _showAction(context, 0),
+          icon: const Icon(Icons.wb_sunny),
+        ),
+        ActionButton(
+          onPressed: () {
+            (MediaQuery.of(context).orientation == Orientation.landscape)
+                ? startMarquee = true
+                : showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                          content: Text(
+                              "Marquee is only available in Landscape Mode"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop();
+                              },
+                              child: Text("okay"),
+                            ),
+                          ],
+                        ));
+          },
+          icon: const Icon(Icons.view_day),
+        ),
+      ],
+    );
   }
 }
 
@@ -341,123 +192,6 @@ void _settingModalBottomSheet(context) {
       });
 }
 
-const _actionTitles = ['Create Post', 'Upload Photo', 'Upload Video'];
-void _showAction(BuildContext context, int index) {
-  showDialog<void>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        content: Text(_actionTitles[index]),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('CLOSE'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-class menu extends StatelessWidget {
-  const menu({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      color: Colors.black12, // kMarqueTextColor,
-      child: Icon(
-        Icons.waves,
-        color: kBezelColor, //kMarqueTextColor,
-      ),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))),
-//              shape: Border(
-//                top: BorderSide(color: Colors.black, width: 10.0),
-//                bottom: BorderSide(color: Colors.black, width: 10.0),
-//                left: BorderSide(color: Colors.black, width: 10.0),
-//                right: BorderSide(color: Colors.black, width: 10.0),
-//              ),
-      elevation: 3.2,
-      offset: Offset(50, 30),
-      onSelected: (int result) {
-        switch (result) {
-          case 1:
-            {
-              Navigator.pushNamed(context, TodayScreen.id);
-            }
-            break;
-
-          case 2:
-            {
-              (MediaQuery.of(context).orientation == Orientation.landscape)
-                  ? startMarquee = true
-                  : showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                            // title: Text("Marquee "),
-                            content: Text(
-                                "Marquee is only available in Landscape Mode"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Text("okay"),
-                              ),
-                            ],
-                          ));
-            }
-            break;
-          case 3:
-            {
-              Navigator.pushNamed(context, SettingsScreen.id);
-            }
-            break;
-
-          default:
-            {
-              //statements;
-            }
-            break;
-        }
-
-//                setState(() {
-//                //  _selection = result;
-//                });
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-        const PopupMenuItem(
-          value: 1,
-          child: Text(
-            'View Forecast',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        PopupMenuItem(
-          value: 2,
-          child: (MediaQuery.of(context).orientation == Orientation.landscape)
-              ? Text('Start Marquee', style: TextStyle(color: Colors.white))
-              : Text(
-                  'Start Marquee',
-                  style: TextStyle(color: kBezelColor),
-                ),
-
-          enabled:
-              (MediaQuery.of(context).orientation == Orientation.landscape),
-          //  enabled: f // (MediaQuery.of(context).orientation == Orientation.portrait)
-        ),
-        const PopupMenuItem(
-          value: 3,
-          child: Text('Settings', style: TextStyle(color: Colors.white)),
-        ),
-      ],
-    );
-  }
-}
-
 class LandScapeMode extends StatefulWidget {
   @override
   _LandScapeModeState createState() => _LandScapeModeState();
@@ -468,10 +202,6 @@ class _LandScapeModeState extends State<LandScapeMode> {
   @override
   void initState() {
     super.initState();
-//    hourlyDataSource =
-//        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
-    //print("Number of hourly records is " +
-    //    weatherData.data.weather[0].hourly.length.toString());
   }
 
   @override
@@ -601,20 +331,7 @@ class _LandscapeViewState extends State<LandscapeView> {
             //   marqueeColor = Colors.blue;
           });
         }
-//    scrollAxis: Axis.horizontal,
-//    velocity: 300.0,
-//    showFadingOnlyWhenScrolling: true,
-//    fadingEdgeStartFraction: 0.1,
-//    fadingEdgeEndFraction: 0.1,
-//    crossAxisAlignment: CrossAxisAlignment.start,
-//    pauseAfterRound: Duration(seconds: 1),
-//    numberOfRounds: 1,
-//    blankSpace: 20.0,
-//    startPadding: 10.0,
-//    accelerationDuration: Duration(seconds: 1),
-//    accelerationCurve: Curves.linear,
-//    decelerationDuration: Duration(milliseconds: 500),
-//    decelerationCurve: Curves.easeOut,
+//
         );
   }
 }
@@ -627,10 +344,8 @@ class ClockRow extends StatelessWidget {
 
     return Row(
       children: [
-        // guageColumn(gaugeType: CircleContainer()),
         gaugeColumn(),
         clockColumn(clockType: zeClockSync()),
-        // gaugeColumn(),
       ],
     );
   }
@@ -715,16 +430,14 @@ class DialRow extends StatelessWidget {
 
 List<Widget> gaugeSequenceList = [
   DialRow(
-    gaugeType1: TempGauge(
-        high: double.parse(globalWeather.dailyWeather[0].highTemp),
-        low: double.parse(globalWeather.dailyWeather[0].lowTemp),
-        conditionIcon: weatherDayIconMap[
-            globalWeather.dailyWeather[0].hourly[0].weatherCode]),
-    gaugeType2: BarometerGauge(
-      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
-      change: getBarometerChange(),
-    ),
-  ),
+      gaugeType1: TempGauge(
+          high: double.parse(globalWeather.dailyWeather[0].highTemp),
+          low: double.parse(globalWeather.dailyWeather[0].lowTemp),
+          conditionIcon: weatherDayIconMap[
+              globalWeather.dailyWeather[0].hourly[0].weatherCode]),
+      gaugeType2: HumidityGauge(
+        gaugeValue: double.parse(globalWeather.dailyWeather[0].humidity),
+      )),
   DialRow(
       gaugeType1: ImageGaugeNew(
         imageName: "sunset1.gif",
@@ -771,18 +484,20 @@ List<Widget> gaugeSequenceList = [
     ),
   ),
   DialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "water.gif",
-        textLabel: "Water " +
-            globalWeather.dailyWeather[0].waterTemp +
+    gaugeType1: ImageGaugeNew(
+      imageName: "water.gif",
+      textLabel: "Water " +
+          globalWeather.dailyWeather[0].waterTemp +
 //   weatherData.data.weather[0].hourly[0].waterTempF +
-            " \u2109",
-        textColor: Colors.black,
-        textBackgroundColor: Colors.transparent,
-      ),
-      gaugeType2: HumidityGauge(
-        gaugeValue: double.parse(globalWeather.dailyWeather[0].humidity),
-      )),
+          " \u2109",
+      textColor: Colors.black,
+      textBackgroundColor: Colors.transparent,
+    ),
+    gaugeType2: BarometerGauge(
+      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
+      change: getBarometerChange(),
+    ),
+  ),
   DialRow(
       gaugeType1: ImageGaugeNew(
         imageName: "boat1.jpg",
@@ -794,6 +509,7 @@ List<Widget> gaugeSequenceList = [
 
 class VenkySwap extends StatefulWidget {
   VenkySwap({Key key, this.title}) : super(key: key);
+
   final String title;
 
   @override
@@ -804,22 +520,57 @@ class _VenkySwapState extends State<VenkySwap> {
   int _counter = 0;
   bool animationSwitcher = false;
   Timer myTimer;
+  Timer ted;
   AnimationController controller;
   List<Widget> myWidgetList;
   Widget myFirstWidget = gaugeSequenceList[0];
   Widget mySecondWidget = gaugeSequenceList[1];
+  int currentTransitionTime = userSettings.transitionTime;
+
+  /*
+   Timer ted;
+
+  int currentTransitionTime = 0;
+  @override
+  void initState() {
+    super.initState();
+    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ted.cancel();
+  }
+
+
+
+   */
 
   @override
   void initState() {
     super.initState();
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+    myTimer = Timer.periodic(
+        Duration(seconds: userSettings.transitionTime), _updateData);
+  }
 
-    myTimer = Timer.periodic(const Duration(milliseconds: 3000), _updateData);
+  _bobX(Timer timer) {
+    if (currentTransitionTime != userSettings.transitionTime) {
+      myTimer.cancel();
+      currentTransitionTime = userSettings.transitionTime;
+      myTimer = Timer.periodic(
+          Duration(seconds: userSettings.transitionTime), _updateData);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     myTimer.cancel();
+    ted.cancel();
   }
 
   void _updateData(Timer timer) {

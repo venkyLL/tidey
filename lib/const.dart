@@ -172,12 +172,7 @@ class TideElement {
   DateTime tideDateTime = DateTime.now();
   String tideType = "";
 
-//  TideElement({
-//    this.tideTime,
-//    this.tideHeightMt,
-//    this.tideDateTime,
-//    this.tideType,
-//  });
+
 }
 
 //global bell constants

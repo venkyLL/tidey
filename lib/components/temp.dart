@@ -65,14 +65,14 @@ class _TempGaugeState extends State<TempGauge> {
             radiusFactor: 0.9,
             //labelOffset: 8,
             annotations: <GaugeAnnotation>[
-              GaugeAnnotation(
-                  angle: 90,
-                  positionFactor: 0.3,
-                  widget: Container(
-                    child: BoxedIcon((conditionIcon),
-                        size: ScreenSize.small ? 20 : 35,
-                        color: const Color(0xFF3366CC)),
-                  )),
+//              GaugeAnnotation(
+//                  angle: 90,
+//                  positionFactor: 0.3,
+//                  widget: Container(
+//                    child: BoxedIcon((conditionIcon),
+//                        size: ScreenSize.small ? 20 : 35,
+//                        color: const Color(0xFF3366CC)),
+//                  )),
 //                      const Text('Temp.°F',
 //                          style: TextStyle(
 //                              color: Color(0xff000000), fontSize: 16)))),
