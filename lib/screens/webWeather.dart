@@ -18,14 +18,11 @@ class _WebWeatherState extends State<WebWeather> {
           // AppBar(title: Text(globalLatitude == null ? "bob" : globalLatitude)),
           AppBar(
         title: Text("Back to Tidey"),
-        // centerTitle: true,
-        //backgroundColor: Colors.transparent,
-        backgroundColor: kHeadingColor,
-        // Color(0x44000000),
-        // elevation: 0,
+        backgroundColor: Colors.grey.shade400,
       ),
       body: WebView(
-        initialUrl: localWeather.data.nearestArea[0].weatherUrl[0].value,
+        initialUrl: destinationURL,
+        // localWeather.data.nearestArea[0].weatherUrl[0].value,
         javascriptMode: JavascriptMode.unrestricted,
       ),
     );

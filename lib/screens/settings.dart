@@ -342,8 +342,13 @@ class _settingsScreenState extends State<SettingsScreen> {
                     MenuListTile(
                       title: "View Current Weather on Web",
                       icon: Icons.cloud_circle_outlined,
-                      onTap: () =>
-                          {Navigator.pushNamed(context, WebWeather.id)},
+                      onTap: () {
+                        destinationURL =
+                            "localWeather.data.nearestArea[0].weatherUrl[0].value";
+                        {
+                          Navigator.pushNamed(context, WebWeather.id);
+                        }
+                      },
                     ),
 
                     Divider(

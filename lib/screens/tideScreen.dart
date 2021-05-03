@@ -17,6 +17,7 @@ import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
+import 'package:tidey/screens/webWeather.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 Color marqueeColor = Colors.transparent;
@@ -101,7 +102,7 @@ class FABMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpandableFab(
-      distance: 70.0,
+      distance: 90.0,
       children: [
         ActionButton(
           onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
@@ -112,6 +113,14 @@ class FABMenu extends StatelessWidget {
           onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
           //   _showAction(context, 0),
           icon: const Icon(Icons.wb_sunny),
+        ),
+        ActionButton(
+          onPressed: () {
+            destinationURL = userSettings.localInfoURL;
+            Navigator.pushNamed(context, WebWeather.id);
+          },
+          //   _showAction(context, 0),
+          icon: const Icon(Icons.info),
         ),
         ActionButton(
           onPressed: () {
@@ -159,6 +168,16 @@ void _settingModalBottomSheet(context) {
                 leading: Icon(Icons.wb_sunny),
                 title: Text('View Weather Table'),
                 onTap: () => {Navigator.pushNamed(context, TodayScreen.id)},
+              ),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text('Local Information'),
+                onTap: () {
+                  {
+                    destinationURL = userSettings.localInfoURL;
+                    Navigator.pushNamed(context, WebWeather.id);
+                  }
+                },
               ),
               ListTile(
                 leading: Icon(Icons.view_day),

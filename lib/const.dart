@@ -38,7 +38,7 @@ double globalNextLowTideHeightInFeet = 999999;
 double currentDirection = 193;
 
 int globalNumberOfDaysOfWeatherData = 1;
-
+String destinationURL = "https://abacosun.com/2019/11/24/whatsopeninabaco/";
 MarineWeather weatherData = MarineWeather();
 LocalWeather localWeather = LocalWeather();
 String marqueeString;
@@ -83,6 +83,8 @@ class UserSettings {
   final keyManualLat = "manualLat";
   double manualLong = -77.3296;
   final keyManualLong = "manualLong";
+  String localInfoURL = "https://abacosun.com/2019/11/24/whatsopeninabaco/";
+  final keyLocalInfoURL = "localInfoURL";
 }
 
 class BoolKey {
@@ -171,8 +173,6 @@ class TideElement {
   double tideHeight = 0.0;
   DateTime tideDateTime = DateTime.now();
   String tideType = "";
-
-
 }
 
 //global bell constants

@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 
 /// Gauge imports
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:tidey/components/alarmSounder.dart';
 import 'package:tidey/components/hourlyBell.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/services/tideServices.dart';
 
 import '../services/tideServices.dart';
-import 'package:tidey/components/alarmSounder.dart';
 
 /// Local imports
 //import 'sample_view.dart';
@@ -53,7 +53,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   }
 
   void _updateData(Timer timer) {
-  //  print("global compass direction is $globalCompassDirection");
+    //  print("global compass direction is $globalCompassDirection");
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();
