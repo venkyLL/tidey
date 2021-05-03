@@ -20,7 +20,7 @@ class _CompassGauge2State extends State<CompassGauge2> {
       height: ScreenSize.gaugeSize,
       child: GaugeContainer(
           child: CompassGauge(
-        direction: currentDirection,
+        direction: globalCompassDirection,
       )),
     );
   }

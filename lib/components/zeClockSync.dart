@@ -53,6 +53,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   }
 
   void _updateData(Timer timer) {
+    print("global compass direction is $globalCompassDirection");
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();
@@ -139,7 +140,7 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                    markerOffset: 40,
 //                    color: Color(0xFFF67280)),
             NeedlePointer(
-              value: currentDirection, // dirMap[gaugeDirection],
+              value: globalCompassDirection, // dirMap[gaugeDirection],
               lengthUnit: GaugeSizeUnit.factor,
               needleLength: 0.5,
               needleColor: Colors.grey.shade300,
