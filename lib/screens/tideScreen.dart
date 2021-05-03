@@ -9,6 +9,7 @@ import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/dsGauge.dart';
+import 'package:tidey/components/fabMenu.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
@@ -20,12 +21,25 @@ import 'package:timer_builder/timer_builder.dart';
 Color marqueeColor = Colors.transparent;
 bool marqueeCompleted = false;
 
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+//enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
-class TideScreen extends StatelessWidget {
+class TideScreen extends StatefulWidget {
   static const String id = 'TideScreen';
 
-//  final String passedValue;
+  @override
+  _TideScreenState createState() => _TideScreenState();
+}
+
+class _TideScreenState extends State<TideScreen> {
+  ScrollController scrollController;
+  bool scrollVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    ExpandableFab();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,16 +53,55 @@ class TideScreen extends StatelessWidget {
           //  backgroundColor: Color(0x44000000),
           elevation: 0,
           // Venky This works
-          leading: menu(),
+          //   leading: menu(),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            print("TOuched Fab");
-            menu();
-          },
-          child: const Icon(Icons.waves, color: kBezelColor),
-          backgroundColor: Colors.black26,
+        floatingActionButton: ExpandableFab(
+          distance: 70.0,
+          children: [
+            ActionButton(
+              onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
+              //   _showAction(context, 0),
+              icon: const Icon(Icons.wb_sunny),
+            ),
+            ActionButton(
+              onPressed: () {
+                (MediaQuery.of(context).orientation == Orientation.landscape)
+                    ? startMarquee = true
+                    : showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                              // title: Text("Marquee "),
+                              content: Text(
+                                  "Marquee is only available in Landscape Mode"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text("okay"),
+                                ),
+                              ],
+                            ));
+              },
+              // => _showAction(context, 1),
+              icon: const Icon(Icons.view_day),
+            ),
+            ActionButton(
+              onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
+              // _showAction(context, 2),
+              icon: const Icon(Icons.settings),
+            ),
+          ],
         ),
+
+//        FloatingActionButton(
+//          onPressed: () {
+//            print("TOuched Fab");
+//            menu();
+//          },
+//          child: const Icon(Icons.waves, color: kBezelColor),
+//          backgroundColor: Colors.black26,
+//        ),
         body: SwipeGestureRecognizer(
           onSwipeRight: () {
             Navigator.pushNamed(context, SettingsScreen.id);
@@ -75,12 +128,24 @@ class TideScreen extends StatelessWidget {
           ),
         ));
   }
+}
 
-  // This is the type used by the popup menu below.
-
-// This menu button widget updates a _selection field (of type WhyFarther,
-// not shown here).
-
+const _actionTitles = ['Create Post', 'Upload Photo', 'Upload Video'];
+void _showAction(BuildContext context, int index) {
+  showDialog<void>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        content: Text(_actionTitles[index]),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CLOSE'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class menu extends StatelessWidget {
@@ -569,6 +634,7 @@ class VenkySwap extends StatefulWidget {
 class _VenkySwapState extends State<VenkySwap> {
   int _counter = 0;
   bool animationSwitcher = false;
+  Timer myTimer;
   AnimationController controller;
   List<Widget> myWidgetList;
   Widget myFirstWidget = gaugeSequenceList[0];
@@ -578,8 +644,13 @@ class _VenkySwapState extends State<VenkySwap> {
   void initState() {
     super.initState();
 
-    Timer myTimer =
-        Timer.periodic(const Duration(milliseconds: 3000), _updateData);
+    myTimer = Timer.periodic(const Duration(milliseconds: 3000), _updateData);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    myTimer.cancel();
   }
 
   void _updateData(Timer timer) {
