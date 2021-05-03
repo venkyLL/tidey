@@ -30,9 +30,28 @@ class TideScreen extends StatefulWidget {
   _TideScreenState createState() => _TideScreenState();
 }
 
+List<String> ringOptions = <String>[
+  chimeTypeEnumtoString[ChimeType.single],
+  chimeTypeEnumtoString[ChimeType.hourly],
+  chimeTypeEnumtoString[ChimeType.nautical],
+];
+
 class _TideScreenState extends State<TideScreen> {
-  ScrollController scrollController;
-  bool scrollVisible = true;
+//  ScrollController scrollController;
+//  bool scrollVisible = true;String speed = 'Ludicrous';
+
+  List<String> menuOptions = <String>[
+    'Settings',
+    'View Weather Table',
+    'Start Marquee',
+  ];
+
+  List<Icon> menuIcons = <Icon>[
+    Icon(Icons.settings),
+    Icon(Icons.wb_sunny),
+    Icon(Icons.view_day),
+    //  BoxedIcon(WeatherIcons.snow),
+  ];
 
   @override
   void initState() {
@@ -58,6 +77,11 @@ class _TideScreenState extends State<TideScreen> {
         floatingActionButton: ExpandableFab(
           distance: 70.0,
           children: [
+            ActionButton(
+              onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
+              // _showAction(context, 2),
+              icon: const Icon(Icons.settings),
+            ),
             ActionButton(
               onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
               //   _showAction(context, 0),
@@ -86,11 +110,6 @@ class _TideScreenState extends State<TideScreen> {
               // => _showAction(context, 1),
               icon: const Icon(Icons.view_day),
             ),
-            ActionButton(
-              onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
-              // _showAction(context, 2),
-              icon: const Icon(Icons.settings),
-            ),
           ],
         ),
 
@@ -112,22 +131,213 @@ class _TideScreenState extends State<TideScreen> {
           child: GestureDetector(
             onTap: () {
               print("Touched everywhere");
-              menu();
+              _settingModalBottomSheet(context);
+
+//              showCupertinoModalPopup(
+//                  context: context,
+//                  builder: (BuildContext context) => CupertinoActionSheet(
+//                        // title: const Text('Select'),
+//                        // message: const Text('Message'),
+//                        actions: [
+//                          CupertinoActionSheetAction(
+//                            child: Text("Settings",
+//                                style: TextStyle(color: kAppBlueColor)),
+//                            isDefaultAction: true,
+//                            onPressed: () {
+//                              Navigator.pop(context);
+//                              Navigator.pushNamed(context, SettingsScreen.id);
+//                            },
+//                          ),
+//                          CupertinoActionSheetAction(
+//                            child: const Text('View Weather Table',
+//                                style: TextStyle(color: kAppBlueColor)),
+//                            onPressed: () {
+//                              Navigator.pop(context);
+//                              Navigator.pushNamed(context, TodayScreen.id);
+//                            },
+//                          ),
+//                          CupertinoActionSheetAction(
+//                            child: const Text('Start Marquee',
+//                                style: TextStyle(color: kAppBlueColor)),
+//                            onPressed: () {
+//                              Navigator.pop(context);
+//                              {
+//                                (MediaQuery.of(context).orientation ==
+//                                        Orientation.landscape)
+//                                    ? startMarquee = true
+//                                    : showDialog(
+//                                        context: context,
+//                                        builder: (ctx) => AlertDialog(
+//                                              // title: Text("Marquee "),
+//                                              content: Text(
+//                                                  "Marquee is only available in Landscape Mode"),
+//                                              actions: <Widget>[
+//                                                TextButton(
+//                                                  onPressed: () {
+//                                                    Navigator.of(ctx).pop();
+//                                                  },
+//                                                  child: Text("okay"),
+//                                                ),
+//                                              ],
+//                                            ));
+//                              }
+//                            },
+//                          )
+//                        ],
+//                        cancelButton: CupertinoActionSheetAction(
+//                          child: const Text('Cancel'),
+//                          isDestructiveAction: true,
+//                          onPressed: () {
+//                            Navigator.pop(context, 'Cancel');
+//                          },
+//                        ),
+//                      ));
+
+//              showMaterialSelectionPicker(
+//                context: context,
+//                headerColor: kAppBlueColor,
+//                maxLongSide: 300,
+//                title: "Select",
+//                items: menuOptions,
+//                selectedValue: "Light",
+//                icons: menuIcons,
+//                onChanged: (value) {
+//                  print("Value Selected $value");
+//                  // Navigator.pushNamed(context, SettingsScreen.id)
+//                  switch (value) {
+//                    case "Settings":
+//                      {
+//                        Navigator.pushNamed(context, SettingsScreen.id);
+//                      }
+//                      break;
+//
+//                    case "View Weather Table":
+//                      {
+//                        Navigator.pushNamed(context, TodayScreen.id);
+//                      }
+//                      break;
+//
+//                    default:
+//                      {
+//                        print("Woops Value Selected $value");
+//                      }
+//                      break;
+//                  }
+//                  userSettings.chimeSelected = chimeTypeStringToEnum[value];
+//                  print("Selected " + userSettings.chimeSelected.toString());
+//                },
+//              );
+
+//              showMaterialScrollPicker(
+//                headerColor: kAppBlueColor,
+//                maxLongSide: 300,
+//                context: context,
+//                title: "Select",
+//                items: <String>[
+//                  "Settings",
+//                  "View Weather Table",
+//                  "Start Marquee",
+//                ],
+//                selectedValue: "Settings",
+//                onChanged: (value) {
+//                  print("Value Selected $value");
+//                  // Navigator.pushNamed(context, SettingsScreen.id)
+//                  switch (value) {
+//                    case "Settings":
+//                      {
+//                        Navigator.pushNamed(context, SettingsScreen.id);
+//                      }
+//                      break;
+//
+//                    case "View Weather Table":
+//                      {
+//                        Navigator.pushNamed(context, TodayScreen.id);
+//                      }
+//                      break;
+//
+//                    default:
+//                      {
+//                        print("Woops Value Selected $value");
+//                      }
+//                      break;
+//                  }
+//                  userSettings.chimeSelected = chimeTypeStringToEnum[value];
+//                  print("Selected " + userSettings.chimeSelected.toString());
+//                },
+//              );
+              // menu();
             },
-            child: OrientationBuilder(
-              builder: (context, orientation) {
-                //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: OrientationBuilder(
+                builder: (context, orientation) {
+                  //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
 //         //   }
-                if (orientation == Orientation.portrait) {
-                  return PortraitMode();
-                } else {
-                  return LandScapeMode();
-                }
-              },
+                  if (orientation == Orientation.portrait) {
+                    return PortraitMode();
+                  } else {
+                    return LandScapeMode();
+                  }
+                },
+              ),
             ),
           ),
         ));
   }
+}
+
+void _settingModalBottomSheet(context) {
+  showModalBottomSheet(
+      context: context,
+      // backgroundColor: Colors.white70,
+      // barrierColor: Colors.red,
+      builder: (BuildContext bc) {
+        return Container(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text(
+                    'Settings',
+                  ),
+                  onTap: () =>
+                      {Navigator.pushNamed(context, SettingsScreen.id)}),
+              ListTile(
+                leading: Icon(Icons.wb_sunny),
+                title: Text('View Weather Table'),
+                onTap: () => {Navigator.pushNamed(context, TodayScreen.id)},
+              ),
+              ListTile(
+                leading: Icon(Icons.view_day),
+                title: Text('Start Weather Marquee (Landscape Mode Only)'),
+                enabled: (MediaQuery.of(context).orientation ==
+                    Orientation.landscape),
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  (MediaQuery.of(context).orientation == Orientation.landscape)
+                      ? startMarquee = true
+                      : showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                // title: Text("Marquee "),
+                                content: Text(
+                                    "Marquee is only available in Landscape Mode"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Text("okay"),
+                                  ),
+                                ],
+                              ))
+                },
+              )
+            ],
+          ),
+        );
+      });
 }
 
 const _actionTitles = ['Create Post', 'Upload Photo', 'Upload Video'];

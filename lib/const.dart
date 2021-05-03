@@ -350,16 +350,17 @@ const weatherServerURL = 'https://api.worldweatheronline.com/premium/v1/';
 const rumWeatherServiceURL = 'https://shoeboxrum.veloxe.com/api/tidey';
 const weatherAPIKey = 'key=51503debb4b34526a33181926211204';
 const marineWeatherService = weatherServerURL + "marine.ashx";
-const kTextAndIconColor = Color(0xFFFFFFFF);
-const kPrimaryTextColor = Color(0xFF212121);
-const kSecondaryTextColor = Color(0xFF757575);
-const kHeadingColor = Color(0xFFAAAAAA);
-const kPrimaryColor = Colors.indigo;
-const kAppBlueColor = Color(0xFF3366CC);
+//const kTextAndIconColor = Color(0xFFFFFFFF);
+//const kPrimaryTextColor = Color(0xFF212121);
+//const kSecondaryTextColor = Color(0xFF757575);
+const kSplashColor = Color(0xFF407DD6);
+var kHeadingColor = Colors.grey.shade200; //Color(0xFFAAAAAA);
+//const kPrimaryColor = Colors.indigo;
+const kAppBlueColor = Color(0xFF192B4D); // Color(0xFF3366CC);
 const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);
 const kTextSettingSize = 15.0;
-const kTextSettingsStyle =
-    TextStyle(fontSize: kTextSettingSize, color: Colors.white);
+var kTextSettingsStyle =
+    GoogleFonts.notoSans(fontSize: kTextSettingSize, color: Colors.white);
 const kIconSettingSize = 30.0;
 const kBezelColor = Color(0xFF999999);
 const kMarqueTextColor = Color(0xFF00022E);
@@ -369,7 +370,6 @@ var kMarqueeTextstyle = GoogleFonts.notoSans(
 //  color: Colors.white,
   backgroundColor: Colors.white10,
   fontSize: 24,
-//    fontWeight: FontWeight.bold
 );
 
 //TextStyle(
@@ -388,38 +388,37 @@ const kTitleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
-const kTableTitleTextStyle = TextStyle(
-  fontSize: 24,
+var kTableTitleTextStyle = GoogleFonts.notoSans(
+  fontSize: 24 * ScreenSize.fs,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
-const kTableTextStyle =
-    TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20);
-const kMoonTextStyle = TextStyle(
-  fontSize: 18,
-  color: Colors.white,
-);
+var kTableTextStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20 * ScreenSize.fs);
+
 const kClockTextSmallStyle = TextStyle(
   fontSize: 17,
   color: Colors.white,
 );
 //const kTableTextStyle =
 //    TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold);
-const kTableTextStyleRed = TextStyle(
-  fontSize: 20,
-  color: Colors.red,
-  fontWeight: FontWeight.bold,
-);
-const kTableTextStyleGreen = TextStyle(
-  fontSize: 20,
-  color: Colors.green,
-  fontWeight: FontWeight.bold,
-);
+//const kTableTextStyleRed = TextStyle(
+//  fontSize: 20,
+//  color: Colors.red,
+//  fontWeight: FontWeight.bold,
+//);
+//const kTableTextStyleGreen = TextStyle(
+//  fontSize: 20,
+//  color: Colors.green,
+//  fontWeight: FontWeight.bold,
+//);
 
-const kClockTrailerTextStyle = TextStyle(
-  fontSize: 17,
-  color: kPrimaryTextColor,
-);
+//const kClockTrailerTextStyle = TextStyle(
+//  fontSize: 17,
+//  color: kPrimaryTextColor,
+//);
 
 const kMySubTileData = [
   {
@@ -510,7 +509,7 @@ class ScreenSize {
     print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
-    print("Small Device? $small");
+    print("Small Device? $small font scale $fs");
     print("GaugeTop = ${gaugeTop}");
     print("Gauge Size = ${gaugeSize}");
     print("ClockTop = ${clockTop}");

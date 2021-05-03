@@ -41,8 +41,6 @@ PODS:
     - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
-  - flutter_boom_menu (0.0.1):
-    - Flutter
   - flutter_sensor_compass (0.0.1):
     - Flutter
   - flutter_sensors (0.0.1):
@@ -73,7 +71,6 @@ DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
-  - flutter_boom_menu (from `.symlinks/plugins/flutter_boom_menu/ios`)
   - flutter_sensor_compass (from `.symlinks/plugins/flutter_sensor_compass/ios`)
   - flutter_sensors (from `.symlinks/plugins/flutter_sensors/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -103,8 +100,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: Flutter
-  flutter_boom_menu:
-    :path: ".symlinks/plugins/flutter_boom_menu/ios"
   flutter_sensor_compass:
     :path: ".symlinks/plugins/flutter_sensor_compass/ios"
   flutter_sensors:
@@ -132,7 +127,6 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_boom_menu: 2f6fd7100348797be93208bb39bad6d53ad53353
   flutter_sensor_compass: b5b4c070c95db5d7f67e17b4b6e393cf0e4c2cd5
   flutter_sensors: dc6eed3291e7724bf8f4138d7d14c4071b42bd29
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:google_fonts/google_fonts.dart";
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tidey/const.dart';
 
@@ -147,7 +148,7 @@ class _DSGaugeState extends State<DSGauge> {
                   child: Text(
                     "\n" + gaugeType + "\n " + gaugeUnit,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.notoSans(
                         fontSize: ScreenSize.small ? 15 : 20,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3366CC)),

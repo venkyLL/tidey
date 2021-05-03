@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
@@ -22,6 +23,8 @@ class SettingsScreen extends StatefulWidget {
 class _settingsScreenState extends State<SettingsScreen> {
   double _currentSliderValue = userSettings.transitionTime.toDouble();
   double _countDownSliderValue = 5;
+  bool _timerOn = false;
+  int _currentValue = userSettings.countDownTimer;
   int _sliding = userSettings.imperialUnits ? 0 : 1;
   String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
   SharedPreferences prefs;
@@ -308,6 +311,10 @@ class _settingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red, // background
+                                onPrimary: Colors.white, // foreground
+                              ),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
@@ -338,6 +345,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       onTap: () =>
                           {Navigator.pushNamed(context, WebWeather.id)},
                     ),
+
                     Divider(
                       height: 10,
                       thickness: 5,
@@ -454,24 +462,24 @@ class _settingsScreenState extends State<SettingsScreen> {
                               icon: Icons.notifications_active,
                               onTap: () => {
                                 showMaterialScrollPicker(
-                                    headerColor: kAppBlueColor,
-                                    maxLongSide: 400,
-                                    context: context,
-                                    title: "Select Bell Ring Schedule",
-                                    items: ringOptions,
-                                    selectedValue: selectedRingMode,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedRingMode = value;
-                                      });
-                                      userSettings.chimeSelected =
-                                          chimeTypeStringToEnum[value];
-                                      print("Selected " +
-                                          userSettings.chimeSelected
-                                              .toString());
-                                      prefs.setString(
-                                          userSettings.keyChimeSelected, value);
-                                    })
+                                  headerColor: kAppBlueColor,
+                                  maxLongSide: 400,
+                                  context: context,
+                                  title: "Select Bell Ring Schedule",
+                                  items: ringOptions,
+                                  selectedValue: selectedRingMode,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRingMode = value;
+                                    });
+                                    userSettings.chimeSelected =
+                                        chimeTypeStringToEnum[value];
+                                    print("Selected " +
+                                        userSettings.chimeSelected.toString());
+                                    prefs.setString(
+                                        userSettings.keyChimeSelected, value);
+                                  },
+                                )
                               },
                             ),
                           ],
@@ -482,45 +490,88 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
+                    MenuListTileWithSwitch(
+                        title: ("Set a Timer"),
+                        value: _timerOn,
+                        icon: Icons.av_timer,
+                        onTap: () {
+                          setState(() {
+                            _timerOn = !_timerOn;
+                            ;
+                          });
+                        }),
+                    Visibility(
+                      visible: _timerOn,
                       child: Row(
+                        //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Icon(
-                            Icons.av_timer,
-                            size: kIconSettingSize,
-                            color: Colors.white,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30.0, top: 8, bottom: 8),
+                            child: Icon(Icons.av_timer,
+                                size: kIconSettingSize, color: Colors.white),
                           ),
-                          Text(
-                            " Timer (" +
-                                _countDownSliderValue.round().toString() +
-                                ")",
-                            style: kTextSettingsStyle,
+                          Text("Select Timer Value", style: kTextSettingsStyle),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30.0, top: 8, bottom: 8),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  color: Colors.grey.shade200,
+                                  child: NumberPicker(
+                                    value: _currentValue,
+                                    //  decoration: ),
+                                    //   selectedTextStyle: TextStyle(color: Colors.yellow),
+                                    //  textStyle: TextStyle(color: Colors.white),
+                                    minValue: 0,
+                                    maxValue: 120,
+                                    onChanged: (value) => setState(() {
+                                      _currentValue = value;
+                                      userSettings.countDownTimer = value;
+                                    }),
+                                  ),
+                                ),
+                                Text('Current value: $_currentValue',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25.0),
-                      child: Row(
-                        children: [
-                          Text("0", style: kTextSettingsStyle),
-                          Slider(
-                            value: _countDownSliderValue,
-                            min: 0,
-                            max: 120,
-                            divisions: 120,
-                            label: _countDownSliderValue.round().toString(),
-                            onChanged: (double value) {
-                              setState(() {
-                                _countDownSliderValue = value;
-                                userSettings.countDownTimer = value.round();
-                              });
-                            },
-                          ),
-                          Text("120 Minutes", style: kTextSettingsStyle),
-                        ],
+                    Visibility(
+                      visible: _timerOn,
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: Row(
+                          //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 40.0, right: 40.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.grey.shade500, // background
+                                  onPrimary: Colors.white, // foreground
+                                ),
+                                onPressed: () {},
+                                child: Text('Start',
+                                    style: TextStyle(color: Colors.black)),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.grey.shade500, // background
+                                onPrimary: Colors.white, // foreground
+                              ),
+                              child: Text('Cancel',
+                                  style: TextStyle(color: Colors.black)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -528,6 +579,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
+
                     MenuListTileWithSwitch(
                         title: (userSettings.alarmOn)
                             ? "Alarm (Enabled)"

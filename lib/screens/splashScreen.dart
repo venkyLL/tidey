@@ -7,11 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/compass.dart';
+import 'package:tidey/services/cronServices.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
-import 'package:tidey/services/cronServices.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -219,9 +219,32 @@ class _SplashScreenState extends State<SplashScreen> {
         "Length " +
         ScreenSize.screenHeight.toString());
     return Scaffold(
-      backgroundColor: Colors.amber,
-      body: Center(
-        child: Text("Splish Splash I am taking a bath ... "),
+      // backgroundColor: kSplashColor,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.JPG'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.8), BlendMode.dstATop),
+          ),
+        ),
+        constraints: BoxConstraints.expand(),
+        child: Container(
+            child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: Image.asset('assets/images/tidieIcon.png'),
+            ),
+            Text(
+              "Tidey",
+              style: kTableTitleTextStyle,
+            ),
+          ],
+        )),
+
+        //   child: Text("Splish Splash I am taking a bath ... "),
       ),
     );
   }

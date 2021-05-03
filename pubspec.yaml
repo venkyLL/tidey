@@ -51,8 +51,9 @@ dependencies:
   share:
   url_launcher:
   google_fonts: ^2.0.0
-  flutter_boom_menu:
+  numberpicker:
   cron: ^0.3.0
+
 
 
 

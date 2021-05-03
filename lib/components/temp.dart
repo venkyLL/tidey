@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Gauge imports
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -81,7 +82,7 @@ class _TempGaugeState extends State<TempGauge> {
                   widget: Container(
                     child: Text(
                       'Temp\nHi & Lo',
-                      style: TextStyle(
+                      style: GoogleFonts.notoSans(
                           fontWeight: FontWeight.bold,
                           fontSize: ScreenSize.small ? 15 : 18,
                           color: const Color(0xFF3366CC)),

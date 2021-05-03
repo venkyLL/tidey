@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tidey/const.dart';
 
 class ImageGauge extends StatelessWidget {
@@ -37,7 +38,7 @@ class ImageGauge extends StatelessWidget {
                     Text(
                       textLabel,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: GoogleFonts.notoSans(
                           color: textColor,
                           backgroundColor: textBackgroundColor,
                           fontWeight: FontWeight.bold,
@@ -143,7 +144,7 @@ class ImageGaugeNew extends StatelessWidget {
                 Text(
                   textLabel,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.notoSans(
                       color: textColor,
                       backgroundColor: textBackgroundColor,
                       fontWeight: FontWeight.bold,
