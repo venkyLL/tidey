@@ -10,6 +10,7 @@ import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/dsGauge.dart';
 import 'package:tidey/components/fabMenu.dart';
+import 'package:tidey/components/humidyGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
@@ -653,22 +654,6 @@ class clockColumn extends StatelessWidget {
     return Column(
       children: [
         Container(
-//          child: Align(
-//            alignment: Alignment.center,
-//            child: Text(
-//                localWeather.data.nearestArea[0].areaName[0].value +
-//                    //   localWeather.data.nearestArea[0].country[0].value +
-//                    "\n" +
-//                    DateFormat('E MM/d').format(now) +
-//                    "\n" +
-//                    localWeather.data.weather[0].hourly[0].weatherDesc[0].value,
-//                textAlign: TextAlign.center,
-//                style: TextStyle(
-//                    fontWeight: FontWeight.bold,
-//                    fontSize: 25,
-//                    //    backgroundColor: Colors.white30,
-//                    color: Colors.white)),
-//          ),
           height: (ScreenSize.clockTop),
         ),
         Container(
@@ -727,34 +712,6 @@ class DialRow extends StatelessWidget {
     );
   }
 }
-
-//  AnimatedCrossFade(
-//    crossFadeState: _crossFadeState,
-//    duration: const Duration(seconds: 2),
-//    firstChild: const Icon(Icons.text_rotate_up, size: 150),
-//    secondChild: const Icon(Icons.text_rotate_vertical, size: 150),
-//  ),
-//class TwoGauges {
-//  Widget gauge1;
-//  Widget gauge2;
-//
-//  TwoGauges() {
-//    this.gauge1;
-//    this.gauge2;
-//  }
-//}
-
-//List <TwoGauges> gaugleList = [
-//  TwoGauges(
-//    TwoGauges(
-//    BarometerGauge(
-//      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
-//      change: getBarometerChange(),
-//    ),
-//
-//  ),
-//
-//];
 
 List<Widget> gaugeSequenceList = [
   DialRow(
@@ -823,7 +780,9 @@ List<Widget> gaugeSequenceList = [
         textColor: Colors.black,
         textBackgroundColor: Colors.transparent,
       ),
-      gaugeType2: CompassGauge2()),
+      gaugeType2: HumidityGauge(
+        gaugeValue: double.parse(globalWeather.dailyWeather[0].humidity),
+      )),
   DialRow(
       gaugeType1: ImageGaugeNew(
         imageName: "boat1.jpg",
