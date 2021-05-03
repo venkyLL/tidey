@@ -11,6 +11,7 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'package:tidey/services/cronServices.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -175,6 +176,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initAll() async {
     await getProfileData();
     Location location = Location();
+    CronJobs myCronJobs = CronJobs();
+    myCronJobs.init();
     if (userSettings.useCurrentPosition) {
       await location.getCurrentLocation();
     } else {

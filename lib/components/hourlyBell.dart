@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:tidey/const.dart';
+import 'package:flutter/material.dart';
 
 class HourlyBellRinger {
   DateTime bellLastRungDateTime;
@@ -12,7 +13,22 @@ class HourlyBellRinger {
     bellLastRungDateTime = DateTime.now();
   }
 
+  bool amISleeping() {
+    TimeOfDay _wakeTime = userSettings.wakeTime;
+    TimeOfDay _sleepTime = userSettings.sleepTime;
+    bool _iAmSleeping = true;
+    if ((DateTime.now().getHours >= _wakeTime.hour) &&
+        (DateTime.now().getHours <= _sleepTime.hour)) {
+      if ((DateTime.now().getMinutes >= _wakeTime.minute) &&
+          (DateTime.now().getMinutes <= _sleepTime.minute)) {
+        _iAmSleeping = false;
+      }
+    }
+    return _iAmSleeping;
+  }
+
   void ringTheBellIfItIsTime() {
+    if (amISleeping()) return;
 //    int test = DateTime.now().getMinutes;
 //    print("arrived in ringTheBellIfItIsTime $test");
     if (userSettings.chimeSelected == ChimeType.hourly) {

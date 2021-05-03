@@ -52,6 +52,7 @@ dependencies:
   url_launcher:
   google_fonts: ^2.0.0
   flutter_boom_menu:
+  cron: ^0.3.0
 
 
 
