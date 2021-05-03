@@ -43,7 +43,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   void initState() {
     super.initState();
     myHourlyBell.init();
-    alarmLastRungAt = DateTime.now();
+    alarmLastRungAt = DateTime.now().subtract(Duration(minutes: 1));
     // update the needle pointer in 1 second interval
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
     timer2 =
@@ -67,7 +67,7 @@ class _zeClockSyncState extends State<zeClockSync> {
         AlarmSounder().soundAlarm();
       }
     }
-    if (userSettings.countDownTimer != 0) {
+    if ((userSettings.countDownTimer != 0) && (userSettings.countDownStart)) {
       if (localCountDownTimer != userSettings.countDownTimer) {
         localCountDownTimer = userSettings.countDownTimer;
         countDownTimerSecondsRemaining = localCountDownTimer * 60;
@@ -78,6 +78,7 @@ class _zeClockSyncState extends State<zeClockSync> {
       userSettings.countDownTimerRemaining =
           (countDownTimerSecondsRemaining / 60.0).ceil();
       if (countDownTimerSecondsRemaining == 0) {
+        userSettings.countDownStart = false;
         userSettings.countDownTimer = 0;
         AlarmSounder().soundTimerAlarm();
         localCountDownTimer = 0;

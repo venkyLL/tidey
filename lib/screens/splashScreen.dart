@@ -232,14 +232,19 @@ class _SplashScreenState extends State<SplashScreen> {
         constraints: BoxConstraints.expand(),
         child: Container(
             child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: Image.asset('assets/images/tidieIcon.png'),
+            Container(
+              width: 500,
+              child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Image.asset('assets/images/tideyIcon.png'),
+              ),
             ),
             Text(
               "Tidey",
-              style: kTableTitleTextStyle,
+              style: TextStyle(fontSize: 40, color: Colors.black),
             ),
           ],
         )),

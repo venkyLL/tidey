@@ -556,13 +556,17 @@ class _settingsScreenState extends State<SettingsScreen> {
                                   primary: Colors.grey.shade500, // background
                                   onPrimary: Colors.white, // foreground
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  userSettings.countDownStart = true;
+                                },
                                 child: Text('Start',
                                     style: TextStyle(color: Colors.black)),
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                userSettings.countDownStart = false;
+                              },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.grey.shade500, // background
                                 onPrimary: Colors.white, // foreground
@@ -878,7 +882,8 @@ class _settingsScreenState extends State<SettingsScreen> {
 
   sendemail() async {
     const url =
-        'mailto:support@amberjacklabs.com?subject=Hi from Tidey\'s #1 Fan&body=Hello';
+//        'mailto:support@amberjacklabs.com?subject=Hi from Tideys 1 Fan&body=Hello';
+        'mailto:support@amberjacklabs.com';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
