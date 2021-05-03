@@ -65,6 +65,7 @@ class UserSettings {
   final keyAlarmTimeHour = "alarmTimeHour";
   final keyAlarmTimeMin = "alarmTimeMin";
   int countDownTimer = 0;
+  int countDownTimerRemaining = 0;
   TimeOfDay sleepTime = TimeOfDay(hour: 7, minute: 20);
   final keySleepTimeHour = "sleepTmeHour";
   final keySleepTimeMin = "sleepTmeMin";

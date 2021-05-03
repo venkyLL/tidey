@@ -31,6 +31,8 @@ class _zeClockSyncState extends State<zeClockSync> {
   _zeClockSyncState();
 //  late Timer timer;
   DateTime alarmLastRungAt;
+  int countDownTimerSecondsRemaining = 0;
+  int localCountDownTimer = 0;
   Timer timer;
   Timer timer2;
   Timer timer3;
@@ -63,6 +65,22 @@ class _zeClockSyncState extends State<zeClockSync> {
           (DateTime.now().differenceInMinutes(alarmLastRungAt) > 1)) {
         alarmLastRungAt = DateTime.now();
         AlarmSounder().soundAlarm();
+      }
+    }
+    if (userSettings.countDownTimer != 0) {
+      if (localCountDownTimer != userSettings.countDownTimer) {
+        localCountDownTimer = userSettings.countDownTimer;
+        countDownTimerSecondsRemaining = localCountDownTimer * 60;
+      }
+      print(
+          "timer values ${userSettings.countDownTimer},$countDownTimerSecondsRemaining");
+      if (countDownTimerSecondsRemaining > 0) countDownTimerSecondsRemaining--;
+      userSettings.countDownTimerRemaining =
+          (countDownTimerSecondsRemaining / 60.0).ceil();
+      if (countDownTimerSecondsRemaining == 0) {
+        userSettings.countDownTimer = 0;
+        AlarmSounder().soundTimerAlarm();
+        localCountDownTimer = 0;
       }
     }
   }

@@ -6,4 +6,8 @@ class AlarmSounder {
     AssetsAudioPlayer.playAndForget(
         Audio('assets/audio/doubleScotlandfoghorn.mp3'));
   }
+
+  void soundTimerAlarm() {
+    AssetsAudioPlayer.playAndForget(Audio('assets/audio/tripleNashpoint.mp3'));
+  }
 }
