@@ -1,6 +1,8 @@
 // Dart imports
 import 'dart:async';
 
+import 'package:dart_date/dart_date.dart';
+
 /// Flutter package imports
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,7 @@ import 'package:tidey/const.dart';
 import 'package:tidey/services/tideServices.dart';
 
 import '../services/tideServices.dart';
+import 'package:tidey/components/alarmSounder.dart';
 
 /// Local imports
 //import 'sample_view.dart';
@@ -27,6 +30,7 @@ class zeClockSync extends StatefulWidget {
 class _zeClockSyncState extends State<zeClockSync> {
   _zeClockSyncState();
 //  late Timer timer;
+  DateTime alarmLastRungAt;
   Timer timer;
   Timer timer2;
   Timer timer3;
@@ -37,6 +41,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   void initState() {
     super.initState();
     myHourlyBell.init();
+    alarmLastRungAt = DateTime.now();
     // update the needle pointer in 1 second interval
     timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
     timer2 =
@@ -50,6 +55,16 @@ class _zeClockSyncState extends State<zeClockSync> {
     setState(() {
       _value = DateTime.now();
     });
+    if (userSettings.alarmOn) {
+      if ((TimeOfDay.now().hour ==
+              userSettings.alarmTime
+                  .hour) && // could use just DateTime Comparison but it depends on the seconds when the alarm was set leading to confusion
+          (TimeOfDay.now().minute == userSettings.alarmTime.minute) &&
+          (DateTime.now().differenceInMinutes(alarmLastRungAt) > 1)) {
+        alarmLastRungAt = DateTime.now();
+        AlarmSounder().soundAlarm();
+      }
+    }
   }
 
   void _kickOffTideComputation(Timer timer) {
