@@ -4,6 +4,7 @@ import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/help.dart';
@@ -38,6 +39,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   bool _useCurrentPosition = userSettings.useCurrentPosition;
   String _city = globalWeather.city;
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
   bool _loading = false;
   //var myController = TextEditingController();
 
@@ -312,7 +314,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.red, // background
+                                primary: Colors.grey.shade200, // background
                                 onPrimary: Colors.white, // foreground
                               ),
                               onPressed: () {
@@ -663,6 +665,103 @@ class _settingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
+
+                    ///mydiv
+                    ///
+                    Form(
+                      key: _formKey2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Container(
+                              // width: ScreenSize.screenWidth - 20,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 180,
+                                    child: Text("Local Information URL:",
+                                        style: kTextSettingsStyle),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: TextFormField(
+                                          style: TextStyle(color: Colors.black),
+                                          initialValue:
+                                              userSettings.localInfoURL,
+                                          decoration: InputDecoration(
+                                            // border: InputBorder.none,
+                                            filled: true,
+                                            fillColor: Colors.grey[200],
+                                            errorStyle: TextStyle(
+                                                color: Colors.red,
+                                                backgroundColor: Colors.white,
+                                                fontSize: 15),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                  width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                  width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(25.0),
+                                            ),
+
+                                            hintText: 'https://www.google.com',
+                                            hoverColor: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          //  keyboardType: TextInputType.number,
+                                          onSaved: (text) {
+                                            userSettings.localInfoURL = (text);
+                                            prefs.setString(
+                                                userSettings.keyLocalInfoURL,
+                                                userSettings.localInfoURL);
+                                          },
+                                          validator: (text) {
+                                            if (text == null) {
+                                              return null;
+                                            }
+                                            if (isURL(text)) {
+                                              print("field looks good");
+                                              return null;
+                                            } else {
+                                              print("Bad URL");
+                                              return 'Invalid URL';
+                                            }
+                                          }),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.grey.shade200, // background
+                              onPrimary: Colors.white, // foreground
+                            ),
+                            onPressed: () {
+                              if (_formKey2.currentState.validate()) {
+                                _formKey2.currentState.save();
+                                // TODO submit
+
+                              }
+                            },
+                            child: Text('Submit',
+                                style: TextStyle(color: Colors.black)),
+                          )
+                        ],
+                      ),
+                    ),
+
                     Container(
                       height: 70,
                       width: double.infinity,

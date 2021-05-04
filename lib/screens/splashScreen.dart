@@ -62,58 +62,8 @@ class _SplashScreenState extends State<SplashScreen> {
         readDoubleFromLocal(prefs, userSettings.keyManualLat, 26.7747);
     userSettings.manualLong =
         readDoubleFromLocal(prefs, userSettings.keyManualLong, -77.3296);
-
-    //   userSettings.chimeOn = prefs.getBool('chimeOn');
-//    if (userSettings.chimeOn == null) {
-//      print("Chime not found");
-//      prefs.setBool('chimeOn', true);
-//      userSettings.chimeOn = true;
-//    } else {
-//      print("Chime On Found" + userSettings.chimeOn.toString());
-//      // globalChimeOn = chimeOn;
-//    }
-
-//    if (userSettings.chimeDoNotDisturb == null) {
-//      print("Do not Disturb not found");
-//      prefs.setBool('doNotDisturb', true);
-//      userSettings.chimeDoNotDisturb = true;
-//    } else {
-//      print("Yes Do not disturb Found" +
-//          userSettings.chimeDoNotDisturb.toString());
-//      // globalChimeOn = chimeOn;
-//    }
-//    userSettings.imperialUnits = prefs.getBool('imperialUnits');
-//    if (userSettings.imperialUnits == null) {
-//      print("Imperial Units not found");
-//      prefs.setBool('imperialUnits', true);
-//      userSettings.imperialUnits = true;
-//    } else {
-//      print("Yes Imperial Units Found" + userSettings.imperialUnits.toString());
-//      // globalChimeOn = chimeOn;
-//    }
-//    userSettings.transitionTime = prefs.getInt('transitionTime');
-//    if (userSettings.transitionTime == null) {
-//      print("Transition Time not found");
-//      prefs.setInt('transitionTime', kDefaultTransitionTime);
-//      userSettings.transitionTime = kDefaultTransitionTime;
-//    } else {
-//      print("Yes Transition Time Found " +
-//          userSettings.transitionTime.toString());
-//      // globalChimeOn = chimeOn;
-//    }
-
-//    String chimeSelectedString = prefs.getString('chimeSelected');
-//    if (chimeSelectedString == null) {
-//      print("Chime Selected Not Found");
-//      prefs.setString('chimeSelected', chimeTypeEnumtoString[ChimeType.single]);
-//      userSettings.chimeSelected = ChimeType.single;
-//    } else {
-//      print("Found " + chimeSelectedString);
-//      userSettings.chimeSelected = chimeTypeStringToEnum[chimeSelectedString];
-//      print("Yes Chime Selected Found" + userSettings.chimeSelected.toString());
-//
-//      // globalChimeOn = chimeOn;
-//    }
+    userSettings.localInfoURL = readStringFromLocal(
+        prefs, userSettings.keyLocalInfoURL, "https://google.com");
   }
 
   String readStringFromLocal(

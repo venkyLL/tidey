@@ -232,6 +232,34 @@ class _zeClockSyncState extends State<zeClockSync> {
               thickness: 0.025,
               thicknessUnit: GaugeSizeUnit.factor,
               color: Colors.black38),
+          annotations: <GaugeAnnotation>[
+//              GaugeAnnotation(
+//                  angle: 90,
+//                  positionFactor: 0.3,
+//                  widget: Container(
+//                    child: BoxedIcon((conditionIcon),
+//                        size: ScreenSize.small ? 20 : 35,
+//                        color: const Color(0xFF3366CC)),
+//                  )),
+//                      const Text('Temp.°F',
+//                          style: TextStyle(
+//                              color: Color(0xff000000), fontSize: 16)))),
+            GaugeAnnotation(
+                angle: 90,
+                positionFactor: 0.6,
+                widget: Container(
+                  child: userSettings.countDownStart
+                      ? Text(
+                          "Timer: " +
+                              userSettings.countDownTimerRemaining.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: ScreenSize.small ? 15 : 20,
+                            color: Colors.white,
+                          ))
+                      : null,
+                ))
+          ],
           pointers: <GaugePointer>[
             MarkerPointer(
               markerHeight: 20,
@@ -300,6 +328,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               animationType: AnimationType.linear,
               color: Colors.green,
             ),
+
             NeedlePointer(
                 needleLength: 0.6,
                 lengthUnit: GaugeSizeUnit.factor,

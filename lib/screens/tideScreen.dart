@@ -18,6 +18,7 @@ import 'package:tidey/const.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
+import 'package:tidey/services/MapUtils.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 Color marqueeColor = Colors.transparent;
@@ -177,6 +178,15 @@ void _settingModalBottomSheet(context) {
                     destinationURL = userSettings.localInfoURL;
                     Navigator.pushNamed(context, WebWeather.id);
                   }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.map),
+                title: Text('Open Map'),
+                onTap: () {
+                  MapUtils.openMap(double.parse(globalLatitude),
+                      double.parse(globalLongitude));
+                  Navigator.of(context).pop();
                 },
               ),
               ListTile(
