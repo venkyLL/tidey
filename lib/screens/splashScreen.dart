@@ -12,6 +12,7 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'dart:math';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -193,7 +194,10 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 500,
+              width:
+                  (MediaQuery.of(context).orientation == Orientation.landscape)
+                      ? ScreenSize.screenHeight * 0.8
+                      : ScreenSize.screenWidth * 0.8,
               child: Padding(
                 padding: const EdgeInsets.all(50.0),
                 child: Image.asset('assets/images/tideyIcon2.png'),
