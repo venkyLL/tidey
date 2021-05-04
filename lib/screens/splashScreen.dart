@@ -150,7 +150,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
-    Navigator.pushReplacementNamed(context, TideScreen.id);
+
     MyCompass theCompass = MyCompass();
     theCompass.init();
     // start audio player service
@@ -158,27 +158,34 @@ class _SplashScreenState extends State<SplashScreen> {
       print(notification.audioId);
       return true;
     });
+
+    Future.delayed(const Duration(milliseconds: 2000), () {
+// Here you can write your code
+
+      setState(() {
+        Navigator.pushReplacementNamed(context, TideScreen.id);
+      });
+    });
+
 //    AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell.mp3'));
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenSize().init(context);
-    print("Width = " +
-        ScreenSize.screenWidth.toString() +
-        "Length " +
-        ScreenSize.screenHeight.toString());
+
     return Scaffold(
       // backgroundColor: kSplashColor,
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/background.JPG'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.8), BlendMode.dstATop),
-          ),
-        ),
+        color: Colors.black,
+//        decoration: BoxDecoration(
+//          image: DecorationImage(
+//          //  image: AssetImage('assets/images/background.JPG'),
+//            fit: BoxFit.cover,
+//            colorFilter: ColorFilter.mode(
+//                Colors.white.withOpacity(0.8), BlendMode.dstATop),
+//          ),
+//        ),
         constraints: BoxConstraints.expand(),
         child: Container(
             child: Column(
@@ -189,7 +196,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 500,
               child: Padding(
                 padding: const EdgeInsets.all(50.0),
-                child: Image.asset('assets/images/tideyIcon.png'),
+                child: Image.asset('assets/images/tideyIcon2.png'),
               ),
             ),
             Text(

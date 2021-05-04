@@ -21,8 +21,8 @@ import 'package:tidey/screens/webWeather.dart';
 import 'package:tidey/services/MapUtils.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-Color marqueeColor = Colors.transparent;
 bool marqueeCompleted = false;
+int counter = 0;
 
 //enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
@@ -460,22 +460,22 @@ class DialRow extends StatelessWidget {
 List<Widget> gaugeSequenceList = [
   DialRow(
       gaugeType1: TempGauge(
-          high: double.parse(globalWeather.dailyWeather[0].highTemp),
-          low: double.parse(globalWeather.dailyWeather[0].lowTemp),
+          high: double.parse(globalWeather.dailyWeather[di].highTemp),
+          low: double.parse(globalWeather.dailyWeather[di].lowTemp),
           conditionIcon: weatherDayIconMap[
-              globalWeather.dailyWeather[0].hourly[0].weatherCode]),
+              globalWeather.dailyWeather[di].hourly[0].weatherCode]),
       gaugeType2: HumidityGauge(
-        gaugeValue: double.parse(globalWeather.dailyWeather[0].humidity),
+        gaugeValue: double.parse(globalWeather.dailyWeather[di].humidity),
       )),
   DialRow(
       gaugeType1: ImageGaugeNew(
         imageName: "sunset1.gif",
-        textLabel: globalWeather.dailyWeather[0].sunrise,
+        textLabel: globalWeather.dailyWeather[di].sunrise,
         textBackgroundColor: Colors.transparent,
       ),
       gaugeType2: ImageGaugeNew(
         imageName: "sunset2.gif",
-        textLabel: globalWeather.dailyWeather[0].sunset,
+        textLabel: globalWeather.dailyWeather[di].sunset,
         textBackgroundColor: Colors.transparent,
       )),
   DialRow(
@@ -487,27 +487,27 @@ List<Widget> gaugeSequenceList = [
     gaugeType2: ImageGaugeNew(
         imageName: "shootingStar.gif",
         innerLineColor: Colors.transparent,
-        textLabel: globalWeather.dailyWeather[0].moonPhase +
+        textLabel: globalWeather.dailyWeather[di].moonPhase +
             "\nRise: " +
-            globalWeather.dailyWeather[0].moonrise +
+            globalWeather.dailyWeather[di].moonrise +
             "\nSet:" +
-            globalWeather.dailyWeather[0].moonset,
+            globalWeather.dailyWeather[di].moonset,
         textPosition: 40,
         textBackgroundColor: Colors.transparent,
         fontSize: 20),
   ),
   DialRow(
     gaugeType1: DSGauge(
-      gaugeDirection: globalWeather.dailyWeather[0].hourly[0].windDirection,
+      gaugeDirection: globalWeather.dailyWeather[di].hourly[0].windDirection,
       gaugeValue: // 8.0,
-          double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
+          double.parse(globalWeather.dailyWeather[di].hourly[0].windSpeed),
     ),
     gaugeType2: DSGauge(
       gaugeType: "Waves",
       gaugeUnit: "ft",
-      gaugeDirection: globalWeather.dailyWeather[0].windDirection,
+      gaugeDirection: globalWeather.dailyWeather[di].windDirection,
       gaugeValue: // 5.0,
-          double.parse(globalWeather.dailyWeather[0].waveHt),
+          double.parse(globalWeather.dailyWeather[di].waveHt),
       gaugeMax: 10,
       gaugeInterval: 1,
     ),
@@ -516,14 +516,14 @@ List<Widget> gaugeSequenceList = [
     gaugeType1: ImageGaugeNew(
       imageName: "water.gif",
       textLabel: "Water " +
-          globalWeather.dailyWeather[0].waterTemp +
+          globalWeather.dailyWeather[di].waterTemp +
 //   weatherData.data.weather[0].hourly[0].waterTempF +
           " \u2109",
       textColor: Colors.black,
       textBackgroundColor: Colors.transparent,
     ),
     gaugeType2: BarometerGauge(
-      current: double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
+      current: double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
       change: getBarometerChange(),
     ),
   ),
@@ -694,13 +694,13 @@ class LandScapeSwapper2 extends StatelessWidget {
       case 0:
         return DialRow(
           gaugeType1: TempGauge(
-              high: double.parse(globalWeather.dailyWeather[0].highTemp),
-              low: double.parse(globalWeather.dailyWeather[0].lowTemp),
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
               conditionIcon: weatherDayIconMap[
-                  globalWeather.dailyWeather[0].hourly[0].weatherCode]),
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
           gaugeType2: BarometerGauge(
             current:
-                double.parse(globalWeather.dailyWeather[0].hourly[0].pressure),
+                double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
             change: getBarometerChange(),
           ),
         );
@@ -722,12 +722,12 @@ class LandScapeSwapper2 extends StatelessWidget {
         return DialRow(
             gaugeType1: ImageGaugeNew(
               imageName: "sunset1.gif",
-              textLabel: globalWeather.dailyWeather[0].sunrise,
+              textLabel: globalWeather.dailyWeather[di].sunrise,
               textBackgroundColor: Colors.transparent,
             ),
             gaugeType2: ImageGaugeNew(
               imageName: "sunset2.gif",
-              textLabel: globalWeather.dailyWeather[0].sunset,
+              textLabel: globalWeather.dailyWeather[di].sunset,
               textBackgroundColor: Colors.transparent,
             ));
         break;
@@ -742,11 +742,11 @@ class LandScapeSwapper2 extends StatelessWidget {
           gaugeType2: ImageGaugeNew(
               imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
-              textLabel: globalWeather.dailyWeather[0].moonPhase +
+              textLabel: globalWeather.dailyWeather[di].moonPhase +
                   "\nRise: " +
-                  globalWeather.dailyWeather[0].moonrise +
+                  globalWeather.dailyWeather[di].moonrise +
                   "\nSet:" +
-                  globalWeather.dailyWeather[0].moonset,
+                  globalWeather.dailyWeather[di].moonset,
               textPosition: 40,
               textBackgroundColor: Colors.transparent,
               fontSize: 20),
@@ -757,16 +757,17 @@ class LandScapeSwapper2 extends StatelessWidget {
         return DialRow(
           gaugeType1: DSGauge(
             gaugeDirection:
-                globalWeather.dailyWeather[0].hourly[0].windDirection,
+                globalWeather.dailyWeather[di].hourly[0].windDirection,
             gaugeValue: // 8.0,
-                double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
+                double.parse(
+                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
           ),
           gaugeType2: DSGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
-            gaugeDirection: globalWeather.dailyWeather[0].windDirection,
+            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
             gaugeValue: // 5.0,
-                double.parse(globalWeather.dailyWeather[0].waveHt),
+                double.parse(globalWeather.dailyWeather[di].waveHt),
             gaugeMax: 10,
             gaugeInterval: 1,
           ),
@@ -777,7 +778,7 @@ class LandScapeSwapper2 extends StatelessWidget {
             gaugeType1: ImageGaugeNew(
               imageName: "water.gif",
               textLabel: "Water " +
-                  globalWeather.dailyWeather[0].waterTemp +
+                  globalWeather.dailyWeather[di].waterTemp +
                   //   weatherData.data.weather[0].hourly[0].waterTempF +
                   " \u2109",
               textColor: Colors.black,
@@ -819,12 +820,12 @@ class PortraitSwapper extends StatelessWidget {
       case 0:
         return PortraitDialRow(
           gaugeType1: TempGauge(
-              high: double.parse(globalWeather.dailyWeather[0].highTemp),
-              low: double.parse(globalWeather.dailyWeather[0].lowTemp),
-              conditionIcon:
-                  weatherDayIconMap[globalWeather.dailyWeather[0].weatherCode]),
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].weatherCode]),
           gaugeType2: BarometerGauge(
-            current: double.parse(globalWeather.dailyWeather[0].pressure),
+            current: double.parse(globalWeather.dailyWeather[di].pressure),
             change: getBarometerChange(),
           ),
         );
@@ -846,13 +847,13 @@ class PortraitSwapper extends StatelessWidget {
         return PortraitDialRow(
             gaugeType1: ImageGaugeNew(
               imageName: "sunset1.gif",
-              textLabel: globalWeather.dailyWeather[0].sunrise,
+              textLabel: globalWeather.dailyWeather[di].sunrise,
               textPosition: 60,
             ),
             gaugeType2: ImageGaugeNew(
                 imageName: "sunset2.gif",
                 textPosition: 60,
-                textLabel: globalWeather.dailyWeather[0].sunset));
+                textLabel: globalWeather.dailyWeather[di].sunset));
         break;
 
       case 2:
@@ -865,11 +866,11 @@ class PortraitSwapper extends StatelessWidget {
           gaugeType1: ImageGaugeNew(
               imageName: "shootingStar.gif",
               innerLineColor: Colors.transparent,
-              textLabel: globalWeather.dailyWeather[0].moonPhase +
+              textLabel: globalWeather.dailyWeather[di].moonPhase +
                   "\nRise: " +
-                  globalWeather.dailyWeather[0].moonrise +
+                  globalWeather.dailyWeather[di].moonrise +
                   "\nSet:" +
-                  globalWeather.dailyWeather[0].moonset,
+                  globalWeather.dailyWeather[di].moonset,
               textPosition: 40,
               textBackgroundColor: Colors.transparent,
               fontSize: 20),
@@ -880,15 +881,15 @@ class PortraitSwapper extends StatelessWidget {
         return PortraitDialRow(
           gaugeType1: DSGauge(
             gaugeDirection:
-                globalWeather.dailyWeather[0].hourly[0].windDirection,
-            gaugeValue:
-                double.parse(globalWeather.dailyWeather[0].hourly[0].windSpeed),
+                globalWeather.dailyWeather[di].hourly[0].windDirection,
+            gaugeValue: double.parse(
+                globalWeather.dailyWeather[di].hourly[0].windSpeed),
           ),
           gaugeType2: DSGauge(
             gaugeType: "Waves",
             gaugeUnit: "ft",
-            gaugeDirection: globalWeather.dailyWeather[0].waveDirection,
-            gaugeValue: double.parse(globalWeather.dailyWeather[0].waveHt),
+            gaugeDirection: globalWeather.dailyWeather[di].waveDirection,
+            gaugeValue: double.parse(globalWeather.dailyWeather[di].waveHt),
             gaugeMax: 10,
             gaugeInterval: 1,
           ),
@@ -899,7 +900,7 @@ class PortraitSwapper extends StatelessWidget {
             gaugeType1: ImageGaugeNew(
               imageName: "water.gif",
               textLabel: "Water " +
-                  globalWeather.dailyWeather[0].waterTemp +
+                  globalWeather.dailyWeather[di].waterTemp +
                   " \u2109",
               textColor: Colors.black,
               textPosition: 50,
@@ -1028,136 +1029,3 @@ class PortraitGaugeRow extends StatelessWidget {
     );
   }
 }
-
-// hello
-class buildMyTideTable extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.blue,
-      height: ScreenSize.safeBlockVertical * 45,
-
-      child: Container(
-        height: ScreenSize.safeBlockVertical * 45,
-        width: ScreenSize.safeBlockHorizontal * 80,
-        child: Column(
-          children: [
-            Text("Tides", style: kTableTitleTextStyle),
-            SizedBox(height: 10),
-//          Padding(
-//            padding: const EdgeInsets.only(left: , right: 65),
-//            child:
-            Table(children: [
-              tideTableRow(
-                  day: 'Today',
-                  time:
-                      weatherData.data.weather[0].tides[0].tideData[0].tideTime,
-                  level: (double.parse(weatherData
-                      .data.weather[0].tides[0].tideData[0].tideHeightMt)),
-                  direction: weatherData
-                      .data.weather[0].tides[0].tideData[0].tideType),
-              tideTableRow(
-                  day: 'Today',
-                  time:
-                      weatherData.data.weather[0].tides[0].tideData[1].tideTime,
-                  level: (double.parse(weatherData
-                      .data.weather[0].tides[0].tideData[1].tideHeightMt)),
-                  direction: weatherData
-                      .data.weather[0].tides[0].tideData[1].tideType),
-              tideTableRow(
-                  day: 'Tomorrow',
-                  time:
-                      weatherData.data.weather[0].tides[0].tideData[2].tideTime,
-                  level: (double.parse(weatherData
-                      .data.weather[0].tides[0].tideData[2].tideHeightMt)),
-                  direction: weatherData
-                      .data.weather[0].tides[0].tideData[2].tideType),
-              tideTableRow(
-                  day: 'Tomorrow',
-                  time:
-                      weatherData.data.weather[0].tides[0].tideData[3].tideTime,
-                  level: (double.parse(weatherData
-                      .data.weather[0].tides[0].tideData[3].tideHeightMt)),
-                  direction: weatherData
-                      .data.weather[0].tides[0].tideData[3].tideType),
-            ]),
-            // mySubTile(kMySubTileData),
-            //         ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-TableRow tideTableRow(
-    {String day, String time, double level, String direction}) {
-  print("Direction is $day,$time, $level,$direction");
-  // static htInFeet = double.parse(level)/3.28084;
-  final String pos = level > 2.0 ? "+" : "-";
-  const fontScale = 5;
-  return TableRow(
-    children: [
-      Text(day,
-          style: TextStyle(
-            fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-            color: Colors.white,
-          )),
-      Text(
-        time,
-        style: TextStyle(
-          fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-          color: Colors.white,
-        ),
-        textAlign: TextAlign.right,
-      ),
-      direction == "LOW"
-          ? RichText(
-              textAlign: TextAlign.left,
-              text: TextSpan(
-                /*defining default style is optional */
-                children: <TextSpan>[
-                  TextSpan(
-                    text:
-                        ("    " + (level * 3.28084).toStringAsFixed(2)) + 'ft ',
-                    style: TextStyle(
-                      fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-                      color: Colors.white,
-                    ),
-                  ),
-                  TextSpan(
-                      text: 'L',
-                      style: TextStyle(
-                        fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-                        color: Colors.red,
-                      )),
-                ],
-              ),
-            )
-          : RichText(
-              textAlign: TextAlign.left,
-              text: TextSpan(
-                /*defining default style is optional */
-                children: <TextSpan>[
-                  TextSpan(
-                    text:
-                        ("    " + (level * 3.28084).toStringAsFixed(2)) + 'ft ',
-                    style: TextStyle(
-                      fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-                      color: Colors.white,
-                    ),
-                  ),
-                  TextSpan(
-                      text: 'H',
-                      style: TextStyle(
-                        fontSize: ScreenSize.safeBlockHorizontal * fontScale,
-                        color: Colors.green,
-                      )),
-                ],
-              ),
-            ),
-    ],
-  );
-}
-
-int counter = 0;

@@ -10,7 +10,8 @@ import 'package:weather_icons/weather_icons.dart';
 
 String globalLatitude;
 String globalLongitude;
-
+int di =
+    0; // Day Index this will be increased at midnight if we have not recevied new weather data and decreased when we do.
 // Print debugger
 bool globalMarineWeatherPrintDone = false;
 // int secondsBetweenTransition = 5;
@@ -346,11 +347,12 @@ const weatherServerURL = 'https://api.worldweatheronline.com/premium/v1/';
 const rumWeatherServiceURL = 'https://shoeboxrum.veloxe.com/api/tidey';
 const weatherAPIKey = 'key=51503debb4b34526a33181926211204';
 const marineWeatherService = weatherServerURL + "marine.ashx";
+Color marqueeColor = Colors.transparent;
 //const kTextAndIconColor = Color(0xFFFFFFFF);
 //const kPrimaryTextColor = Color(0xFF212121);
 //const kSecondaryTextColor = Color(0xFF757575);
 const kSplashColor = Color(0xFF407DD6);
-var kHeadingColor = Colors.grey.shade200; //Color(0xFFAAAAAA);
+var kHeadingColor = Colors.grey.shade500; //Color(0xFFAAAAAA);
 //const kPrimaryColor = Colors.indigo;
 const kAppBlueColor = Color(0xFF192B4D); // Color(0xFF3366CC);
 const kTitleBoxColor = Color(0xff717786); //(0xFFBEC2CB);

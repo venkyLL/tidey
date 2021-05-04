@@ -21,9 +21,9 @@ class _TodayScreenState extends State<TodayScreen> {
   void initState() {
     super.initState();
     hourlyDataSource =
-        HourlyDataSource(hourlyData: globalWeather.dailyWeather[0].hourly);
-    print("Number of hourly records is " +
-        weatherData.data.weather[0].hourly.length.toString());
+        HourlyDataSource(hourlyData: globalWeather.dailyWeather[di].hourly);
+//    print("Number of hourly records is " +
+//        weatherData.data.weather[0].hourly.length.toString());
     Timer(Duration(seconds: userSettings.transitionTime), () {
       // 5s over, navigate to a new page
       Navigator.pushReplacementNamed(context, ForecastScreen.id);
@@ -86,7 +86,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       height: 200,
                       child: Text(
                           'Today\'s Weather\n' +
-                              globalWeather.dailyWeather[0].hourly[0]
+                              globalWeather.dailyWeather[di].hourly[0]
                                   .weatherConditionDesc,
                           style: kTableTitleTextStyle,
                           textAlign: TextAlign.center),

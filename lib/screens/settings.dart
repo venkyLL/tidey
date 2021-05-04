@@ -181,6 +181,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                             initialValue: userSettings.manualLat
                                                 .toString(),
                                             decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 8.0),
                                               // border: InputBorder.none,
                                               filled: true,
                                               fillColor: Colors.grey[200],
@@ -192,8 +195,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                                                 borderSide: const BorderSide(
                                                     color: Colors.white,
                                                     width: 2.0),
-//                                          borderRadius:
-//                                              BorderRadius.circular(25.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(25.0),
                                               ),
                                               border: OutlineInputBorder(
                                                 borderSide: const BorderSide(
@@ -257,6 +260,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                             style:
                                                 TextStyle(color: Colors.black),
                                             decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 8.0),
                                               // border: InputBorder.none,
                                               filled: true,
                                               fillColor: Colors.grey[200],
@@ -314,7 +320,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.grey.shade200, // background
+                                primary: kHeadingColor, // background
                                 onPrimary: Colors.white, // foreground
                               ),
                               onPressed: () {
@@ -665,9 +671,14 @@ class _settingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
-
-                    ///mydiv
-                    ///
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuListTile(
+                      title: "Local Information URL",
+                      icon: Icons.info,
+                    ),
                     Form(
                       key: _formKey2,
                       child: Column(
@@ -679,11 +690,6 @@ class _settingsScreenState extends State<SettingsScreen> {
                               // width: ScreenSize.screenWidth - 20,
                               child: Row(
                                 children: [
-                                  SizedBox(
-                                    width: 180,
-                                    child: Text("Local Information URL:",
-                                        style: kTextSettingsStyle),
-                                  ),
                                   Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.all(20.0),
@@ -692,6 +698,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                           initialValue:
                                               userSettings.localInfoURL,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 8.0),
                                             // border: InputBorder.none,
                                             filled: true,
                                             fillColor: Colors.grey[200],
@@ -703,15 +712,15 @@ class _settingsScreenState extends State<SettingsScreen> {
                                               borderSide: const BorderSide(
                                                   color: Colors.white,
                                                   width: 2.0),
-//                                          borderRadius:
-//                                              BorderRadius.circular(25.0),
+//                                              borderRadius:
+//                                                  BorderRadius.circular(25.0),
                                             ),
                                             border: OutlineInputBorder(
                                               borderSide: const BorderSide(
                                                   color: Colors.white,
                                                   width: 2.0),
-//                                          borderRadius:
-//                                              BorderRadius.circular(25.0),
+//                                              borderRadius:
+//                                                  BorderRadius.circular(25.0),
                                             ),
 
                                             hintText: 'https://www.google.com',
@@ -763,7 +772,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                     ),
 
                     Container(
-                      height: 70,
+                      height: ScreenSize.small ? 50 : 70,
                       width: double.infinity,
                       color: kHeadingColor,
                       child: Align(
@@ -773,7 +782,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                           child: Text("Information",
                               style: TextStyle(
                                 //   backgroundColor: Colors.grey,
-                                fontSize: 20,
+                                fontSize: kTextSettingSize,
                               )),
                         ),
                       ),

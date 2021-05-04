@@ -1,8 +1,8 @@
 import 'package:cron/cron.dart';
-import 'package:tidey/services/marineWeather.dart';
-import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
+import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
 
 class CronJobs {
@@ -21,12 +21,14 @@ class CronJobs {
       await localWeatherService.getLocalWeatherData();
 
       if (globalWeather.tideAPIError) {
+        di += 1;
         print(
             'getting nightly weather data failed - checking again every 15 minutes');
       } else {
         mySineWaveData msw = mySineWaveData();
         await msw.computeTidesForPainting();
         print('nightly weather data updated successfully');
+        di = 0;
       }
     });
     cron.schedule(Schedule.parse('*/15 * * * *'), () async {
@@ -41,6 +43,7 @@ class CronJobs {
           print(
               'getting nightly weather data failed - checking again every 15 minutes');
         } else {
+          di = 0;
           mySineWaveData msw = mySineWaveData();
           await msw.computeTidesForPainting();
           print('nightly weather data updated successfully');
