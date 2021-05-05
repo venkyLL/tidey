@@ -6,11 +6,14 @@ import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-//  double globalLatitude;
-//  double globalLongitude;
+void main() async {
   // imageCache.clear();
+  WidgetsFlutterBinding.ensureInitialized();
+  print("before FB initialization, ${DateTime.now()}");
+  await Firebase.initializeApp();
+  print("firebase initialized, ${DateTime.now()}");
   runApp(MyApp());
 }
 

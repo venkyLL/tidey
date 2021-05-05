@@ -141,7 +141,8 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                    color: Color(0xFFF67280)),
             NeedlePointer(
               value:
-                  globalCompassDirection * 80 / 360, // dirMap[gaugeDirection],
+//                  globalCompassDirection * 80 / 360, // dirMap[gaugeDirection],
+                  270 * 80 / 360,
               lengthUnit: GaugeSizeUnit.factor,
               needleLength: 0.5,
               needleColor: Colors.grey.shade300,
