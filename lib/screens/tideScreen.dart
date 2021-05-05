@@ -15,6 +15,7 @@ import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
+import 'package:tidey/screens/help.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
@@ -23,6 +24,7 @@ import 'package:timer_builder/timer_builder.dart';
 
 bool marqueeCompleted = false;
 int counter = 0;
+bool pauseGauge = false;
 
 //enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
@@ -74,6 +76,10 @@ class _TideScreenState extends State<TideScreen> {
             onTap: () {
               print("Touched everywhere");
               _settingModalBottomSheet(context);
+            },
+            onDoubleTap: () {
+              print("Did a double tap");
+              pauseGauge = !pauseGauge;
             },
             child: Container(
               height: MediaQuery.of(context).size.height,
@@ -214,7 +220,15 @@ void _settingModalBottomSheet(context) {
                                 ],
                               ))
                 },
-              )
+              ),
+              ListTile(
+                  leading: Icon(Icons.help),
+                  title: Text(
+                    'Help',
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, HelpScreen.id);
+                  }),
             ],
           ),
         );
@@ -603,16 +617,18 @@ class _VenkySwapState extends State<VenkySwap> {
   }
 
   void _updateData(Timer timer) {
-    counter = (counter + 1) % (gaugeSequenceList.length);
-    setState(() {
-      animationSwitcher = !animationSwitcher;
-    });
-    if (animationSwitcher) {
-      // you need this funky method because animationCrossFade goes back and forth between one image and the other
-      // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
-      myFirstWidget = gaugeSequenceList[counter];
-    } else {
-      mySecondWidget = gaugeSequenceList[counter];
+    if (!pauseGauge) {
+      counter = (counter + 1) % (gaugeSequenceList.length);
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+      if (animationSwitcher) {
+        // you need this funky method because animationCrossFade goes back and forth between one image and the other
+        // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+        myFirstWidget = gaugeSequenceList[counter];
+      } else {
+        mySecondWidget = gaugeSequenceList[counter];
+      }
     }
   }
 
