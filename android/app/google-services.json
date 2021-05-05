@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "565501802547",
+    "project_id": "tidey-3d8f8",
+    "storage_bucket": "tidey-3d8f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565501802547:android:0025688d483d88a20c0b46",
+        "android_client_info": {
+          "package_name": "com.amberjacklabs.tidey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "565501802547-ot3ji2gchvjdmb493one20b9j1837nfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ-LWJjcaStsMM8gzcmN2a1ahMO9Po2fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "565501802547-ot3ji2gchvjdmb493one20b9j1837nfs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
