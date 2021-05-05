@@ -143,7 +143,7 @@ class _DSGaugeState extends State<DSGauge> {
 //                              color: Color(0xFFF8B195), fontSize: 16)))),
             GaugeAnnotation(
                 angle: 90,
-                positionFactor: 0.8,
+                positionFactor: ScreenSize.small ? .7 : 0.8,
                 widget: Container(
                   child: Text(
                     "\n" + gaugeType + "\n " + gaugeUnit,

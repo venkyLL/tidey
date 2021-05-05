@@ -1002,7 +1002,7 @@ class PortraitMode extends StatelessWidget {
     return Container(
         alignment: Alignment.center,
         child: zeClockSync(),
-        width: ScreenSize.clockSize + 25,
+        width: ScreenSize.clockSize, // + 25,
         height: ScreenSize.clockSize);
   }
 }
@@ -1025,7 +1025,7 @@ class PortraitDialRow extends StatelessWidget {
       Container(
           alignment: Alignment.center,
           color: Colors.transparent,
-          width: ScreenSize.clockSize + 25,
+          width: ScreenSize.clockSize, // + 25,
           height: ScreenSize.clockSize),
       SizedBox(height: ScreenSize.safeBlockVertical * 2),
       PortraitGaugeRow(child: gaugeType2),

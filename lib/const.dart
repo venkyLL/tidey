@@ -503,7 +503,7 @@ class ScreenSize {
     clockBottomRight = Offset(gaugeSize + clockSize, clockTop + clockSize);
 
     small = (min(safeBlockHorizontal, safeBlockVertical) < 5.00);
-    small ? fs = .8 : fs = 1.0;
+    small ? fs = .7 : fs = 1.0;
     print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");

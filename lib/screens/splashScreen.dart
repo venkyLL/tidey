@@ -12,7 +12,6 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
-import 'dart:math';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -54,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
     hour = readIntFromLocal(prefs, userSettings.keySleepTimeHour, 22);
     min = readIntFromLocal(prefs, userSettings.keySleepTimeMin, 0);
     userSettings.sleepTime = TimeOfDay(hour: hour, minute: min);
-    hour = readIntFromLocal(prefs, userSettings.keyWakeTimeHour, 22);
+    hour = readIntFromLocal(prefs, userSettings.keyWakeTimeHour, 07);
     min = readIntFromLocal(prefs, userSettings.keyWakeTimeMin, 0);
     userSettings.wakeTime = TimeOfDay(hour: hour, minute: min);
     userSettings.useCurrentPosition =

@@ -47,15 +47,15 @@ class GaugePainter extends CustomPainter {
     paintClockFace.style = PaintingStyle.fill; // Change this to fill
 
     var path = Path();
-    double centerX = ScreenSize.gaugeSize / 2;
-    double centerY = ScreenSize.gaugeSize / 2;
+    double centerX = ScreenSize.clockSize / 2;
+    double centerY = ScreenSize.clockSize / 2;
     myDraw.drawFilledCircle(
-        centerX, centerY, ScreenSize.gaugeSize / 2, paintClockFace, canvas);
+        centerX, centerY, ScreenSize.clockSize / 2, paintClockFace, canvas);
 
     var gaugeBezel = Paint();
     gaugeBezel.color = Color(0xFF999999);
     myDraw.drawRing(
-        centerX, centerY, ScreenSize.gaugeSize / 2, 5.0, gaugeBezel, canvas);
+        centerX, centerY, ScreenSize.clockSize / 2, 5.0, gaugeBezel, canvas);
   }
 
   @override
