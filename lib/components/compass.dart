@@ -188,6 +188,7 @@ class _CompassGaugeState extends State<CompassGauge> {
         args.text = 'S';
       } else if (args.text == '270') {
         args.text = 'W';
+//        args.text = 'XX';
       }
 
       args.labelStyle = GaugeTextStyle(
