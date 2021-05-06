@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
 import 'package:swipe_gesture_recognizer/swipe_gesture_recognizer.dart';
+import 'package:tidey/components/DS2.dart';
+import 'package:tidey/components/Humidty2.dart';
+import 'package:tidey/components/Temp2.dart';
 import 'package:tidey/components/barometer.dart';
 import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/dsGauge.dart';
@@ -162,13 +165,11 @@ void _settingModalBottomSheet(context) {
       // barrierColor: Colors.red,
       builder: (BuildContext bc) {
         return Container(
-          child: Wrap(
+          child: ListView(
             children: <Widget>[
               ListTile(
                   leading: Icon(Icons.settings),
-                  title: Text(
-                    'Settings',
-                  ),
+                  title: Text('Settings'),
                   onTap: () =>
                       {Navigator.pushNamed(context, SettingsScreen.id)}),
               ListTile(
@@ -186,6 +187,17 @@ void _settingModalBottomSheet(context) {
                   }
                 },
               ),
+              ListTile(
+                  leading: Icon(
+                    Icons.stop,
+                  ),
+                  title: Text(
+                    'Pause/Restart Gauge Swap',
+                  ),
+                  onTap: () => {
+                        pauseGauge = !pauseGauge,
+                        Navigator.of(context).pop(),
+                      }),
               ListTile(
                 leading: Icon(Icons.map),
                 title: Text('Open Map'),
@@ -258,7 +270,14 @@ class _LandScapeModeState extends State<LandScapeMode> {
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      child: LandscapeView(),
+      child: Row(
+        children: [
+          SizedBox(
+            width: ScreenSize.hasNotch ? 40 : 0,
+          ),
+          LandscapeView(),
+        ],
+      ),
     );
   }
 }
@@ -473,11 +492,17 @@ class DialRow extends StatelessWidget {
 
 List<Widget> gaugeSequenceList = [
   DialRow(
-      gaugeType1: TempGauge(
-          high: double.parse(globalWeather.dailyWeather[di].highTemp),
-          low: double.parse(globalWeather.dailyWeather[di].lowTemp),
-          conditionIcon: weatherDayIconMap[
-              globalWeather.dailyWeather[di].hourly[0].weatherCode]),
+      gaugeType1: ScreenSize.small
+          ? TempGauge2(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode])
+          : TempGauge(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
       gaugeType2: HumidityGauge(
         gaugeValue: double.parse(globalWeather.dailyWeather[di].humidity),
       )),
@@ -542,6 +567,123 @@ List<Widget> gaugeSequenceList = [
     ),
   ),
   DialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "boat1.jpg",
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "boat2.jpg",
+      ))
+];
+
+List<Widget> gaugeSequenceListP = [
+  PortraitDialRow(
+      gaugeType1: ScreenSize.small
+          ? TempGauge2(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode])
+          : TempGauge2(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
+      gaugeType2: ScreenSize.small
+          ? Humidity2Gauge(
+              gaugeValue: double.parse(
+              globalWeather.dailyWeather[di].humidity,
+            ))
+          : HumidityGauge(
+              gaugeValue: double.parse(
+                globalWeather.dailyWeather[di].humidity,
+              ),
+            )),
+  PortraitDialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "sunset1.gif",
+        textLabel: globalWeather.dailyWeather[di].sunrise,
+        textBackgroundColor: Colors.transparent,
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "sunset2.gif",
+        textLabel: globalWeather.dailyWeather[di].sunset,
+        textBackgroundColor: Colors.transparent,
+      )),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeNew(
+      imageName: getMoonImageName(),
+      innerLineColor: Colors.transparent,
+    ),
+//ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+    gaugeType2: ImageGaugeNew(
+        imageName: "shootingStar.gif",
+        innerLineColor: Colors.transparent,
+        textLabel: globalWeather.dailyWeather[di].moonPhase +
+            "\nRise: " +
+            globalWeather.dailyWeather[di].moonrise +
+            "\nSet:" +
+            globalWeather.dailyWeather[di].moonset,
+        textPosition: 40,
+        textBackgroundColor: Colors.transparent,
+        fontSize: 20),
+  ),
+  ScreenSize.small
+      ? PortraitDialRow(
+          gaugeType1: DS2Gauge(
+            gaugeDirection:
+                globalWeather.dailyWeather[di].hourly[0].windDirection,
+            gaugeValue: // 8.0,
+                double.parse(
+                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
+            gaugeMax: 50,
+            gaugeInterval: 10,
+          ),
+          gaugeType2: DS2Gauge(
+            gaugeType: "Waves",
+            gaugeUnit: "ft",
+            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
+            gaugeValue: // 5.0,
+                double.parse(globalWeather.dailyWeather[di].waveHt),
+            gaugeMax: 10,
+            gaugeInterval: 2,
+          ),
+        )
+      : PortraitDialRow(
+          gaugeType1: DSGauge(
+            gaugeDirection:
+                globalWeather.dailyWeather[di].hourly[0].windDirection,
+            gaugeValue: // 8.0,
+                double.parse(
+                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
+            gaugeMax: 50,
+            gaugeInterval: 10,
+          ),
+          gaugeType2: DSGauge(
+            gaugeType: "Waves",
+            gaugeUnit: "ft",
+            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
+            gaugeValue: // 5.0,
+                double.parse(globalWeather.dailyWeather[di].waveHt),
+            gaugeMax: 10,
+            gaugeInterval: 2,
+          ),
+        ),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeNew(
+      imageName: "water.gif",
+      textLabel: "Water " +
+          globalWeather.dailyWeather[di].waterTemp +
+//   weatherData.data.weather[0].hourly[0].waterTempF +
+          " \u2109",
+      textColor: Colors.black,
+      textBackgroundColor: Colors.transparent,
+    ),
+    gaugeType2: BarometerGauge(
+      current: double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
+      change: getBarometerChange(),
+    ),
+  ),
+  PortraitDialRow(
       gaugeType1: ImageGaugeNew(
         imageName: "boat1.jpg",
       ),
@@ -622,12 +764,23 @@ class _VenkySwapState extends State<VenkySwap> {
       setState(() {
         animationSwitcher = !animationSwitcher;
       });
-      if (animationSwitcher) {
-        // you need this funky method because animationCrossFade goes back and forth between one image and the other
-        // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
-        myFirstWidget = gaugeSequenceList[counter];
+      if (MediaQuery.of(context).orientation == Orientation.landscape) {
+        if (animationSwitcher) {
+          // you need this funky method because animationCrossFade goes back and forth between one image and the other
+          // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+          myFirstWidget = gaugeSequenceList[counter];
+        } else {
+          mySecondWidget = gaugeSequenceList[counter];
+        }
       } else {
-        mySecondWidget = gaugeSequenceList[counter];
+        print("In Portrait Switchter");
+        if (animationSwitcher) {
+          // you need this funky method because animationCrossFade goes back and forth between one image and the other
+          // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+          myFirstWidget = gaugeSequenceListP[counter];
+        } else {
+          mySecondWidget = gaugeSequenceListP[counter];
+        }
       }
     }
   }
@@ -649,13 +802,28 @@ class _VenkySwapState extends State<VenkySwap> {
   }
 }
 
-class LandscapeTimerWidget extends StatefulWidget {
+class VenkySwapP extends StatefulWidget {
+  VenkySwapP({Key key, this.title}) : super(key: key);
+
+  final String title;
+
   @override
-  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
+  _VenkySwapStateP createState() => _VenkySwapStateP();
 }
 
-class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
+class _VenkySwapStateP extends State<VenkySwapP> {
+  int _counter = 0;
+  bool animationSwitcher = false;
+  Timer myTimer;
   Timer ted;
+  AnimationController controller;
+  List<Widget> myWidgetList;
+  Widget myFirstWidget = gaugeSequenceListP[0];
+  Widget mySecondWidget = gaugeSequenceListP[1];
+  int currentTransitionTime = userSettings.transitionTime;
+
+  /*
+   Timer ted;
 
   int currentTransitionTime = 0;
   @override
@@ -663,7 +831,7 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
     super.initState();
     // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
 
-    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+
   }
 
   @override
@@ -672,162 +840,249 @@ class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
     ted.cancel();
   }
 
+
+
+   */
+
+  @override
+  void initState() {
+    super.initState();
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+    myTimer = Timer.periodic(
+        Duration(seconds: userSettings.transitionTime), _updateData);
+  }
+
   _bobX(Timer timer) {
     if (currentTransitionTime != userSettings.transitionTime) {
+      myTimer.cancel();
+      currentTransitionTime = userSettings.transitionTime;
+      myTimer = Timer.periodic(
+          Duration(seconds: userSettings.transitionTime), _updateData);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    myTimer.cancel();
+    ted.cancel();
+  }
+
+  void _updateData(Timer timer) {
+    if (!pauseGauge) {
+      counter = (counter + 1) % (gaugeSequenceList.length);
+      //counter = 0;
       setState(() {
-        currentTransitionTime = userSettings.transitionTime;
+        animationSwitcher = !animationSwitcher;
       });
-    }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
-        builder: (context) {
-      counter = (counter + 1) % 6;
-      if (globalWeather.weatherAPIError) {
-        counter = 5;
+      if (animationSwitcher) {
+        // you need this funky method because animationCrossFade goes back and forth between one image and the other
+        // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+        myFirstWidget = gaugeSequenceListP[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
       }
-      // counter = 4;
-      // counter == 0 ? counter = 1 : counter = 0;
-
-      return LandScapeSwapper2();
-    });
-  }
-}
-
-class LandscapeSwapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return gaugeSequenceList[counter];
-  }
-}
-
-class LandScapeSwapper2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    switch (counter) {
-      case 0:
-        return DialRow(
-          gaugeType1: TempGauge(
-              high: double.parse(globalWeather.dailyWeather[di].highTemp),
-              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
-              conditionIcon: weatherDayIconMap[
-                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
-          gaugeType2: BarometerGauge(
-            current:
-                double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
-            change: getBarometerChange(),
-          ),
-        );
-        break;
-      case 1:
-//        return AnimatedCrossFade(
-//            crossFadeState: _crossFadeState,
-//            firstChild: DialRow(
-//              gaugeType1: TempGauge(),
-//              gaugeType2: BarometerGauge(),
-//            ),
-//            secondChild: DialRow(
-//                gaugeType1: ImageGauge(
-//                    imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
-//                gaugeType2: ImageGauge(
-//                    imageName: "gaugeSunset.png", textLabel: "8:15PM")),
-//            // crossFadeState: crossFadeState,
-//            duration: const Duration(seconds: 2));
-        return DialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "sunset1.gif",
-              textLabel: globalWeather.dailyWeather[di].sunrise,
-              textBackgroundColor: Colors.transparent,
-            ),
-            gaugeType2: ImageGaugeNew(
-              imageName: "sunset2.gif",
-              textLabel: globalWeather.dailyWeather[di].sunset,
-              textBackgroundColor: Colors.transparent,
-            ));
-        break;
-
-      case 2:
-        return DialRow(
-          gaugeType1: ImageGaugeNew(
-            imageName: getMoonImageName(),
-            innerLineColor: Colors.transparent,
-          ),
-          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-          gaugeType2: ImageGaugeNew(
-              imageName: "shootingStar.gif",
-              innerLineColor: Colors.transparent,
-              textLabel: globalWeather.dailyWeather[di].moonPhase +
-                  "\nRise: " +
-                  globalWeather.dailyWeather[di].moonrise +
-                  "\nSet:" +
-                  globalWeather.dailyWeather[di].moonset,
-              textPosition: 40,
-              textBackgroundColor: Colors.transparent,
-              fontSize: 20),
-        );
-        break;
-
-      case 3:
-        return DialRow(
-          gaugeType1: DSGauge(
-            gaugeDirection:
-                globalWeather.dailyWeather[di].hourly[0].windDirection,
-            gaugeValue: // 8.0,
-                double.parse(
-                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
-          ),
-          gaugeType2: DSGauge(
-            gaugeType: "Waves",
-            gaugeUnit: "ft",
-            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
-            gaugeValue: // 5.0,
-                double.parse(globalWeather.dailyWeather[di].waveHt),
-            gaugeMax: 10,
-            gaugeInterval: 1,
-          ),
-        );
-        break;
-      case 4:
-        return DialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "water.gif",
-              textLabel: "Water " +
-                  globalWeather.dailyWeather[di].waterTemp +
-                  //   weatherData.data.weather[0].hourly[0].waterTempF +
-                  " \u2109",
-              textColor: Colors.black,
-              textBackgroundColor: Colors.transparent,
-            ),
-            gaugeType2: CompassGauge2());
-      case 5:
-        return DialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "boat1.jpg",
-            ),
-            gaugeType2: ImageGaugeNew(
-              imageName: "boat2.jpg",
-            ));
-
-      default:
-        {
-          print("Error");
-          return DialRow(
-              gaugeType1: ImageGaugeNew(
-                imageName: "boat1.jpg",
-              ),
-              gaugeType2: ImageGaugeNew(
-                imageName: "boat2.jpg",
-              ));
-        }
-        break;
     }
-//    return counter == 0
-//        ? buildMyTideTable()
-//        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    return Center(
+      child: AnimatedCrossFade(
+        duration: const Duration(milliseconds: 1500),
+        firstChild: myFirstWidget,
+        secondChild: mySecondWidget,
+        crossFadeState: animationSwitcher
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+      ),
+    );
   }
 }
+
+//
+//class LandscapeTimerWidget extends StatefulWidget {
+//  @override
+//  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
+//}
+//
+//class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
+//  Timer ted;
+//
+//  int currentTransitionTime = 0;
+//  @override
+//  void initState() {
+//    super.initState();
+//    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
+//
+//    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+//  }
+//
+//  @override
+//  void dispose() {
+//    super.dispose();
+//    ted.cancel();
+//  }
+//
+//  _bobX(Timer timer) {
+//    if (currentTransitionTime != userSettings.transitionTime) {
+//      setState(() {
+//        currentTransitionTime = userSettings.transitionTime;
+//      });
+//    }
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
+//        builder: (context) {
+//      counter = (counter + 1) % 6;
+//      if (globalWeather.weatherAPIError) {
+//        counter = 5;
+//      }
+//      // counter = 4;
+//      // counter == 0 ? counter = 1 : counter = 0;
+//
+//      return LandScapeSwapper2();
+//    });
+//  }
+//}
+//
+//class LandscapeSwapper extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return gaugeSequenceList[counter];
+//  }
+//}
+//
+//class LandScapeSwapper2 extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    switch (counter) {
+//      case 0:
+//        return DialRow(
+//          gaugeType1: TempGauge(
+//              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+//              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+//              conditionIcon: weatherDayIconMap[
+//                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
+//          gaugeType2: BarometerGauge(
+//            current:
+//                double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
+//            change: getBarometerChange(),
+//          ),
+//        );
+//        break;
+//      case 1:
+////        return AnimatedCrossFade(
+////            crossFadeState: _crossFadeState,
+////            firstChild: DialRow(
+////              gaugeType1: TempGauge(),
+////              gaugeType2: BarometerGauge(),
+////            ),
+////            secondChild: DialRow(
+////                gaugeType1: ImageGauge(
+////                    imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
+////                gaugeType2: ImageGauge(
+////                    imageName: "gaugeSunset.png", textLabel: "8:15PM")),
+////            // crossFadeState: crossFadeState,
+////            duration: const Duration(seconds: 2));
+//        return DialRow(
+//            gaugeType1: ImageGaugeNew(
+//              imageName: "sunset1.gif",
+//              textLabel: globalWeather.dailyWeather[di].sunrise,
+//              textBackgroundColor: Colors.transparent,
+//            ),
+//            gaugeType2: ImageGaugeNew(
+//              imageName: "sunset2.gif",
+//              textLabel: globalWeather.dailyWeather[di].sunset,
+//              textBackgroundColor: Colors.transparent,
+//            ));
+//        break;
+//
+//      case 2:
+//        return DialRow(
+//          gaugeType1: ImageGaugeNew(
+//            imageName: getMoonImageName(),
+//            innerLineColor: Colors.transparent,
+//          ),
+//          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+//          gaugeType2: ImageGaugeNew(
+//              imageName: "shootingStar.gif",
+//              innerLineColor: Colors.transparent,
+//              textLabel: globalWeather.dailyWeather[di].moonPhase +
+//                  "\nRise: " +
+//                  globalWeather.dailyWeather[di].moonrise +
+//                  "\nSet:" +
+//                  globalWeather.dailyWeather[di].moonset,
+//              textPosition: 40,
+//              textBackgroundColor: Colors.transparent,
+//              fontSize: 20),
+//        );
+//        break;
+//
+//      case 3:
+//        return DialRow(
+//          gaugeType1: DSGauge(
+//            gaugeDirection:
+//                globalWeather.dailyWeather[di].hourly[0].windDirection,
+//            gaugeValue: // 8.0,
+//                double.parse(
+//                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
+//          ),
+//          gaugeType2: DSGauge(
+//            gaugeType: "Waves",
+//            gaugeUnit: "ft",
+//            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
+//            gaugeValue: // 5.0,
+//                double.parse(globalWeather.dailyWeather[di].waveHt),
+//            gaugeMax: 10,
+//            gaugeInterval: 1,
+//          ),
+//        );
+//        break;
+//      case 4:
+//        return DialRow(
+//            gaugeType1: ImageGaugeNew(
+//              imageName: "water.gif",
+//              textLabel: "Water " +
+//                  globalWeather.dailyWeather[di].waterTemp +
+//                  //   weatherData.data.weather[0].hourly[0].waterTempF +
+//                  " \u2109",
+//              textColor: Colors.black,
+//              textBackgroundColor: Colors.transparent,
+//            ),
+//            gaugeType2: CompassGauge2());
+//      case 5:
+//        return DialRow(
+//            gaugeType1: ImageGaugeNew(
+//              imageName: "boat1.jpg",
+//            ),
+//            gaugeType2: ImageGaugeNew(
+//              imageName: "boat2.jpg",
+//            ));
+//
+//      default:
+//        {
+//          print("Error");
+//          return DialRow(
+//              gaugeType1: ImageGaugeNew(
+//                imageName: "boat1.jpg",
+//              ),
+//              gaugeType2: ImageGaugeNew(
+//                imageName: "boat2.jpg",
+//              ));
+//        }
+//        break;
+//    }
+////    return counter == 0
+////        ? buildMyTideTable()
+////        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
+//  }
+//}
 
 class PortraitSwapper extends StatelessWidget {
   @override
@@ -978,21 +1233,29 @@ class PortraitMode extends StatelessWidget {
               Colors.white.withOpacity(0.8), BlendMode.dstATop),
         ),
       ),
-      child: Stack(
+      child: Column(
         children: [
-          PortraitTimerWidget(),
-          Column(children: [
-            SizedBox(height: ScreenSize.safeBlockVertical * 4),
-            Container(
-                height:
-                    ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
-            SizedBox(height: ScreenSize.safeBlockVertical * 2),
-            PortraitClockRow(),
-            SizedBox(height: ScreenSize.safeBlockVertical * 2),
-            Container(
-                height:
-                    ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
-          ]),
+          SizedBox(
+            height: ScreenSize.hasNotch ? 25 : 0,
+          ),
+          Stack(
+            children: [
+              // PortraitTimerWidget(),
+              VenkySwapP(),
+              Column(children: [
+                SizedBox(height: ScreenSize.safeBlockVertical * 4),
+                Container(
+                    height: ScreenSize.gaugeSize -
+                        (ScreenSize.safeBlockVertical * 4)),
+                SizedBox(height: ScreenSize.safeBlockVertical * 2),
+                PortraitClockRow(),
+                SizedBox(height: ScreenSize.safeBlockVertical * 2),
+                Container(
+                    height: ScreenSize.gaugeSize -
+                        (ScreenSize.safeBlockVertical * 4)),
+              ]),
+            ],
+          ),
         ],
       ),
     );

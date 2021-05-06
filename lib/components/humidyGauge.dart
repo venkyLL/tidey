@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import "package:google_fonts/google_fonts.dart";
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tidey/const.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 /// Locals imports
 class HumidityGauge extends StatefulWidget {
@@ -90,11 +89,11 @@ class _HumidityGaugeState extends State<HumidityGauge> {
           maximum: gaugeMax,
           labelsPosition: ElementsPosition.outside,
           labelOffset: 15,
-          interval: gaugeInterval,
-          radiusFactor: 0.9,
+          interval: ScreenSize.small ? 20 : 10,
+          radiusFactor: 1.0,
           //  showFirstLabel: false,
           axisLabelStyle: GaugeTextStyle(
-              fontSize: ScreenSize.small ? 15 : 20, color: Colors.white),
+              fontSize: ScreenSize.small ? 10 : 20, color: Colors.white),
           minorTicksPerInterval: 0,
           onLabelCreated: _handleAxisLabelCreated,
           showTicks: false,
@@ -110,26 +109,26 @@ class _HumidityGaugeState extends State<HumidityGauge> {
 //                      child: const Text('Temp.°C',
 //                          style: TextStyle(
 //                              color: Color(0xFFF8B195), fontSize: 16)))),
-            GaugeAnnotation(
-                angle: 270,
-                positionFactor: .3,
-                widget: Container(
-                  child: BoxedIcon(
-                      (weatherDayIconMap[
-                          globalWeather.dailyWeather[0].hourly[0].weatherCode]),
-                      size: ScreenSize.small ? 30 : 40,
-                      color: const Color(0xFF3366CC)),
-                )),
+//            GaugeAnnotation(
+//                angle: 90,
+//                positionFactor: .3,
+//                widget: Container(
+//                  child: BoxedIcon(
+//                      (weatherDayIconMap[
+//                          globalWeather.dailyWeather[0].hourly[0].weatherCode]),
+//                      size: ScreenSize.small ? 20 : 40,
+//                      color: const Color(0xFF3366CC)),
+//                )),
             GaugeAnnotation(
                 angle: 90,
-                positionFactor: 0.8,
+                positionFactor: 0.9,
                 widget: Container(
                   child: Text(
-                    "\n" + gaugeType + "\n " + gaugeUnit,
+                    gaugeType,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.notoSans(
-                        fontSize: ScreenSize.small ? 15 : 20,
-                        fontWeight: FontWeight.bold,
+                        fontSize: ScreenSize.small ? 10 : 20,
+                        //  fontWeight: FontWeight.bold,
                         color: const Color(0xFF3366CC)),
                   ),
                 ))

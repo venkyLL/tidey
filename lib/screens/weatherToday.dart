@@ -16,6 +16,7 @@ class TodayScreen extends StatefulWidget {
 
 class _TodayScreenState extends State<TodayScreen> {
   HourlyDataSource hourlyDataSource;
+  Timer ted;
 
   @override
   void initState() {
@@ -24,7 +25,7 @@ class _TodayScreenState extends State<TodayScreen> {
         HourlyDataSource(hourlyData: globalWeather.dailyWeather[di].hourly);
 //    print("Number of hourly records is " +
 //        weatherData.data.weather[0].hourly.length.toString());
-    Timer(Duration(seconds: userSettings.transitionTime), () {
+    ted = Timer(Duration(seconds: userSettings.transitionTime), () {
       // 5s over, navigate to a new page
       Navigator.pushReplacementNamed(context, ForecastScreen.id);
     });
@@ -33,6 +34,7 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   void dispose() {
     super.dispose();
+    ted.cancel();
   }
 
   @override
@@ -41,8 +43,10 @@ class _TodayScreenState extends State<TodayScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.transparent),
-          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.chevron_left, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
 
         centerTitle: true,
@@ -73,7 +77,7 @@ class _TodayScreenState extends State<TodayScreen> {
           child: (!globalWeather.marineHourlyExists)
               ? Container(
                   alignment: Alignment.center,
-                  height: 200,
+                  height: ScreenSize.small ? 50 : 200,
                   child: Text(
                       'Local Weather Not Available\nPlease Check Network Connections',
                       style: kTableTitleTextStyle,
@@ -83,7 +87,7 @@ class _TodayScreenState extends State<TodayScreen> {
                   children: [
                     Container(
                       alignment: Alignment.center,
-                      height: 200,
+                      height: ScreenSize.small ? 50 : 200,
                       child: Text(
                           'Today\'s Weather\n' +
                               globalWeather.dailyWeather[di].hourly[0]
@@ -109,15 +113,21 @@ class _TodayScreenState extends State<TodayScreen> {
                                       style: kTableTextStyle,
                                     ))),
                             GridTextColumn(
-                                columnName: 'Condition',
-                                label: Container(
-                                    color: kTitleBoxColor,
-                                    padding: EdgeInsets.all(2.0),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Condition',
-                                      style: kTableTextStyle,
-                                    ))),
+                              columnName: 'Condition',
+                              label: Container(
+                                  color: kTitleBoxColor,
+                                  padding: EdgeInsets.all(2.0),
+                                  alignment: Alignment.center,
+                                  child: ScreenSize.small
+                                      ? Text(
+                                          'Cond',
+                                          style: kTableTextStyle,
+                                        )
+                                      : Text(
+                                          'Condition',
+                                          style: kTableTextStyle,
+                                        )),
+                            ),
                             GridTextColumn(
                                 columnName: 'Temp',
                                 label: Container(
@@ -260,7 +270,10 @@ class HourlyDataSource extends DataGridSource {
         child: Text(
           row.getCells()[0].value.toString(),
           overflow: TextOverflow.ellipsis,
-          style: kTableTextStyle,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20 * ScreenSize.fs),
         ),
       ),
       Container(
@@ -273,14 +286,21 @@ class HourlyDataSource extends DataGridSource {
         child: Text(
           row.getCells()[2].value.toString(),
           softWrap: true,
-          style: kTableTextStyle,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20 * ScreenSize.fs),
         ),
       ),
       Container(
         padding: EdgeInsets.all(2.0),
         alignment: Alignment.center,
         child: Text(row.getCells()[3].value.toString(),
-            overflow: TextOverflow.ellipsis, style: kTableTextStyle),
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20 * ScreenSize.fs)),
       ),
       Container(
         padding: EdgeInsets.all(2.0),
@@ -288,7 +308,10 @@ class HourlyDataSource extends DataGridSource {
         child: Text(
           row.getCells()[4].value.toString(),
           overflow: TextOverflow.ellipsis,
-          style: kTableTextStyle,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20 * ScreenSize.fs),
         ),
       ),
     ]);
@@ -302,13 +325,15 @@ class HourlyDataSource extends DataGridSource {
       case "300":
       case "2100":
         {
-          return BoxedIcon((weatherNightIconMap[code]), color: Colors.white);
+          return BoxedIcon((weatherNightIconMap[code]),
+              color: Colors.white, size: 20);
         }
         break;
 
       default:
         {
-          return BoxedIcon((weatherDayIconMap[code]), color: Colors.white);
+          return BoxedIcon((weatherDayIconMap[code]),
+              color: Colors.white, size: 20);
         }
         break;
     }

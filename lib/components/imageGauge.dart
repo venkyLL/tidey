@@ -141,9 +141,14 @@ class ImageGaugeNew extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                    height: ScreenSize.gaugeSize *
-                        (textPosition / 100) *
-                        ScreenSize.fs),
+                    height: (ScreenSize.small)
+                        ? ScreenSize.gaugeSize *
+                            (textPosition / 100) *
+                            ScreenSize.fs
+                        : (MediaQuery.of(context).orientation ==
+                                Orientation.landscape)
+                            ? ScreenSize.gaugeSize * (textPosition / 100)
+                            : ScreenSize.gaugeSize * (textPosition / 100) * .8),
                 Text(
                   textLabel,
                   textAlign: TextAlign.center,

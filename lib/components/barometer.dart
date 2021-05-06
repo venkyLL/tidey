@@ -60,7 +60,7 @@ class _BarometerGaugeState extends State<BarometerGauge> {
             minorTickStyle: MinorTickStyle(
                 length: 0.16, lengthUnit: GaugeSizeUnit.factor, thickness: 1),
             axisLabelStyle: GaugeTextStyle(
-                fontSize: ScreenSize.small ? 30 : 40, color: Colors.white),
+                fontSize: ScreenSize.small ? 15 : 40, color: Colors.white),
             pointers: <GaugePointer>[
               NeedlePointer(
                   value: this.current, //,
@@ -114,35 +114,35 @@ class _BarometerGaugeState extends State<BarometerGauge> {
             annotations: <GaugeAnnotation>[
               GaugeAnnotation(
                   angle: 230,
-                  positionFactor: 0.38,
+                  positionFactor: ScreenSize.small ? .70 : 0.3,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_cloudy),
-                        size: ScreenSize.small ? 25 : 35,
+                        size: ScreenSize.small ? 15 : 25,
                         color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                   angle: 310,
-                  positionFactor: 0.38,
+                  positionFactor: ScreenSize.small ? .70 : 0.3,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.day_sunny),
-                        size: ScreenSize.small ? 25 : 35,
+                        size: ScreenSize.small ? 15 : 25,
                         color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                   angle: 129,
-                  positionFactor: 0.38,
+                  positionFactor: ScreenSize.small ? .70 : .3,
                   widget: Container(
                     child: BoxedIcon((WeatherIcons.thunderstorm),
-                        size: ScreenSize.small ? 25 : 35,
+                        size: ScreenSize.small ? 15 : 25,
                         color: const Color(0xFF3366CC)),
                   )),
               GaugeAnnotation(
                 angle: 50,
-                positionFactor: 0.38,
+                positionFactor: ScreenSize.small ? .70 : 0.38,
                 widget: Container(
                     child: (change == BarometerChange.falling)
                         ? Icon(Icons.arrow_circle_down_sharp,
-                            size: ScreenSize.small ? 30 : 50, color: Colors.red)
+                            size: ScreenSize.small ? 15 : 50, color: Colors.red)
                         : (change == BarometerChange.rising)
                             ? Icon(Icons.arrow_circle_up_sharp,
                                 size: ScreenSize.small ? 30 : 50,

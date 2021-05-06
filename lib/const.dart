@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iphone_has_notch/iphone_has_notch.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
@@ -468,8 +470,19 @@ class ScreenSize {
   static double portraitClockSpace;
   static bool small;
   static double fs; // FontScaleFactor
+  static bool isPhone;
+  static bool isTablet;
+  static bool hasNotch;
+  static bool isAndroid;
+  static bool isIOS;
 
   void init(BuildContext context) {
+    isTablet = Device.get().isTablet;
+    isPhone = Device.get().isPhone;
+    hasNotch = IphoneHasNotch.hasNotch; //  Device.get().hasNotch;
+    isAndroid = Device.get().isAndroid;
+    isIOS = Device.get().isIos;
+
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
@@ -507,6 +520,8 @@ class ScreenSize {
     print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");
+    print("Has Notch " + hasNotch.toString());
+    print("Is Tablet = " + isTablet.toString());
     print("Small Device? $small font scale $fs");
     print("GaugeTop = ${gaugeTop}");
     print("Gauge Size = ${gaugeSize}");

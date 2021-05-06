@@ -56,23 +56,23 @@ class _TempGaugeState extends State<TempGauge> {
             endAngle: 50,
             minimum: 0,
             maximum: 110,
-            //  interval: isCardView ? 20 : _interval,
-            minorTicksPerInterval: 9,
+            //  interval: isCardView ? 10 : _interval,
+            minorTicksPerInterval: 10,
             showAxisLine: false,
             labelsPosition: ElementsPosition.outside,
             labelOffset: 15,
-            interval: ScreenSize.small ? 10 : 10,
+            interval: ScreenSize.small ? 20 : 10,
             radiusFactor: 0.9,
             //labelOffset: 8,
             annotations: <GaugeAnnotation>[
-//              GaugeAnnotation(
-//                  angle: 90,
-//                  positionFactor: 0.3,
-//                  widget: Container(
-//                    child: BoxedIcon((conditionIcon),
-//                        size: ScreenSize.small ? 20 : 35,
-//                        color: const Color(0xFF3366CC)),
-//                  )),
+              GaugeAnnotation(
+                  angle: 90,
+                  positionFactor: 0.3,
+                  widget: Container(
+                    child: BoxedIcon((conditionIcon),
+                        size: ScreenSize.small ? 20 : 35,
+                        color: const Color(0xFF3366CC)),
+                  )),
 //                      const Text('Temp.°F',
 //                          style: TextStyle(
 //                              color: Color(0xff000000), fontSize: 16)))),

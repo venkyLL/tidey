@@ -16,7 +16,7 @@ class ForecastScreen extends StatefulWidget {
 
 class _ForecastScreenState extends State<ForecastScreen> {
   WeatherDataSource weatherDataSource;
-
+  Timer ted;
   @override
   void initState() {
     super.initState();
@@ -24,7 +24,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
         WeatherDataSource(weatherData: globalWeather.dailyWeather);
 //    print("Number of hourly records is " +
 //        weatherDataSource._weatherData.length.toString());
-    Timer(Duration(seconds: userSettings.transitionTime), () {
+    ted = Timer(Duration(seconds: userSettings.transitionTime), () {
       Navigator.of(context).pop();
     });
   }
@@ -32,6 +32,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
   @override
   void dispose() {
     super.dispose();
+    ted.cancel;
   }
 
   @override
@@ -40,8 +41,11 @@ class _ForecastScreenState extends State<ForecastScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.transparent),
-          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.chevron_left, color: Colors.black),
+          onPressed: () {
+            ted.cancel;
+            Navigator.of(context).pop();
+          },
         ),
         // title: const Text('Weekly Forecast'),
         centerTitle: true,
@@ -78,7 +82,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
                   children: [
                     Container(
                       alignment: Alignment.center,
-                      height: 200,
+                      height: ScreenSize.small ? 50 : 200,
                       child:
                           Text('Weekly Forecast', style: kTableTitleTextStyle),
                     ),
@@ -100,26 +104,41 @@ class _ForecastScreenState extends State<ForecastScreen> {
                                       style: kTableTextStyle,
                                     ))),
                             GridTextColumn(
-                                columnName: 'Condition',
-                                label: Container(
-                                    color: kTitleBoxColor,
-                                    padding: EdgeInsets.all(2.0),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Condition',
-                                      style: kTableTextStyle,
-                                    ))),
+                              columnName: 'Condition',
+                              label: Container(
+                                color: kTitleBoxColor,
+                                padding: EdgeInsets.all(2.0),
+                                alignment: Alignment.center,
+                                child: ScreenSize.small
+                                    ? Text(
+                                        'Cond',
+                                        style: kTableTextStyle,
+                                      )
+                                    : Text(
+                                        'Cond',
+                                        style: kTableTextStyle,
+                                      ),
+                              ),
+                            ),
                             GridTextColumn(
-                                columnName: 'Deescription',
-                                label: Container(
-                                    color: kTitleBoxColor,
-                                    padding: EdgeInsets.all(2.0),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Description',
-                                      style: kTableTextStyle,
-                                      overflow: TextOverflow.ellipsis,
-                                    ))),
+                              columnName: 'Deescription',
+                              label: Container(
+                                color: kTitleBoxColor,
+                                padding: EdgeInsets.all(2.0),
+                                alignment: Alignment.center,
+                                child: ScreenSize.small
+                                    ? Text(
+                                        'Desc',
+                                        style: kTableTextStyle,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Text(
+                                        'Description',
+                                        style: kTableTextStyle,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                              ),
+                            ),
                             GridTextColumn(
                                 columnName: 'Temp',
                                 label: Container(
