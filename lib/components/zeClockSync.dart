@@ -140,56 +140,14 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                    markerOffset: 40,
 //                    color: Color(0xFFF67280)),
             NeedlePointer(
-              value:
-//                  globalCompassDirection * 80 / 360, // dirMap[gaugeDirection],
-                  270 * 80 / 360,
+              value: globalCompassDirection != null
+                  ? globalCompassDirection * 80 / 360
+                  : 270 * 80 / 360,
               lengthUnit: GaugeSizeUnit.factor,
               needleLength: 0.5,
               needleColor: Colors.grey.shade300,
               needleEndWidth: ScreenSize.small ? 5 : 10,
-//              gradient: const LinearGradient(colors: <Color>[
-//                Color(0xFFFF6B78),
-//                Color(0xFFFF6B78),
-//                Color(0xFFE20A22),
-//                Color(0xFFE20A22)
-//              ], stops: <double>[
-//                0,
-//                0.5,
-//                0.5,
-//                1
-//              ]),
-//              knobStyle: KnobStyle(
-//                  borderColor: const Color(0xFFF67280),
-//                  borderWidth: 0.0,
-//                  color: Colors.white,
-//                  sizeUnit: GaugeSizeUnit.factor,
-//                  knobRadius: 0.05),
             )
-//                NeedlePointer(
-//                    value: dirMap[gaugeDirection],
-//                    needleLength: 0.9,
-//                    needleColor: const Color(0xFFF67280),
-//                    lengthUnit: GaugeSizeUnit.factor,
-//                    needleStartWidth: 0,
-//                    needleEndWidth: 5,
-//                    enableAnimation: true,
-//                    knobStyle: KnobStyle(knobRadius: 0),
-//                    animationType: AnimationType.ease),
-//                NeedlePointer(
-//                    value: gaugeValue,
-//                    needleLength: .9,
-//                    lengthUnit: (GaugeSizeUnit.factor),
-//                    needleColor: const Color(0xFFF67280),
-//                    needleStartWidth: 0,
-//                    needleEndWidth: 8,
-//                    enableAnimation: true,
-//                    animationType: AnimationType.ease,
-//                    knobStyle: KnobStyle(
-//                        borderColor: const Color(0xFFF67280),
-//                        borderWidth: 0.015,
-//                        color: Colors.white,
-//                        sizeUnit: GaugeSizeUnit.factor,
-//                        knobRadius: 0.05)),
           ],
           axisLineStyle: AxisLineStyle(
               thicknessUnit: GaugeSizeUnit.factor,
