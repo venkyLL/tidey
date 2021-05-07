@@ -7,31 +7,39 @@ class HourlyBellRinger {
   DateTime bellLastRungDateTime;
   int myHour;
   int myMinutes;
-  // int test_bell_has_rung_counter = 12;
 
   init() {
     bellLastRungDateTime = DateTime.now();
   }
 
+  double _timeOfDayToDouble(TimeOfDay tod) => tod.hour + tod.minute / 60.0;
+
   bool amISleeping() {
-    TimeOfDay _wakeTime = userSettings.wakeTime;
-    TimeOfDay _sleepTime = userSettings.sleepTime;
-    bool _iAmSleeping = true;
-    if ((DateTime.now().getHours >= _wakeTime.hour) &&
-        (DateTime.now().getHours <= _sleepTime.hour)) {
-      if ((DateTime.now().getMinutes >= _wakeTime.minute) &&
-          (DateTime.now().getMinutes <= _sleepTime.minute)) {
-        _iAmSleeping = false;
-      }
+    bool _iAmSleeping = false;
+    double _now = _timeOfDayToDouble(TimeOfDay.now());
+    double _wakeTime =
+        _timeOfDayToDouble(userSettings.wakeTime); // _startTime is a TimeOfDay
+    double _sleepTime =
+        _timeOfDayToDouble(userSettings.sleepTime); // _stopTime is a TimeOfDay
+    if (_sleepTime < _wakeTime) {
+      // we are in the same day
+      if ((_now >= _sleepTime) && (_now <= _wakeTime)) _iAmSleeping = true;
+    } else {
+      // we are crossing the midnight boundary
+      if ((_now >= _sleepTime) || (_now <= _wakeTime)) _iAmSleeping = true;
     }
+
     return _iAmSleeping;
   }
 
   void ringTheBellIfItIsTime() {
-    if (amISleeping()) return;
-//    int test = DateTime.now().getMinutes;
-//    print("arrived in ringTheBellIfItIsTime $test");
-    if (userSettings.chimeSelected == ChimeType.hourly) {
+    if (amISleeping()) {
+      print(
+          "not ringing the bell because I am sleeping at ${DateTime.now()}, ${userSettings.wakeTime}, ${userSettings.sleepTime}");
+      return;
+    }
+    if ((userSettings.chimeSelected == ChimeType.hourly) ||
+        (userSettings.chimeSelected == ChimeType.single)) {
       if (DateTime.now().getMinutes == 0) {
         if (bellLastRungDateTime.addMinutes(1).isPast) {
           bellLastRungDateTime = DateTime.now();

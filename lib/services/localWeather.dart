@@ -809,11 +809,11 @@ class LocalWeatherService {
         globalWeather.dailyWeather[i].sunrise =
             localWeather.data.weather[i].astronomy[0].sunrise;
         globalWeather.dailyWeather[i].sunset =
-            localWeather.data.weather[i].astronomy[0].sunrise;
+            localWeather.data.weather[i].astronomy[0].sunset;
         globalWeather.dailyWeather[i].moonrise =
-            localWeather.data.weather[i].astronomy[0].sunrise;
+            localWeather.data.weather[i].astronomy[0].moonrise;
         globalWeather.dailyWeather[i].moonset =
-            localWeather.data.weather[i].astronomy[0].sunrise;
+            localWeather.data.weather[i].astronomy[0].moonset;
         globalWeather.dailyWeather[i].moonPhase =
             localWeather.data.weather[i].astronomy[0].moonPhase;
         globalWeather.dailyWeather[i].moonIllumination =

@@ -70,10 +70,10 @@ class UserSettings {
   int countDownTimer = 0;
   int countDownTimerRemaining = 0;
   bool countDownStart = false;
-  TimeOfDay sleepTime = TimeOfDay(hour: 7, minute: 20);
+  TimeOfDay sleepTime = TimeOfDay(hour: 22, minute: 00);
   final keySleepTimeHour = "sleepTmeHour";
   final keySleepTimeMin = "sleepTmeMin";
-  TimeOfDay wakeTime = TimeOfDay(hour: 7, minute: 20);
+  TimeOfDay wakeTime = TimeOfDay(hour: 7, minute: 00);
   final keyWakeTimeHour = "wakeTimeHour";
   final keyWakeTimeMin = "wakeTimeMin";
   bool imperialUnits;

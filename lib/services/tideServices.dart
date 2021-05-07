@@ -332,6 +332,9 @@ class mySineWaveData {
 
     double c = (_lowTideFeet + _highTideFeet) / 2;
     double a = _highTideFeet - c;
+    double _smallNumber =
+        ((_lowTideFeet - _highTideFeet) / _highTideFeet).abs();
+    if (_smallNumber < 0.1) a = 1.0;
 
     DateTime firstDate = _highTideTime;
     DateTime secondDate = _lowTideTime;
