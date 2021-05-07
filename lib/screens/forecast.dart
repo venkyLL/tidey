@@ -80,6 +80,9 @@ class _ForecastScreenState extends State<ForecastScreen> {
                 )
               : Column(
                   children: [
+                    SizedBox(
+                      width: ScreenSize.hasNotch ? 40 : 0,
+                    ),
                     Container(
                       alignment: Alignment.center,
                       height: ScreenSize.small ? 50 : 200,
@@ -121,7 +124,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
                               ),
                             ),
                             GridTextColumn(
-                              columnName: 'Deescription',
+                              columnName: 'Description',
                               label: Container(
                                 color: kTitleBoxColor,
                                 padding: EdgeInsets.all(2.0),

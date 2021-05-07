@@ -78,6 +78,8 @@ class _zeClockSyncState extends State<zeClockSync> {
       if (countDownTimerSecondsRemaining > 0) countDownTimerSecondsRemaining--;
       userSettings.countDownTimerRemaining =
           (countDownTimerSecondsRemaining / 60.0).ceil();
+      userSettings.countDownTimerSecondsRemaining =
+          countDownTimerSecondsRemaining;
       if (countDownTimerSecondsRemaining == 0) {
         userSettings.countDownStart = false;
         userSettings.countDownTimer = 0;
@@ -209,12 +211,22 @@ class _zeClockSyncState extends State<zeClockSync> {
                 widget: Container(
                   child: userSettings.countDownStart
                       ? Text(
-                          "Timer: " +
-                              userSettings.countDownTimerRemaining.toString(),
+                          ((countDownTimerSecondsRemaining / 60.0).ceil() - 1)
+                                  .toString() +
+                              ":" +
+                              (((countDownTimerSecondsRemaining -
+                                              ((countDownTimerSecondsRemaining /
+                                                          60.0)
+                                                      .ceil() *
+                                                  60)) +
+                                          60) -
+                                      1)
+                                  .toString()
+                                  .padLeft(2, "0"),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: ScreenSize.small ? 15 : 20,
-                            color: Colors.white,
+                            color: const Color(0xFF3366CC),
                           ))
                       : null,
                 ))

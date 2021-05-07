@@ -1,7 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dart_date/dart_date.dart';
-import 'package:tidey/const.dart';
 import 'package:flutter/material.dart';
+import 'package:tidey/const.dart';
 
 class HourlyBellRinger {
   DateTime bellLastRungDateTime;
@@ -34,8 +34,8 @@ class HourlyBellRinger {
 
   void ringTheBellIfItIsTime() {
     if (amISleeping()) {
-      print(
-          "not ringing the bell because I am sleeping at ${DateTime.now()}, ${userSettings.wakeTime}, ${userSettings.sleepTime}");
+//      print(
+//          "not ringing the bell because I am sleeping at ${DateTime.now()}, ${userSettings.wakeTime}, ${userSettings.sleepTime}");
       return;
     }
     if ((userSettings.chimeSelected == ChimeType.hourly) ||

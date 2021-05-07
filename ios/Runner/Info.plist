@@ -24,10 +24,10 @@
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To get location and direction</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>To get location and direction</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To get location and direction</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-    	<string>To get location and direction</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app displays images from the library</string>
 	<key>UILaunchStoryboardName</key>

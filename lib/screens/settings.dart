@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
@@ -25,7 +26,9 @@ class _settingsScreenState extends State<SettingsScreen> {
   double _currentSliderValue = userSettings.transitionTime.toDouble();
   double _countDownSliderValue = 5;
   bool _timerOn = false;
+  bool _countDownStart = userSettings.countDownStart;
   int _currentValue = userSettings.countDownTimer;
+  int _countDownTimeRemaining = UserSettings().countDownTimerSecondsRemaining;
   int _sliding = userSettings.imperialUnits ? 0 : 1;
   String selectedRingMode = chimeTypeEnumtoString[userSettings.chimeSelected];
   SharedPreferences prefs;
@@ -41,12 +44,20 @@ class _settingsScreenState extends State<SettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   bool _loading = false;
+  Timer ted;
   //var myController = TextEditingController();
 
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    setState(() {
+      _countDownTimeRemaining = userSettings.countDownTimerSecondsRemaining;
+    });
+    if (_countDownTimeRemaining != 0 && _countDownStart) {
+      ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+      // _countDownStart = true;
+    }
     openPerfs();
   }
 
@@ -56,6 +67,7 @@ class _settingsScreenState extends State<SettingsScreen> {
     // widget tree.
     // myController.dispose();
     super.dispose();
+    ted.cancel();
   }
 
   void openPerfs() async {
@@ -503,92 +515,160 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
-                    MenuListTileWithSwitch(
-                        title: ("Set a Timer"),
-                        value: _timerOn,
-                        icon: Icons.av_timer,
-                        onTap: () {
-                          setState(() {
-                            _timerOn = !_timerOn;
-                            ;
-                          });
-                        }),
+
+                    MenuListTile(
+                      title: "Start a timer",
+                      icon: Icons.hourglass_bottom,
+                      onTap: () => {
+                        showMaterialNumberPicker(
+                          headerColor: kAppBlueColor,
+                          maxLongSide: 400,
+                          context: context,
+                          title: "Minutes",
+                          selectedNumber: 10,
+                          maxNumber: 120,
+                          minNumber: 1,
+                          onChanged: (value) {
+                            ted = Timer.periodic(
+                                const Duration(milliseconds: 1000), _bobX);
+                            setState(() {
+                              _currentValue = value;
+                              userSettings.countDownTimer = value;
+                              _countDownTimeRemaining = value * 60;
+                              _countDownStart = true;
+                              userSettings.countDownStart = true;
+                            });
+//
+                          },
+                        )
+                      },
+                    ),
                     Visibility(
-                      visible: _timerOn,
-                      child: Row(
-                        //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      visible: _countDownTimeRemaining != 0, //_countDownStart,
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, right: 30.0, top: 8, bottom: 8),
-                            child: Icon(Icons.av_timer,
-                                size: kIconSettingSize, color: Colors.white),
-                          ),
-                          Text("Select Timer Value", style: kTextSettingsStyle),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, right: 30.0, top: 8, bottom: 8),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  color: Colors.grey.shade200,
-                                  child: NumberPicker(
-                                    value: _currentValue,
-                                    //  decoration: ),
-                                    //   selectedTextStyle: TextStyle(color: Colors.yellow),
-                                    //  textStyle: TextStyle(color: Colors.white),
-                                    minValue: 0,
-                                    maxValue: 120,
-                                    onChanged: (value) => setState(() {
-                                      _currentValue = value;
-                                      userSettings.countDownTimer = value;
-                                    }),
+                          Container(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 80.0, bottom: 8),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  // margin: EdgeInsets.all(100.0),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      shape: BoxShape.circle),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      width: 95,
+                                      height: 95,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.shade800,
+                                          shape: BoxShape.circle),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            ((_countDownTimeRemaining / 60.0)
+                                                            .ceil() -
+                                                        1)
+                                                    .toString() +
+                                                ":" +
+                                                (((_countDownTimeRemaining -
+                                                                ((_countDownTimeRemaining /
+                                                                            60.0)
+                                                                        .ceil() *
+                                                                    60)) +
+                                                            60) -
+                                                        1)
+                                                    .toString()
+                                                    .padLeft(2, "0"),
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                Text('Current value: $_currentValue',
-                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            child: Row(
+                              //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 40.0, right: 40.0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary:
+                                          Colors.grey.shade500, // background
+                                      onPrimary: Colors.white, // foreground
+                                    ),
+                                    onPressed: () {
+                                      ted.cancel();
+                                      setState(() {
+                                        _countDownTimeRemaining = 0;
+                                        userSettings
+                                            .countDownTimerSecondsRemaining = 0;
+                                        _countDownStart = false;
+                                      });
+
+                                      userSettings.countDownStart = false;
+                                    },
+                                    child: Text('Cancel',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                ),
+                                !_countDownStart
+                                    ? ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors
+                                              .grey.shade500, // background
+                                          onPrimary: Colors.white, // foreground
+                                        ),
+                                        onPressed: () {
+                                          ted = Timer.periodic(
+                                              const Duration(
+                                                  milliseconds: 1000),
+                                              _bobX);
+                                          _currentValue = _currentValue;
+                                          userSettings.countDownTimer =
+                                              _currentValue;
+                                          _countDownTimeRemaining =
+                                              _currentValue * 60;
+                                          _countDownStart = true;
+                                          userSettings.countDownStart = true;
+                                        },
+                                        child: Text('Continue',
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () {
+                                          userSettings.countDownStart = false;
+                                          ted.cancel();
+                                          setState(() {
+                                            _countDownStart = false;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors
+                                              .grey.shade500, // background
+                                          onPrimary: Colors.white, // foreground
+                                        ),
+                                        child: Text('Pause',
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      ),
                               ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    Visibility(
-                      visible: _timerOn,
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        child: Row(
-                          //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 40.0, right: 40.0),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.grey.shade500, // background
-                                  onPrimary: Colors.white, // foreground
-                                ),
-                                onPressed: () {
-                                  userSettings.countDownStart = true;
-                                },
-                                child: Text('Start',
-                                    style: TextStyle(color: Colors.black)),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                userSettings.countDownStart = false;
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.grey.shade500, // background
-                                onPrimary: Colors.white, // foreground
-                              ),
-                              child: Text('Cancel',
-                                  style: TextStyle(color: Colors.black)),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
 
@@ -858,6 +938,20 @@ class _settingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  _bobX(Timer timer) {
+    print("Checking countdown remaining = " +
+        userSettings.countDownTimerRemaining.toString());
+    if (_countDownTimeRemaining !=
+        userSettings.countDownTimerSecondsRemaining) {
+      setState(() {
+        _countDownTimeRemaining = userSettings.countDownTimerSecondsRemaining;
+      });
+    }
+    if (_countDownTimeRemaining == 0) {
+      ted.cancel();
+    }
   }
 
   Future _showAlert(BuildContext context) {

@@ -85,6 +85,9 @@ class _TodayScreenState extends State<TodayScreen> {
                 )
               : Column(
                   children: [
+                    SizedBox(
+                      width: ScreenSize.hasNotch ? 40 : 0,
+                    ),
                     Container(
                       alignment: Alignment.center,
                       height: ScreenSize.small ? 50 : 200,

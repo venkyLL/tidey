@@ -10,7 +10,6 @@ import 'package:tidey/components/DS2.dart';
 import 'package:tidey/components/Humidty2.dart';
 import 'package:tidey/components/Temp2.dart';
 import 'package:tidey/components/barometer.dart';
-import 'package:tidey/components/compass.dart';
 import 'package:tidey/components/dsGauge.dart';
 import 'package:tidey/components/fabMenu.dart';
 import 'package:tidey/components/humidyGauge.dart';
@@ -23,7 +22,6 @@ import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
 import 'package:tidey/services/MapUtils.dart';
-import 'package:timer_builder/timer_builder.dart';
 
 bool marqueeCompleted = false;
 int counter = 0;
@@ -134,25 +132,33 @@ class FABMenu extends StatelessWidget {
         ),
         ActionButton(
           onPressed: () {
-            (MediaQuery.of(context).orientation == Orientation.landscape)
-                ? startMarquee = true
-                : showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                          content: Text(
-                              "Marquee is only available in Landscape Mode"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(ctx).pop();
-                              },
-                              child: Text("okay"),
-                            ),
-                          ],
-                        ));
+            _settingModalBottomSheet(context);
           },
-          icon: const Icon(Icons.view_day),
+          //   _showAction(context, 0),
+          icon: const Icon(Icons.more_horiz),
         ),
+// _settingModalBottomSheet(context)
+//        ActionButton(
+//          onPressed: () {
+//            (MediaQuery.of(context).orientation == Orientation.landscape)
+//                ? startMarquee = true
+//                : showDialog(
+//                    context: context,
+//                    builder: (ctx) => AlertDialog(
+//                          content: Text(
+//                              "Marquee is only available in Landscape Mode"),
+//                          actions: <Widget>[
+//                            TextButton(
+//                              onPressed: () {
+//                                Navigator.of(ctx).pop();
+//                              },
+//                              child: Text("okay"),
+//                            ),
+//                          ],
+//                        ));
+//          },
+//          icon: const Icon(Icons.view_day),
+//        ),
       ],
     );
   }
@@ -170,41 +176,60 @@ void _settingModalBottomSheet(context) {
               ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
-                  onTap: () =>
-                      {Navigator.pushNamed(context, SettingsScreen.id)}),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, SettingsScreen.id);
+                  }),
               ListTile(
                 leading: Icon(Icons.wb_sunny),
                 title: Text('View Weather Table'),
-                onTap: () => {Navigator.pushNamed(context, TodayScreen.id)},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, TodayScreen.id);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.info),
                 title: Text('Local Information'),
                 onTap: () {
                   {
+                    Navigator.of(context).pop();
                     destinationURL = userSettings.localInfoURL;
                     Navigator.pushNamed(context, WebWeather.id);
                   }
                 },
               ),
-              ListTile(
-                  leading: Icon(
-                    Icons.stop,
-                  ),
-                  title: Text(
-                    'Pause/Restart Gauge Swap',
-                  ),
-                  onTap: () => {
-                        pauseGauge = !pauseGauge,
-                        Navigator.of(context).pop(),
-                      }),
+              pauseGauge
+                  ? ListTile(
+                      leading: Icon(
+                        Icons.play_arrow,
+                      ),
+                      title: Text(
+                        'Restart Gauge Swap',
+                      ),
+                      onTap: () => {
+                            pauseGauge = !pauseGauge,
+                            Navigator.of(context).pop(),
+                          })
+                  : ListTile(
+                      leading: Icon(
+                        Icons.pause,
+                      ),
+                      title: Text(
+                        'Pause Gauge Swap',
+                      ),
+                      onTap: () => {
+                            pauseGauge = !pauseGauge,
+                            Navigator.of(context).pop(),
+                          }),
               ListTile(
                 leading: Icon(Icons.map),
                 title: Text('Open Map'),
                 onTap: () {
+                  Navigator.of(context).pop();
                   MapUtils.openMap(double.parse(globalLatitude),
                       double.parse(globalLongitude));
-                  Navigator.of(context).pop();
+                  //  Navigator.of(context).pop();
                 },
               ),
               ListTile(
@@ -239,6 +264,7 @@ void _settingModalBottomSheet(context) {
                     'Help',
                   ),
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.pushNamed(context, HelpScreen.id);
                   }),
             ],
@@ -519,7 +545,7 @@ List<Widget> gaugeSequenceList = [
       )),
   DialRow(
     gaugeType1: ImageGaugeNew(
-      imageName: getMoonImageName(),
+      imageName: globalWeather.dailyWeather[di].moonImageName,
       innerLineColor: Colors.transparent,
     ),
 //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
@@ -603,15 +629,18 @@ List<Widget> gaugeSequenceListP = [
         imageName: "sunset1.gif",
         textLabel: globalWeather.dailyWeather[di].sunrise,
         textBackgroundColor: Colors.transparent,
+        fontSize: 20,
       ),
       gaugeType2: ImageGaugeNew(
         imageName: "sunset2.gif",
         textLabel: globalWeather.dailyWeather[di].sunset,
         textBackgroundColor: Colors.transparent,
+        fontSize: 20,
       )),
   PortraitDialRow(
     gaugeType1: ImageGaugeNew(
-      imageName: getMoonImageName(),
+      // moon23.png
+      imageName: globalWeather.dailyWeather[di].moonImageName,
       innerLineColor: Colors.transparent,
     ),
 //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
@@ -1083,136 +1112,6 @@ class _VenkySwapStateP extends State<VenkySwapP> {
 ////        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
 //  }
 //}
-
-class PortraitSwapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    switch (counter) {
-      case 0:
-        return PortraitDialRow(
-          gaugeType1: TempGauge(
-              high: double.parse(globalWeather.dailyWeather[di].highTemp),
-              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
-              conditionIcon: weatherDayIconMap[
-                  globalWeather.dailyWeather[di].weatherCode]),
-          gaugeType2: BarometerGauge(
-            current: double.parse(globalWeather.dailyWeather[di].pressure),
-            change: getBarometerChange(),
-          ),
-        );
-        break;
-      case 1:
-//        return AnimatedCrossFade(
-//            crossFadeState: _crossFadeState,
-//            firstChild: DialRow(
-//              gaugeType1: TempGauge(),
-//              gaugeType2: BarometerGauge(),
-//            ),
-//            secondChild: DialRow(
-//                gaugeType1: ImageGauge(
-//                    imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
-//                gaugeType2: ImageGauge(
-//                    imageName: "gaugeSunset.png", textLabel: "8:15PM")),
-//            // crossFadeState: crossFadeState,
-//            duration: const Duration(seconds: 2));
-        return PortraitDialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "sunset1.gif",
-              textLabel: globalWeather.dailyWeather[di].sunrise,
-              textPosition: 60,
-            ),
-            gaugeType2: ImageGaugeNew(
-                imageName: "sunset2.gif",
-                textPosition: 60,
-                textLabel: globalWeather.dailyWeather[di].sunset));
-        break;
-
-      case 2:
-        return PortraitDialRow(
-          gaugeType2: ImageGaugeNew(
-            imageName: getMoonImageName(),
-            innerLineColor: Colors.transparent,
-          ),
-          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-          gaugeType1: ImageGaugeNew(
-              imageName: "shootingStar.gif",
-              innerLineColor: Colors.transparent,
-              textLabel: globalWeather.dailyWeather[di].moonPhase +
-                  "\nRise: " +
-                  globalWeather.dailyWeather[di].moonrise +
-                  "\nSet:" +
-                  globalWeather.dailyWeather[di].moonset,
-              textPosition: 40,
-              textBackgroundColor: Colors.transparent,
-              fontSize: 20),
-        );
-        break;
-
-      case 3:
-        return PortraitDialRow(
-          gaugeType1: DSGauge(
-            gaugeDirection:
-                globalWeather.dailyWeather[di].hourly[0].windDirection,
-            gaugeValue: double.parse(
-                globalWeather.dailyWeather[di].hourly[0].windSpeed),
-          ),
-          gaugeType2: DSGauge(
-            gaugeType: "Waves",
-            gaugeUnit: "ft",
-            gaugeDirection: globalWeather.dailyWeather[di].waveDirection,
-            gaugeValue: double.parse(globalWeather.dailyWeather[di].waveHt),
-            gaugeMax: 10,
-            gaugeInterval: 1,
-          ),
-        );
-        break;
-      case 4:
-        return PortraitDialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "water.gif",
-              textLabel: "Water " +
-                  globalWeather.dailyWeather[di].waterTemp +
-                  " \u2109",
-              textColor: Colors.black,
-              textPosition: 50,
-            ),
-            gaugeType2: CompassGauge2());
-      case 5:
-        return PortraitDialRow(
-            gaugeType1: ImageGaugeNew(
-              imageName: "boat1.jpg",
-            ),
-            gaugeType2: ImageGaugeNew(
-              imageName: "boat2.jpg",
-            ));
-
-      default:
-        {
-          print("Error");
-        }
-        break;
-    }
-//    return counter == 0
-//        ? buildMyTideTable()
-//        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
-  }
-}
-
-class PortraitTimerWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
-        builder: (context) {
-      counter = (counter + 1) % 6;
-      if (globalWeather.weatherAPIError) {
-        counter = 5;
-      }
-      // counter = 4;
-      // counter == 0 ? counter = 1 : counter = 0;
-      return PortraitSwapper();
-    });
-  }
-}
 
 Widget _wrapWithStuff(Widget child) {
   return Padding(

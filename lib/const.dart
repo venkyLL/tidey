@@ -69,6 +69,7 @@ class UserSettings {
   final keyAlarmTimeMin = "alarmTimeMin";
   int countDownTimer = 0;
   int countDownTimerRemaining = 0;
+  int countDownTimerSecondsRemaining = 0;
   bool countDownStart = false;
   TimeOfDay sleepTime = TimeOfDay(hour: 22, minute: 00);
   final keySleepTimeHour = "sleepTmeHour";
@@ -125,6 +126,7 @@ class WeatherDay {
   String moonset = "";
   String moonPhase = "";
   String moonIllumination = "";
+  String moonImageName = "moon15.png";
   String waterTemp = "";
   String pressure = "0";
   String highTemp = "0";
@@ -190,19 +192,19 @@ enum ChimeType {
 }
 final chimeTypeStringToEnum = {
   "Single ring on the hour": ChimeType.single,
-  "Multiple ring based on time": ChimeType.hourly,
-  "Traditional ship bell watch code": ChimeType.nautical
+  "Multiple ring on hour": ChimeType.hourly,
+  "Ship bell watch code": ChimeType.nautical
 };
 final chimeTypeEnumtoString = {
   ChimeType.single: "Single ring on the hour",
-  ChimeType.hourly: "Multiple ring based on time",
-  ChimeType.nautical: "Traditional ship bell watch code"
+  ChimeType.hourly: "Multiple ring on hour",
+  ChimeType.nautical: "Ship bell watch code"
 };
 
 final globalChimeValues = EnumValues({
   "Single ring on the hour": ChimeType.single,
-  "Multiple ring based on time": ChimeType.hourly,
-  "Traditional ship bell watch code": ChimeType.nautical
+  "Multiple ring on hour": ChimeType.hourly,
+  "Ship bell watch code": ChimeType.nautical
 });
 
 //final String testString = globalChimeValues.mapToString[GloabalChime.single];
@@ -584,8 +586,9 @@ getBarometerChange() {
     return BarometerChange.rising;
 }
 
-String getMoonImageName() {
-  switch (globalWeather.dailyWeather[0].moonPhase) {
+String getMoonImageName(String name) {
+  print("Getting Moon " + name);
+  switch (name) {
     case "New Moon":
       {
         return "moon0.png";
@@ -593,7 +596,7 @@ String getMoonImageName() {
       break;
     case "Waxing Crescent":
       {
-        return "moon6.png";
+        return "moon5.png";
       }
       break;
     case "First Quarter":
@@ -623,12 +626,12 @@ String getMoonImageName() {
       break;
     case "Waning Crescent":
       {
-        return "moon23.png";
+        return "moon24.jpg";
       }
       break;
     default:
       {
-        return "assets/images/moons/moon1.png";
+        return "moon20.png";
       }
       break;
   }

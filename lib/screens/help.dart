@@ -22,7 +22,7 @@ class _HelpScreenState extends State<HelpScreen> {
           icon: Icon(Icons.chevron_left, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        // title: const Text('Weekly Forecast'),
+        title: Text('Tidey Help'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -48,20 +48,25 @@ class _HelpScreenState extends State<HelpScreen> {
             children: [
               Column(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    height: 30,
-                    child: Text('Tidey Help', style: kTableTitleTextStyle),
-                  ),
+//                  Container(
+//                    alignment: Alignment.center,
+//                    height: 30,
+//                    child: Text('Tidey Help', style: kTableTitleTextStyle),
+//                  ),
                   helpTile(
                       context,
-                      "How do I read Tidey Gauge?",
+                      "How do I read the Tidey Clock?",
                       "The green arrow points to the time of the next high tide." +
                           "\nThe red arrow points to the time of the next low tide." +
                           "\nThe blue curve indicates slack time," +
-                          "\nThe width of grey bezel represent the amount the tide is above or below median low tide." +
+                          "\nThe width of silver bezel is proportional to the amount the tide is above or below median low tide at that time." +
                           "\nThe red and green numbers represent the tide at high or low tide in ft" +
                           "\n\n All tide estimates are approximate.  Factors such as exact location, wind, pressure, and rain can affect tides."),
+                  helpTile(
+                      context,
+                      "Why is the silver ring around Tidey not round?",
+                      "The width of silver bezel is proportional to the amount the tide is above or below median low tide at that time."),
+
                   helpTile(
                       context,
                       "Do I need to be connected to Internet to use Tidey?",
@@ -121,7 +126,7 @@ class _HelpScreenState extends State<HelpScreen> {
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
-                backgroundColor: Colors.white10,
+                backgroundColor: Colors.black,
                 title: Text(
                   title,
                   style: TextStyle(color: Colors.white),

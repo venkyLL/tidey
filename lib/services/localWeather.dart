@@ -816,6 +816,9 @@ class LocalWeatherService {
             localWeather.data.weather[i].astronomy[0].moonset;
         globalWeather.dailyWeather[i].moonPhase =
             localWeather.data.weather[i].astronomy[0].moonPhase;
+        globalWeather.dailyWeather[i].moonImageName = getMoonImageName(
+            localWeather.data.weather[i].astronomy[0].moonPhase);
+        // localWeather.data.weather[i].astronomy[0].moonPhase;
         globalWeather.dailyWeather[i].moonIllumination =
             localWeather.data.weather[i].astronomy[0].moonIllumination;
       }

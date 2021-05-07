@@ -131,8 +131,12 @@ class ImageGaugeNew extends StatelessWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                   //  image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
-                  image: AssetImage("assets/images/" + imageName),
-                  fit: BoxFit.fill),
+                  image: AssetImage(
+                    "assets/images/" + imageName,
+                  ),
+                  fit: (imageName == "sunset1.gif")
+                      ? BoxFit.fill
+                      : BoxFit.fitHeight),
             ),
           ),
         ),
@@ -142,9 +146,12 @@ class ImageGaugeNew extends StatelessWidget {
               children: [
                 SizedBox(
                     height: (ScreenSize.small)
-                        ? ScreenSize.gaugeSize *
-                            (textPosition / 100) *
-                            ScreenSize.fs
+                        ? (MediaQuery.of(context).orientation ==
+                                Orientation.landscape)
+                            ? ScreenSize.gaugeSize * (textPosition / 100)
+                            : ScreenSize.gaugeSize *
+                                (textPosition / 100) *
+                                ScreenSize.fs
                         : (MediaQuery.of(context).orientation ==
                                 Orientation.landscape)
                             ? ScreenSize.gaugeSize * (textPosition / 100)
@@ -155,7 +162,7 @@ class ImageGaugeNew extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                       color: textColor,
                       backgroundColor: textBackgroundColor,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       fontSize: fontSize * ScreenSize.fs),
                 ),
               ],
