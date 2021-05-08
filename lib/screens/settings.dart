@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
@@ -873,9 +875,25 @@ class _settingsScreenState extends State<SettingsScreen> {
                       onTap: () => {
                         Share.share(
                             'Download the Tidey app its an awesome Marine Weather Clock',
-                            subject: 'Check Out Tidey Marine Weather Clock')
+                            subject: 'Check Out Tidey Marine Weather Clock\n  '
+                            // +  'https://apps.apple.com/us/app/tidey-clock/id1566159762'
+
+                            )
                       },
                     ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+
+                    //
+                    MenuListTile(
+                        title: "Rate Us",
+                        icon: Icons.star,
+                        onTap: () => {
+                              OpenAppstore.launch(
+                                  androidAppId: "tbd", iOSAppId: "1566159762")
+                            }),
                     Divider(
                       height: 10,
                       thickness: 5,

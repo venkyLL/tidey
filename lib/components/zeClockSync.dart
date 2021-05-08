@@ -57,6 +57,7 @@ class _zeClockSyncState extends State<zeClockSync> {
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();
+      _curDir = globalCompassDirection; // (_curDir + 10) % 360; //
     });
     if (userSettings.alarmOn) {
       if ((TimeOfDay.now().hour ==
@@ -127,46 +128,47 @@ class _zeClockSyncState extends State<zeClockSync> {
   /// Returns the gauge clock
   SfRadialGauge _buildMyClock() {
     return SfRadialGauge(axes: <RadialAxis>[
-      RadialAxis(
-          startAngle: 270,
-          endAngle: 270,
-          radiusFactor: 0.3,
-          minimum: 0,
-          maximum: 80,
-          pointers: <GaugePointer>[
-            //      MarkerPointer(
+//      RadialAxis(
+//          startAngle: 270,
+//          endAngle: 270,
+//          radiusFactor: 0.3,
+//          minimum: 0,
+//          maximum: 360,
+//          pointers: <GaugePointer>[
+      //      MarkerPointer(
 //                    value: dirMap[gaugeDirection],
 //                    markerType: MarkerType.triangle,
 //                    markerWidth: 30,
 //                    markerHeight: 20,
 //                    markerOffset: 40,
 //                    color: Color(0xFFF67280)),
-            NeedlePointer(
-              value: globalCompassDirection != null
-                  ? globalCompassDirection * 80 / 360
-                  : 270 * 80 / 360,
-              lengthUnit: GaugeSizeUnit.factor,
-              needleLength: 0.5,
-              needleColor: Colors.grey.shade300,
-              needleEndWidth: ScreenSize.small ? 5 : 10,
-            )
-          ],
-          axisLineStyle: AxisLineStyle(
-              thicknessUnit: GaugeSizeUnit.factor,
-              thickness: 0.05,
-              color: Colors.grey.shade300), //kBezelColor),
-          interval: 10,
-          canRotateLabels: true,
-          axisLabelStyle: GaugeTextStyle(
-              fontSize: ScreenSize.small ? 8 : 10,
-              fontWeight: FontWeight.bold,
-              color: Colors.white),
-          minorTicksPerInterval: 0,
-          majorTickStyle: MajorTickStyle(
-              thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
-          showLabels: true,
-          labelOffset: 10,
-          onLabelCreated: _handleLabelCreated),
+      // This below is for Compass
+//            NeedlePointer(
+//              value: globalCompassDirection != null
+//                  ? globalCompassDirection * 80 / 360
+//                  : 270 * 80 / 360,
+//              lengthUnit: GaugeSizeUnit.factor,
+//              needleLength: 0.5,
+//              needleColor: Colors.grey.shade300,
+//              needleEndWidth: ScreenSize.small ? 5 : 10,
+//            )
+      //         ],
+//          axisLineStyle: AxisLineStyle(
+//              thicknessUnit: GaugeSizeUnit.factor,
+//              thickness: 0.05,
+//              color: Colors.grey.shade300), //kBezelColor),
+//          interval: 10,
+//          canRotateLabels: true,
+//          axisLabelStyle: GaugeTextStyle(
+//              fontSize: ScreenSize.small ? 8 : 10,
+//              fontWeight: FontWeight.bold,
+//              color: Colors.white),
+//          minorTicksPerInterval: 0,
+//          majorTickStyle: MajorTickStyle(
+//              thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
+//          showLabels: true,
+//          labelOffset: 10,
+//          onLabelCreated: _handleLabelCreated),
 
       /// Renders inner axis and positioned it using CenterX and
       /// CenterY properties and reduce the radius using radiusFactor
@@ -194,17 +196,30 @@ class _zeClockSyncState extends State<zeClockSync> {
               thicknessUnit: GaugeSizeUnit.factor,
               color: Colors.black38),
           annotations: <GaugeAnnotation>[
-//              GaugeAnnotation(
-//                  angle: 90,
-//                  positionFactor: 0.3,
-//                  widget: Container(
-//                    child: BoxedIcon((conditionIcon),
-//                        size: ScreenSize.small ? 20 : 35,
-//                        color: const Color(0xFF3366CC)),
-//                  )),
-//                      const Text('Temp.°F',
-//                          style: TextStyle(
-//                              color: Color(0xff000000), fontSize: 16)))),
+            GaugeAnnotation(
+                angle: 270,
+                positionFactor: 0.4,
+                widget: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      //    borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.transparent,
+                      border: Border.all(
+                        color: Colors.white60,
+                        width: 1,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(getDirectionLabel(_curDir.toInt()),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: ScreenSize.small ? 18 : 25,
+                            color: Colors.red, // kBezelColor
+
+                            //  const Color(0xFF3366CC),
+                          )),
+                    ))),
             GaugeAnnotation(
                 angle: 90,
                 positionFactor: 0.6,
@@ -348,25 +363,75 @@ class _zeClockSyncState extends State<zeClockSync> {
 
 //  double _value = 0;
   DateTime _value = DateTime.now();
+  double _curDir = 270;
   final Color _needleColor = const Color(0xFFFFFFFF);
-}
 
-void _handleLabelCreated(AxisLabelCreatedArgs args) {
-  if (args.text == '80' || args.text == '0') {
+  void _handleLabelCreated(AxisLabelCreatedArgs args) {
+    int oldLabel = int.parse(args.text);
+
+    double units = (80 / 360) * _curDir;
+
+    double answer = ((oldLabel / 360) * 80);
+    double argsNew = (answer + units) % 80;
+    // double argsNew = oldLabel + units % 80;
+
+    // argsNew = curDir + oldLabel % 360;
+
+    if (argsNew == 80 || argsNew == 0) {
+      args.text = 'N';
+    } else if (argsNew == 10) {
+      args.text = ScreenSize.small ? '' : 'NE';
+    } else if (argsNew == 20) {
+      args.text = 'E';
+    } else if (argsNew == 30) {
+      args.text = ScreenSize.small ? '' : 'SE';
+    } else if (argsNew == 40) {
+      args.text = 'S';
+    } else if (argsNew == 50) {
+      args.text = ScreenSize.small ? '' : 'SW';
+    } else if (argsNew == 60) {
+      args.text = 'W';
+    } else if (argsNew == 70) {
+      args.text = ScreenSize.small ? '' : 'NW';
+    } else
+      args.text = '';
+
+    /*
+   if (args.text == '80' || args.text == '0') {
     args.text = 'N';
   } else if (args.text == '10') {
-    args.text = ScreenSize.small ? ' ' : 'NE';
+    args.text = ScreenSize.small ? '' : 'NE';
   } else if (args.text == '20') {
     args.text = 'E';
   } else if (args.text == '30') {
-    args.text = ScreenSize.small ? ' ' : 'SE';
+    args.text = ScreenSize.small ? '' : 'SE';
   } else if (args.text == '40') {
     args.text = 'S';
   } else if (args.text == '50') {
-    args.text = ScreenSize.small ? ' ' : 'SW';
+    args.text = ScreenSize.small ? '' : 'SW';
   } else if (args.text == '60') {
     args.text = 'W';
   } else if (args.text == '70') {
-    args.text = ScreenSize.small ? ' ' : 'NW';
+    args.text = ScreenSize.small ? '' : 'NW';
+  } else args.text = '';
+   */
+  }
+
+  String getDirectionLabel(int direction) {
+    final dirMap = {
+      0: "N",
+      1: "NE",
+      2: "E",
+      3: "SE",
+      4: "S",
+      5: "SW",
+      6: "W",
+      7: "NW",
+      8: "N"
+    };
+
+    int index = (direction / 45).round();
+
+    return dirMap[index];
   }
 }

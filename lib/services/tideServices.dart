@@ -43,7 +43,7 @@ class GaugePainter extends CustomPainter {
     Offset _bottomRight = ScreenSize.clockBottomRight;
 
     var paintClockFace = Paint();
-    paintClockFace.color = Colors.black;
+    paintClockFace.color = Colors.transparent;
     paintClockFace.style = PaintingStyle.fill; // Change this to fill
 
     var path = Path();
@@ -56,6 +56,9 @@ class GaugePainter extends CustomPainter {
     gaugeBezel.color = Color(0xFF999999);
     myDraw.drawRing(
         centerX, centerY, ScreenSize.clockSize / 2, 5.0, gaugeBezel, canvas);
+
+    myDraw.drawRing(
+        centerX, centerY, ScreenSize.clockSize / 4, 2.0, gaugeBezel, canvas);
   }
 
   @override

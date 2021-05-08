@@ -74,6 +74,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - open_appstore (0.0.1):
+    - Flutter
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -103,6 +105,7 @@ DEPENDENCIES:
   - flutter_sensor_compass (from `.symlinks/plugins/flutter_sensor_compass/ios`)
   - flutter_sensors (from `.symlinks/plugins/flutter_sensors/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
+  - open_appstore (from `.symlinks/plugins/open_appstore/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -144,6 +147,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_sensors/ios"
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
+  open_appstore:
+    :path: ".symlinks/plugins/open_appstore/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -175,6 +180,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
   GoogleUtilities: 284cddc7fffc14ae1907efb6f78ab95c1fccaedc
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  open_appstore: 4eddfae38848002fdde8d42e1734d16cb34439de
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97

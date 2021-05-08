@@ -57,6 +57,7 @@ dependencies:
   firebase_core: ^1.1.0
   flutter_device_type:
   iphone_has_notch:
+  open_appstore:
 
 
 
