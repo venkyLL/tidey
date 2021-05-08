@@ -261,7 +261,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               markerHeight: 20,
               markerWidth: 20,
               markerType: MarkerType.text,
-              markerOffset: -30,
+              markerOffset: -40,
               value: globalNextLowTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,

@@ -224,7 +224,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                               hoverColor: Colors.white,
                                             ),
                                             textAlign: TextAlign.center,
-                                            keyboardType: TextInputType.number,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    decimal: true),
                                             onSaved: (text) {
                                               userSettings.manualLat =
                                                   double.parse(text);
@@ -365,8 +367,11 @@ class _settingsScreenState extends State<SettingsScreen> {
                       title: "View Current Weather on Web",
                       icon: Icons.cloud_circle_outlined,
                       onTap: () {
-                        destinationURL =
-                            "localWeather.data.nearestArea[0].weatherUrl[0].value";
+                        print("LOcal Weather " +
+                            localWeather
+                                .data.nearestArea[0].weatherUrl[0].value);
+                        destinationURL = localWeather
+                            .data.nearestArea[0].weatherUrl[0].value;
                         {
                           Navigator.pushNamed(context, WebWeather.id);
                         }
