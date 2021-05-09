@@ -224,6 +224,7 @@ class WeatherLocationService {
       globalLongitude = "0";
       globalLatitude = "0";
       print("error found");
+      globalWeather.weatherAPIError = true;
 
       print(e);
     }

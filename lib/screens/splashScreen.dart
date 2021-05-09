@@ -126,15 +126,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initAll() async {
-    var defaultLocationSnackBar = SnackBar(
-        content: Text('Using saved Location! $globalLatitude $globalLongitude'),
-        duration: const Duration(milliseconds: 1500));
     var noLocationSnackBar = SnackBar(
         content: Text('Location Services off using default location!'),
         duration: const Duration(milliseconds: 1500));
-    var networkSnackBar = SnackBar(
-        content: Text('Yay! Network Found! $_networkStatus1'),
-        duration: const Duration(milliseconds: 1500));
+
     var weather1Snackbar = SnackBar(
         content: Text('Yay! Weather data found!'),
         duration: const Duration(milliseconds: 1500));
@@ -149,36 +144,43 @@ class _SplashScreenState extends State<SplashScreen> {
         duration: const Duration(milliseconds: 1500));
 
     await checkConnectivity();
+    var networkSnackBar = SnackBar(
+        content: Text('Yay! Network Found! $_networkStatus1'),
+        duration: const Duration(milliseconds: 1500));
     ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
     await getProfileData();
 //    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
 //      print("Location Service Enabled");
-    Location location = Location();
-    if (userSettings.useCurrentPosition) {
-      print("Using Current Position");
-      await location.getCurrentLocation();
-      var locationSnackBar = SnackBar(
-          content:
-              Text('Yay! Location Found! $globalLatitude $globalLongitude '),
-          duration: const Duration(milliseconds: 1500)
-          //     action: SnackBarAction(
+    if (_networkStatus1 != "None") {
+      Location location = Location();
+      if (userSettings.useCurrentPosition) {
+        print("Using Current Position");
+        await location.getCurrentLocation();
+        var locationSnackBar = SnackBar(
+            content:
+                Text('Yay! Location Found! $globalLatitude $globalLongitude '),
+            duration: const Duration(milliseconds: 1500)
+            //     action: SnackBarAction(
 //        label: 'Undo',
 //        onPressed: () {
 //          // Some code to undo the change.
 //        },
-          );
-      ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+            );
+        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+      } else {
+        globalLatitude = userSettings.manualLat.toString();
+        globalLongitude = userSettings.manualLong.toString();
+        var defaultLocationSnackBar = SnackBar(
+            content:
+                Text('Using saved Location! $globalLatitude $globalLongitude'),
+            duration: const Duration(milliseconds: 1500));
+        ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
+      }
     } else {
       globalLatitude = userSettings.manualLat.toString();
       globalLongitude = userSettings.manualLong.toString();
-      ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
     }
-
-//   } else {
-//      globalLatitude = userSettings.manualLat.toString();
-//      globalLongitude = userSettings.manualLong.toString();
-//      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
-//    }
 
     CronJobs myCronJobs = CronJobs();
     myCronJobs.init();
@@ -189,7 +191,9 @@ class _SplashScreenState extends State<SplashScreen> {
     print(packageInfo.buildNumber);
     print(packageInfo.version);
     print(packageInfo.packageName);
-    if (_networkStatus1 != "none") {
+    globalWeather.weatherAPIError = true;
+//
+    if (_networkStatus1 != "None") {
       WeatherService weatherService = WeatherService();
       await weatherService.getMarineData();
       ScaffoldMessenger.of(context).showSnackBar(weather1Snackbar);

@@ -171,6 +171,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                             prefs.setBool(userSettings.keyUseCity, false);
                             if (userSettings.useCurrentPosition) {
                               getWeather();
+                              globalWeather.weatherAPIError = true;
                             }
                             ;
                           });

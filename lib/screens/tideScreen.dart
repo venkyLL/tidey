@@ -15,6 +15,7 @@ import 'package:tidey/components/fabMenu.dart';
 import 'package:tidey/components/humidyGauge.dart';
 import 'package:tidey/components/imageGauge.dart';
 import 'package:tidey/components/temp.dart';
+import 'package:tidey/components/zeClock.dart';
 import 'package:tidey/components/zeClockSync.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/help.dart';
@@ -315,9 +316,37 @@ class LandscapeView extends StatefulWidget {
 
 bool startMarquee = false;
 
+/*
+Timer ted;
+bool _APIError = globalWeather.weatherAPIError;
+
+class _PortraitModeState extends State<PortraitMode> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (globalWeather.weatherAPIError) {
+      ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+    }
+  }
+
+//
+  _bobX(Timer timer) {
+    print("In Timer");
+    if (!globalWeather.weatherAPIError) {
+      ted.cancel();
+      print("Now have data");
+      setState(() {
+        _APIError = false;
+      });
+    }
+  }
+ */
+
 class _LandscapeViewState extends State<LandscapeView> {
   Timer timer;
   DateTime bellLastRungDateTime = DateTime.now();
+  bool _APIError = globalWeather.weatherAPIError;
   //int currentTransitionTime = 0;
   @override
   void initState() {
@@ -333,26 +362,33 @@ class _LandscapeViewState extends State<LandscapeView> {
 
   _bobX(Timer timer) {
     // print("Should be checking for marquee" +
-    DateTime.now().getMinutes.toString();
-
-    if (DateTime.now().getMinutes == 00) {
-      //  print("Should be starting Marquee");
-      DateTime myDate = bellLastRungDateTime.addMinutes(1);
-      if (bellLastRungDateTime.addMinutes(1).isPast) {
-        bellLastRungDateTime = DateTime.now();
-        print("Should be starting Marquee2");
-        setState(() {
-          marqueeCompleted = false;
-          startMarquee = true;
-        });
-      } //has the bell already rung for this hour
+    if (!globalWeather.weatherAPIError) {
+      //  print("Now have data");
+      setState(() {
+        _APIError = false;
+      });
     } else {
-      if (startMarquee) {
-        print("Setting MarqueeCompled = false");
-        setState(() {
-          startMarquee = false;
-          marqueeCompleted = false;
-        });
+      DateTime.now().getMinutes.toString();
+
+      if (DateTime.now().getMinutes == 00) {
+        //  print("Should be starting Marquee");
+        DateTime myDate = bellLastRungDateTime.addMinutes(1);
+        if (bellLastRungDateTime.addMinutes(1).isPast) {
+          bellLastRungDateTime = DateTime.now();
+          print("Should be starting Marquee2");
+          setState(() {
+            marqueeCompleted = false;
+            startMarquee = true;
+          });
+        } //has the bell already rung for this hour
+      } else {
+        if (startMarquee) {
+          print("Setting MarqueeCompled = false");
+          setState(() {
+            startMarquee = false;
+            marqueeCompleted = false;
+          });
+        }
       }
       ;
 
@@ -364,32 +400,55 @@ class _LandscapeViewState extends State<LandscapeView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          children: [
-            VenkySwap(),
-            // LandscapeTimerWidget(),
-            ClockRow(),
-          ],
-        ),
-        !marqueeCompleted
-            ? Container(
-                color: marqueeColor,
-                width: ScreenSize.safeBlockHorizontal * 100,
-                height: ScreenSize.marqueeHeight,
-                child: ListView(
-                  padding: EdgeInsets.only(top: 50.0),
-                  children: [
-                    buildMarquee(),
-                    // _buildComplexMarquee(),
-                  ].map(_wrapWithStuff).toList(),
-                ),
-              )
-            : Container(
-                color: Colors.transparent,
-                width: ScreenSize.safeBlockHorizontal * 100,
-                height: ScreenSize.marqueeHeight),
+        _APIError ? landscapeErrorStack() : landscapeStack(),
+//        !marqueeCompleted && !_APIError
+//            ? Container(
+//                color: marqueeColor,
+//                width: ScreenSize.safeBlockHorizontal * 100,
+//                height: ScreenSize.marqueeHeight,
+//                child: ListView(
+//                  padding: EdgeInsets.only(top: 50.0),
+//                  children: [
+//                    buildMarquee(),
+//                    // _buildComplexMarquee(),
+//                  ].map(_wrapWithStuff).toList(),
+//                ),
+//              )
+//            : Container(
+//                color: Colors.transparent,
+//                width: ScreenSize.safeBlockHorizontal * 100,
+//                height: ScreenSize.marqueeHeight),
       ],
     );
+  }
+
+  Stack landscapeStack() {
+    return Stack(
+      children: [
+        VenkySwap(),
+        // LandscapeTimerWidget(),
+        ClockRow(),
+      ],
+    );
+  }
+
+  Stack landscapeErrorStack() {
+    return Stack(children: [
+      DialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "boat1.jpg",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "boat2.jpg",
+          )),
+      // LandscapeTimerWidget(),
+      Row(
+        children: [
+          gaugeColumn(),
+          clockColumn(clockType: zeClock()),
+        ],
+      )
+    ]);
   }
 
   //pollForChanges() {}
@@ -932,187 +991,6 @@ class _VenkySwapStateP extends State<VenkySwapP> {
   }
 }
 
-//
-//class LandscapeTimerWidget extends StatefulWidget {
-//  @override
-//  _LandscapeTimerWidgetState createState() => _LandscapeTimerWidgetState();
-//}
-//
-//class _LandscapeTimerWidgetState extends State<LandscapeTimerWidget> {
-//  Timer ted;
-//
-//  int currentTransitionTime = 0;
-//  @override
-//  void initState() {
-//    super.initState();
-//    // timer = Timer.periodic(const Duration(milliseconds: 1000), _updateData);
-//
-//    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
-//  }
-//
-//  @override
-//  void dispose() {
-//    super.dispose();
-//    ted.cancel();
-//  }
-//
-//  _bobX(Timer timer) {
-//    if (currentTransitionTime != userSettings.transitionTime) {
-//      setState(() {
-//        currentTransitionTime = userSettings.transitionTime;
-//      });
-//    }
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return TimerBuilder.periodic(Duration(seconds: userSettings.transitionTime),
-//        builder: (context) {
-//      counter = (counter + 1) % 6;
-//      if (globalWeather.weatherAPIError) {
-//        counter = 5;
-//      }
-//      // counter = 4;
-//      // counter == 0 ? counter = 1 : counter = 0;
-//
-//      return LandScapeSwapper2();
-//    });
-//  }
-//}
-//
-//class LandscapeSwapper extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return gaugeSequenceList[counter];
-//  }
-//}
-//
-//class LandScapeSwapper2 extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    switch (counter) {
-//      case 0:
-//        return DialRow(
-//          gaugeType1: TempGauge(
-//              high: double.parse(globalWeather.dailyWeather[di].highTemp),
-//              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
-//              conditionIcon: weatherDayIconMap[
-//                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
-//          gaugeType2: BarometerGauge(
-//            current:
-//                double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
-//            change: getBarometerChange(),
-//          ),
-//        );
-//        break;
-//      case 1:
-////        return AnimatedCrossFade(
-////            crossFadeState: _crossFadeState,
-////            firstChild: DialRow(
-////              gaugeType1: TempGauge(),
-////              gaugeType2: BarometerGauge(),
-////            ),
-////            secondChild: DialRow(
-////                gaugeType1: ImageGauge(
-////                    imageName: "gaugeSunrise.png", textLabel: "6:110PM"),
-////                gaugeType2: ImageGauge(
-////                    imageName: "gaugeSunset.png", textLabel: "8:15PM")),
-////            // crossFadeState: crossFadeState,
-////            duration: const Duration(seconds: 2));
-//        return DialRow(
-//            gaugeType1: ImageGaugeNew(
-//              imageName: "sunset1.gif",
-//              textLabel: globalWeather.dailyWeather[di].sunrise,
-//              textBackgroundColor: Colors.transparent,
-//            ),
-//            gaugeType2: ImageGaugeNew(
-//              imageName: "sunset2.gif",
-//              textLabel: globalWeather.dailyWeather[di].sunset,
-//              textBackgroundColor: Colors.transparent,
-//            ));
-//        break;
-//
-//      case 2:
-//        return DialRow(
-//          gaugeType1: ImageGaugeNew(
-//            imageName: getMoonImageName(),
-//            innerLineColor: Colors.transparent,
-//          ),
-//          //ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
-//          gaugeType2: ImageGaugeNew(
-//              imageName: "shootingStar.gif",
-//              innerLineColor: Colors.transparent,
-//              textLabel: globalWeather.dailyWeather[di].moonPhase +
-//                  "\nRise: " +
-//                  globalWeather.dailyWeather[di].moonrise +
-//                  "\nSet:" +
-//                  globalWeather.dailyWeather[di].moonset,
-//              textPosition: 40,
-//              textBackgroundColor: Colors.transparent,
-//              fontSize: 20),
-//        );
-//        break;
-//
-//      case 3:
-//        return DialRow(
-//          gaugeType1: DSGauge(
-//            gaugeDirection:
-//                globalWeather.dailyWeather[di].hourly[0].windDirection,
-//            gaugeValue: // 8.0,
-//                double.parse(
-//                    globalWeather.dailyWeather[di].hourly[0].windSpeed),
-//          ),
-//          gaugeType2: DSGauge(
-//            gaugeType: "Waves",
-//            gaugeUnit: "ft",
-//            gaugeDirection: globalWeather.dailyWeather[di].windDirection,
-//            gaugeValue: // 5.0,
-//                double.parse(globalWeather.dailyWeather[di].waveHt),
-//            gaugeMax: 10,
-//            gaugeInterval: 1,
-//          ),
-//        );
-//        break;
-//      case 4:
-//        return DialRow(
-//            gaugeType1: ImageGaugeNew(
-//              imageName: "water.gif",
-//              textLabel: "Water " +
-//                  globalWeather.dailyWeather[di].waterTemp +
-//                  //   weatherData.data.weather[0].hourly[0].waterTempF +
-//                  " \u2109",
-//              textColor: Colors.black,
-//              textBackgroundColor: Colors.transparent,
-//            ),
-//            gaugeType2: CompassGauge2());
-//      case 5:
-//        return DialRow(
-//            gaugeType1: ImageGaugeNew(
-//              imageName: "boat1.jpg",
-//            ),
-//            gaugeType2: ImageGaugeNew(
-//              imageName: "boat2.jpg",
-//            ));
-//
-//      default:
-//        {
-//          print("Error");
-//          return DialRow(
-//              gaugeType1: ImageGaugeNew(
-//                imageName: "boat1.jpg",
-//              ),
-//              gaugeType2: ImageGaugeNew(
-//                imageName: "boat2.jpg",
-//              ));
-//        }
-//        break;
-//    }
-////    return counter == 0
-////        ? buildMyTideTable()
-////        : SunTable(); // (moonPhaseImageName: "assets/images/fullMoon.jpg");
-//  }
-//}
-
 Widget _wrapWithStuff(Widget child) {
   return Padding(
     padding: EdgeInsets.all(16.0),
@@ -1120,7 +998,42 @@ Widget _wrapWithStuff(Widget child) {
   );
 }
 
-class PortraitMode extends StatelessWidget {
+class PortraitMode extends StatefulWidget {
+  @override
+  _PortraitModeState createState() => _PortraitModeState();
+}
+
+Timer ted;
+bool _APIError = globalWeather.weatherAPIError;
+
+class _PortraitModeState extends State<PortraitMode> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (globalWeather.weatherAPIError) {
+      ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+    }
+  }
+
+//
+  _bobX(Timer timer) {
+    // print("In Timer");
+    if (!globalWeather.weatherAPIError) {
+      ted.cancel();
+      print("Now have data");
+      setState(() {
+        _APIError = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // ted.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1137,26 +1050,62 @@ class PortraitMode extends StatelessWidget {
           SizedBox(
             height: ScreenSize.hasNotch ? 25 : 0,
           ),
-          Stack(
-            children: [
-              // PortraitTimerWidget(),
-              VenkySwapP(),
-              Column(children: [
-                SizedBox(height: ScreenSize.safeBlockVertical * 4),
-                Container(
-                    height: ScreenSize.gaugeSize -
-                        (ScreenSize.safeBlockVertical * 4)),
-                SizedBox(height: ScreenSize.safeBlockVertical * 2),
-                PortraitClockRow(),
-                SizedBox(height: ScreenSize.safeBlockVertical * 2),
-                Container(
-                    height: ScreenSize.gaugeSize -
-                        (ScreenSize.safeBlockVertical * 4)),
-              ]),
-            ],
-          ),
+          (_APIError) ? errorStack() : portraitStack(),
         ],
       ),
+    );
+  }
+
+  Stack errorStack() {
+    return Stack(
+      children: [
+        // PortraitTimerWidget(),
+        PortraitDialRow(
+            gaugeType1: ImageGaugeNew(
+              imageName: "boat1.jpg",
+            ),
+            gaugeType2: ImageGaugeNew(
+              imageName: "boat2.jpg",
+            )),
+        Column(children: [
+          SizedBox(height: ScreenSize.safeBlockVertical * 4),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          Container(
+              alignment: Alignment.center,
+              child: zeClock(),
+              width: ScreenSize.clockSize, // + 25,
+              height: ScreenSize.clockSize),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+        ]),
+      ],
+    );
+  }
+
+  Stack portraitStack() {
+    print("In Portrait Stack");
+    return Stack(
+      children: [
+        // PortraitTimerWidget(),
+        VenkySwapP(),
+        Column(children: [
+          SizedBox(height: ScreenSize.safeBlockVertical * 4),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          PortraitClockRow(),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+        ]),
+      ],
     );
   }
 
