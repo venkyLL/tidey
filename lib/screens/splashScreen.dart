@@ -4,7 +4,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
@@ -151,33 +151,34 @@ class _SplashScreenState extends State<SplashScreen> {
     await checkConnectivity();
     ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
     await getProfileData();
-    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
-      print("Location Service Enabled");
-      Location location = Location();
-      if (userSettings.useCurrentPosition) {
-        print("Using Current Position");
-        await location.getCurrentLocation();
-        var locationSnackBar = SnackBar(
-            content:
-                Text('Yay! Location Found! $globalLatitude $globalLongitude '),
-            duration: const Duration(milliseconds: 1500)
-            //     action: SnackBarAction(
+//    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
+//      print("Location Service Enabled");
+    Location location = Location();
+    if (userSettings.useCurrentPosition) {
+      print("Using Current Position");
+      await location.getCurrentLocation();
+      var locationSnackBar = SnackBar(
+          content:
+              Text('Yay! Location Found! $globalLatitude $globalLongitude '),
+          duration: const Duration(milliseconds: 1500)
+          //     action: SnackBarAction(
 //        label: 'Undo',
 //        onPressed: () {
 //          // Some code to undo the change.
 //        },
-            );
-        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
-      } else {
-        globalLatitude = userSettings.manualLat.toString();
-        globalLongitude = userSettings.manualLong.toString();
-        ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
-      }
+          );
+      ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
     } else {
       globalLatitude = userSettings.manualLat.toString();
       globalLongitude = userSettings.manualLong.toString();
-      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
     }
+
+//   } else {
+//      globalLatitude = userSettings.manualLat.toString();
+//      globalLongitude = userSettings.manualLong.toString();
+//      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
+//    }
 
     CronJobs myCronJobs = CronJobs();
     myCronJobs.init();

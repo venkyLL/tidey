@@ -56,7 +56,7 @@ dependencies:
   flutter_device_type:
   iphone_has_notch:
   open_appstore:
-  permission_handler:
+  # permission_handler:
 
 
 
