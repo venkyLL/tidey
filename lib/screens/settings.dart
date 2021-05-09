@@ -111,6 +111,10 @@ class _settingsScreenState extends State<SettingsScreen> {
                 },
                 child: ListView(
                   children: [
+                    SizedBox(
+                      height: ScreenSize.hasNotch ? 40 : 0,
+                      width: ScreenSize.hasNotch ? 40 : 0,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: !globalWeather.weatherAPIError
@@ -848,7 +852,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                               if (_formKey2.currentState.validate()) {
                                 _formKey2.currentState.save();
                                 // TODO submit
-
+                                destinationURL = userSettings.localInfoURL;
+                                Navigator.pushNamed(context, WebWeather.id);
                               }
                             },
                             child: Text('Submit',

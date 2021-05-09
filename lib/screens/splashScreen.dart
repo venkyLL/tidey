@@ -1,8 +1,10 @@
 //import 'dart:html';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
 import 'package:tidey/screens/tideScreen.dart';
@@ -124,16 +126,61 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initAll() async {
+    var defaultLocationSnackBar = SnackBar(
+        content: Text('Using saved Location! $globalLatitude $globalLongitude'),
+        duration: const Duration(milliseconds: 1500));
+    var noLocationSnackBar = SnackBar(
+        content: Text('Location Services off using default location!'),
+        duration: const Duration(milliseconds: 1500));
+    var networkSnackBar = SnackBar(
+        content: Text('Yay! Network Found! $_networkStatus1'),
+        duration: const Duration(milliseconds: 1500));
+    var weather1Snackbar = SnackBar(
+        content: Text('Yay! Weather data found!'),
+        duration: const Duration(milliseconds: 1500));
+    final tideSnackbar = SnackBar(
+        content: Text('Yay! Tide data found! '),
+        duration: const Duration(milliseconds: 1500));
+    final tideySnackbar = SnackBar(
+        content: Text('Yay! Calculated Tidey Ring! '),
+        duration: const Duration(milliseconds: 1500));
+    final noNetworkSnackbar = SnackBar(
+        content: Text('Network not available no weather data colleted! '),
+        duration: const Duration(milliseconds: 1500));
+
+    await checkConnectivity();
+    ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
     await getProfileData();
-    Location location = Location();
-    CronJobs myCronJobs = CronJobs();
-    myCronJobs.init();
-    if (userSettings.useCurrentPosition) {
-      await location.getCurrentLocation();
+    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
+      print("Location Service Enabled");
+      Location location = Location();
+      if (userSettings.useCurrentPosition) {
+        print("Using Current Position");
+        await location.getCurrentLocation();
+        var locationSnackBar = SnackBar(
+            content:
+                Text('Yay! Location Found! $globalLatitude $globalLongitude '),
+            duration: const Duration(milliseconds: 1500)
+            //     action: SnackBarAction(
+//        label: 'Undo',
+//        onPressed: () {
+//          // Some code to undo the change.
+//        },
+            );
+        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+      } else {
+        globalLatitude = userSettings.manualLat.toString();
+        globalLongitude = userSettings.manualLong.toString();
+        ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
+      }
     } else {
       globalLatitude = userSettings.manualLat.toString();
       globalLongitude = userSettings.manualLong.toString();
+      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
     }
+
+    CronJobs myCronJobs = CronJobs();
+    myCronJobs.init();
 
     packageInfo = await PackageInfo.fromPlatform();
 
@@ -141,16 +188,19 @@ class _SplashScreenState extends State<SplashScreen> {
     print(packageInfo.buildNumber);
     print(packageInfo.version);
     print(packageInfo.packageName);
-
-    WeatherService weatherService = WeatherService();
-    await weatherService.getMarineData();
+    if (_networkStatus1 != "none") {
+      WeatherService weatherService = WeatherService();
+      await weatherService.getMarineData();
+      ScaffoldMessenger.of(context).showSnackBar(weather1Snackbar);
 // Note need to run weather service before local weather to correctly populate
-    LocalWeatherService localWeatherService = LocalWeatherService();
-    await localWeatherService.getLocalWeatherData();
-
-    mySineWaveData msw = mySineWaveData();
-    await msw.computeTidesForPainting();
-
+      LocalWeatherService localWeatherService = LocalWeatherService();
+      await localWeatherService.getLocalWeatherData();
+      ScaffoldMessenger.of(context).showSnackBar(tideSnackbar);
+      mySineWaveData msw = mySineWaveData();
+      await msw.computeTidesForPainting();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(noNetworkSnackbar);
+    }
     MyCompass theCompass = MyCompass();
     theCompass.init();
     // start audio player service
@@ -158,6 +208,7 @@ class _SplashScreenState extends State<SplashScreen> {
       print(notification.audioId);
       return true;
     });
+    ScaffoldMessenger.of(context).showSnackBar(tideySnackbar);
 
     Future.delayed(const Duration(milliseconds: 2000), () {
 // Here you can write your code
@@ -168,6 +219,38 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
 //    AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell.mp3'));
+  }
+
+  Connectivity connectivity = Connectivity();
+  String _networkStatus1 = '';
+
+  void checkConnectivity() async {
+    var connectivityResult = await connectivity.checkConnectivity();
+    var conn = getConnectionValue(connectivityResult);
+    setState(() {
+      _networkStatus1 = conn;
+      print('Check Connection:: ' + _networkStatus1);
+    });
+  }
+
+// Method to convert the connectivity to a string value
+  String getConnectionValue(var connectivityResult) {
+    String status = '';
+    switch (connectivityResult) {
+      case ConnectivityResult.mobile:
+        status = 'Mobile';
+        break;
+      case ConnectivityResult.wifi:
+        status = 'Wi-Fi';
+        break;
+      case ConnectivityResult.none:
+        status = 'None';
+        break;
+      default:
+        status = 'None';
+        break;
+    }
+    return status;
   }
 
   @override

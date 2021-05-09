@@ -48,6 +48,10 @@ class _HelpScreenState extends State<HelpScreen> {
             children: [
               Column(
                 children: [
+                  SizedBox(
+                    height: ScreenSize.hasNotch ? 40 : 0,
+                    width: ScreenSize.hasNotch ? 40 : 0,
+                  ),
 //                  Container(
 //                    alignment: Alignment.center,
 //                    height: 30,

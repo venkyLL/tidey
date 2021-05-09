@@ -1,12 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/screens/forecast.dart';
 import 'package:tidey/screens/help.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
+import 'package:tidey/screens/tideTableScreen.dart';
 import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   // imageCache.clear();
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           SettingsScreen.id: (context) => SettingsScreen(),
           TodayScreen.id: (context) => TodayScreen(),
           HelpScreen.id: (context) => HelpScreen(),
+          TideTableScreen.id: (context) => TideTableScreen(),
         });
   }
 }
