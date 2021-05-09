@@ -286,8 +286,8 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "Tidey",
-              style: TextStyle(fontSize: 40, color: Colors.black),
+              "by Amberjack Labs",
+              style: TextStyle(fontSize: 20, color: Colors.blueAccent),
             ),
           ],
         )),

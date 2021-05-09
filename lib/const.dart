@@ -591,7 +591,7 @@ String getMoonImageName(String name) {
   switch (name) {
     case "New Moon":
       {
-        return "moon0.png";
+        return "shootingStar.gif";
       }
       break;
     case "Waxing Crescent":
