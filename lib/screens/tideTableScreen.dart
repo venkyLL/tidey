@@ -89,8 +89,8 @@ class _TideTableScreenState extends State<TideTableScreen> {
               : Column(
                   children: [
                     SizedBox(
-                      height: ScreenSize.hasNotch ? 40 : 0,
-                      width: ScreenSize.hasNotch ? 40 : 0,
+                      height: ScreenSize.hasNotch ? 60 : 0,
+                      width: ScreenSize.hasNotch ? 60 : 0,
                     ),
                     Container(
                       alignment: Alignment.center,

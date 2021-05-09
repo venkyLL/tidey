@@ -113,8 +113,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                 child: ListView(
                   children: [
                     SizedBox(
-                      height: ScreenSize.hasNotch ? 40 : 0,
-                      width: ScreenSize.hasNotch ? 40 : 0,
+                      height: ScreenSize.hasNotch ? 60 : 0,
+                      width: ScreenSize.hasNotch ? 60 : 0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -1016,10 +1016,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                       onTap: () => {
                         Share.share(
                             'Download the Tidey app its an awesome Marine Weather Clock',
-                            subject: 'Check Out Tidey Marine Weather Clock\n  '
-                            // +  'https://apps.apple.com/us/app/tidey-clock/id1566159762'
-
-                            )
+                            subject: 'Check Out Tidey Marine Weather Clock\n  ' +
+                                'https://apps.apple.com/us/app/tidey-clock/id1566159762')
                       },
                     ),
                     Divider(
