@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
@@ -16,6 +15,7 @@ import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'package:tidey/services/weatherLocation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -45,6 +45,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   String _city = globalWeather.city;
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
+  final _formKey3 = GlobalKey<FormState>();
   bool _loading = false;
   Timer ted;
   //var myController = TextEditingController();
@@ -122,6 +123,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                               "Most Recent Weather Report From\n" +
                                   _city +
                                   ", " +
+                                  globalWeather.region +
+                                  " " +
                                   globalWeather.country +
                                   "\n" +
                                   globalWeather.loadDateString,
@@ -165,6 +168,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                                 userSettings.useCurrentPosition;
                             prefs.setBool(userSettings.keyUseCurrentPosition,
                                 userSettings.useCurrentPosition);
+                            prefs.setBool(userSettings.keyUseCity, false);
                             if (userSettings.useCurrentPosition) {
                               getWeather();
                             }
@@ -174,37 +178,44 @@ class _settingsScreenState extends State<SettingsScreen> {
                     Visibility(
                       visible: !_useCurrentPosition,
                       child: Form(
-                        key: _formKey,
+                        key: _formKey3,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8),
                               child: Container(
                                 // width: ScreenSize.screenWidth - 20,
-                                child: Row(
+                                child: Column(
                                   children: [
+//                                    SizedBox(
+//                                      // width: 180,
+//                                      child: Align(
+//                                        alignment: Alignment.center,
+//                                        child: Text("Enter City/State or Zip",
+//                                            style: kTextSettingsStyle),
+//                                      ),
+//                                    ),
                                     SizedBox(
-                                      width: 180,
-                                      child: Text("Enter Latitude:     ",
-                                          style: kTextSettingsStyle),
-                                    ),
-                                    SizedBox(
-                                      width: 180,
+                                      width: double.infinity,
                                       child: Padding(
                                         padding: const EdgeInsets.all(20.0),
                                         child: TextFormField(
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                            initialValue: userSettings.manualLat
-                                                .toString(),
-                                            decoration: InputDecoration(
+                                          style: TextStyle(color: Colors.white),
+                                          initialValue: globalWeather.city +
+                                              "," +
+                                              globalWeather.region,
+                                          decoration: InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.symmetric(
                                                       vertical: 8.0),
-                                              // border: InputBorder.none,
-                                              filled: true,
-                                              fillColor: Colors.grey[200],
+//                                               border: inputBorder(
+//                                                   borderSide: const BorderSide(
+//                                                       color: Colors.white,
+//                                                       width: 2.0),),
+                                              //   filled: true,
+                                              fillColor: Colors.grey[100],
                                               errorStyle: TextStyle(
                                                   color: Colors.red,
                                                   backgroundColor: Colors.white,
@@ -213,125 +224,57 @@ class _settingsScreenState extends State<SettingsScreen> {
                                                 borderSide: const BorderSide(
                                                     color: Colors.white,
                                                     width: 2.0),
-                                                borderRadius:
-                                                    BorderRadius.circular(25.0),
+                                                //  borderRadius:
+                                                //  BorderRadius.circular(25.0),
                                               ),
-                                              border: OutlineInputBorder(
+                                              enabledBorder: OutlineInputBorder(
                                                 borderSide: const BorderSide(
                                                     color: Colors.white,
                                                     width: 2.0),
+                                              ),
 //                                          borderRadius:
 //                                              BorderRadius.circular(25.0),
-                                              ),
+                                              //      ),
 
-                                              hintText: '-90 ... 90',
+                                              //  hintText: 'Marsh Harbour, Bahamas',
                                               hoverColor: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    decimal: true),
-                                            onSaved: (text) {
-                                              userSettings.manualLat =
-                                                  double.parse(text);
-                                              prefs.setDouble(
-                                                  userSettings.keyManualLat,
-                                                  userSettings.manualLat);
-                                              globalLatitude = text;
-                                            },
-                                            validator: (text) {
-                                              if (text == null) {
-                                                return null;
-                                              }
-                                              final n = num.tryParse(text);
-                                              if (n == null) {
-                                                return 'Invalid Latitude';
-                                              }
-                                              if (n < -90 || n > 90) {
-                                                return 'Invalid Latitude';
-                                              }
-                                              return null;
-                                            }),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Container(
-                                // width: ScreenSize.screenWidth - 20,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 180,
-                                      child: Text("Enter Longitude:  ",
-                                          style: kTextSettingsStyle),
-                                    ),
-                                    SizedBox(
-                                      width: 180,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: TextFormField(
-                                            initialValue: userSettings
-                                                .manualLong
-                                                .toString(),
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 8.0),
-                                              // border: InputBorder.none,
-                                              filled: true,
-                                              fillColor: Colors.grey[200],
-                                              errorStyle: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 15,
-                                                  backgroundColor:
-                                                      Colors.white),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    color: Colors.white,
-                                                    width: 2.0),
-//                                          borderRadius:
-//                                              BorderRadius.circular(25.0),
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    color: Colors.white,
-                                                    width: 2.0),
-//                                          borderRadius:
-//                                              BorderRadius.circular(25.0),
-                                              ),
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white),
+                                              labelText:
+                                                  "  Enter City/State or Postal Code:"),
+                                          //
+//                                            keyboardType:
+//                                                TextInputType.numberWithOptions(
+//                                                    decimal: true),
 
-                                              hintText: '-180...180',
-                                              hoverColor: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                            keyboardType: TextInputType.number,
-                                            onSaved: (text) {
-                                              userSettings.manualLong =
-                                                  double.parse(text);
-                                              prefs.setDouble(
-                                                  userSettings.keyManualLong,
-                                                  userSettings.manualLong);
-                                              globalLongitude = text;
-                                            },
-                                            validator: (text) {
-                                              if (text == null) {
-                                                return null;
-                                              }
-                                              final n = num.tryParse(text);
-                                              if (n == null) {
-                                                return 'Invalid Longitude';
-                                              }
-                                              if (n < -180 || n > 180) {
-                                                return 'Invalid Longitude';
-                                              }
-                                              return null;
-                                            }),
+                                          textAlign: TextAlign.center,
+                                          onSaved: (text) {
+                                            String _location =
+                                                text.replaceAll(" ", "+");
+
+                                            userSettings.cityString = _location;
+                                            userSettings.useCity = true;
+                                            prefs.setBool(
+                                                userSettings.keyUseCity,
+                                                userSettings.useCity);
+                                            prefs.setString(
+                                                userSettings.keyCityString,
+                                                userSettings.cityString);
+                                          },
+//                                            validator: (text) {
+//                                              if (text == null) {
+//                                                return null;
+//                                              }
+//                                              final n = num.tryParse(text);
+//                                              if (n == null) {
+//                                                return 'Invalid Latitude';
+//                                              }
+//                                              if (n < -90 || n > 90) {
+//                                                return 'Invalid Latitude';
+//                                              }
+//                                              return null;
+//                                            }),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -344,11 +287,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                 onPrimary: Colors.white, // foreground
                               ),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  _formKey.currentState.save();
-                                  // TODO submit
-                                  getWeather();
-                                }
+                                _formKey3.currentState.save();
+                                // TODO submit
+                                getWeatherName();
                               },
                               child: Text('Submit',
                                   style: TextStyle(color: Colors.black)),
@@ -357,6 +298,195 @@ class _settingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                     ),
+//                    Visibility(
+//                      visible: !_useCurrentPosition,
+//                      child: Form(
+//                        key: _formKey,
+//                        child: Column(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Padding(
+//                              padding: const EdgeInsets.only(left: 8.0),
+//                              child: Container(
+//                                // width: ScreenSize.screenWidth - 20,
+//                                child: Row(
+//                                  children: [
+//                                    SizedBox(
+//                                      width: 180,
+//                                      child: Text("Enter Latitude:     ",
+//                                          style: kTextSettingsStyle),
+//                                    ),
+//                                    SizedBox(
+//                                      width: 180,
+//                                      child: Padding(
+//                                        padding: const EdgeInsets.all(20.0),
+//                                        child: TextFormField(
+//                                            style:
+//                                                TextStyle(color: Colors.black),
+//                                            initialValue: userSettings.manualLat
+//                                                .toString(),
+//                                            decoration: InputDecoration(
+//                                              contentPadding:
+//                                                  EdgeInsets.symmetric(
+//                                                      vertical: 8.0),
+//                                              // border: InputBorder.none,
+//                                              filled: true,
+//                                              fillColor: Colors.grey[200],
+//                                              errorStyle: TextStyle(
+//                                                  color: Colors.red,
+//                                                  backgroundColor: Colors.white,
+//                                                  fontSize: 15),
+//                                              focusedBorder: OutlineInputBorder(
+//                                                borderSide: const BorderSide(
+//                                                    color: Colors.white,
+//                                                    width: 2.0),
+//                                                borderRadius:
+//                                                    BorderRadius.circular(25.0),
+//                                              ),
+//                                              border: OutlineInputBorder(
+//                                                borderSide: const BorderSide(
+//                                                    color: Colors.white,
+//                                                    width: 2.0),
+////                                          borderRadius:
+////                                              BorderRadius.circular(25.0),
+//                                              ),
+//
+//                                              hintText: '-90 ... 90',
+//                                              hoverColor: Colors.white,
+//                                            ),
+//                                            textAlign: TextAlign.center,
+//                                            keyboardType:
+//                                                TextInputType.numberWithOptions(
+//                                                    decimal: true),
+//                                            onSaved: (text) {
+//                                              userSettings.manualLat =
+//                                                  double.parse(text);
+//                                              prefs.setDouble(
+//                                                  userSettings.keyManualLat,
+//                                                  userSettings.manualLat);
+//                                              globalLatitude = text;
+//                                            },
+//                                            validator: (text) {
+//                                              if (text == null) {
+//                                                return null;
+//                                              }
+//                                              final n = num.tryParse(text);
+//                                              if (n == null) {
+//                                                return 'Invalid Latitude';
+//                                              }
+//                                              if (n < -90 || n > 90) {
+//                                                return 'Invalid Latitude';
+//                                              }
+//                                              return null;
+//                                            }),
+//                                      ),
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
+//                            ),
+//                            Padding(
+//                              padding: const EdgeInsets.only(left: 8.0),
+//                              child: Container(
+//                                // width: ScreenSize.screenWidth - 20,
+//                                child: Row(
+//                                  children: [
+//                                    SizedBox(
+//                                      width: 180,
+//                                      child: Text("Enter Longitude:  ",
+//                                          style: kTextSettingsStyle),
+//                                    ),
+//                                    SizedBox(
+//                                      width: 180,
+//                                      child: Padding(
+//                                        padding: const EdgeInsets.all(20.0),
+//                                        child: TextFormField(
+//                                            initialValue: userSettings
+//                                                .manualLong
+//                                                .toString(),
+//                                            style:
+//                                                TextStyle(color: Colors.black),
+//                                            decoration: InputDecoration(
+//                                              contentPadding:
+//                                                  EdgeInsets.symmetric(
+//                                                      vertical: 8.0),
+//                                              // border: InputBorder.none,
+//                                              filled: true,
+//                                              fillColor: Colors.grey[200],
+//                                              errorStyle: TextStyle(
+//                                                  color: Colors.red,
+//                                                  fontSize: 15,
+//                                                  backgroundColor:
+//                                                      Colors.white),
+//                                              focusedBorder: OutlineInputBorder(
+//                                                borderSide: const BorderSide(
+//                                                    color: Colors.white,
+//                                                    width: 2.0),
+////                                          borderRadius:
+////                                              BorderRadius.circular(25.0),
+//                                              ),
+//                                              border: OutlineInputBorder(
+//                                                borderSide: const BorderSide(
+//                                                    color: Colors.white,
+//                                                    width: 2.0),
+////                                          borderRadius:
+////                                              BorderRadius.circular(25.0),
+//                                              ),
+//
+//                                              hintText: '-180...180',
+//                                              hoverColor: Colors.white,
+//                                            ),
+//                                            textAlign: TextAlign.center,
+//                                            keyboardType: TextInputType.number,
+//                                            onSaved: (text) {
+//                                              userSettings.manualLong =
+//                                                  double.parse(text);
+//                                              prefs.setDouble(
+//                                                  userSettings.keyManualLong,
+//                                                  userSettings.manualLong);
+//                                              globalLongitude = text;
+//                                            },
+//                                            validator: (text) {
+//                                              if (text == null) {
+//                                                return null;
+//                                              }
+//                                              final n = num.tryParse(text);
+//                                              if (n == null) {
+//                                                return 'Invalid Longitude';
+//                                              }
+//                                              if (n < -180 || n > 180) {
+//                                                return 'Invalid Longitude';
+//                                              }
+//                                              return null;
+//                                            }),
+//                                      ),
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
+//                            ),
+//                            ElevatedButton(
+//                              style: ElevatedButton.styleFrom(
+//                                primary: kHeadingColor, // background
+//                                onPrimary: Colors.white, // foreground
+//                              ),
+//                              onPressed: () {
+//                                if (_formKey.currentState.validate()) {
+//                                  _formKey.currentState.save();
+//                                  // TODO submit
+//                                  getWeather();
+//                                }
+//                              },
+//                              child: Text('Submit',
+//                                  style: TextStyle(color: Colors.black)),
+//                            )
+//                          ],
+//                        ),
+//                      ),
+//                    ),
+
+                    /* Enter lat long */
+
 //              TextField(
 //                decoration: InputDecoration(
 //                    labelText: "Enter Latitude",
@@ -1101,6 +1231,26 @@ class _settingsScreenState extends State<SettingsScreen> {
     });
     Location location = Location();
     await location.getCurrentLocation();
+    WeatherService weatherService = WeatherService();
+    await weatherService.getMarineData();
+    LocalWeatherService localWeatherService = LocalWeatherService();
+    await localWeatherService.getLocalWeatherData();
+    setState(() {
+      _city = globalWeather.city;
+    });
+    mySineWaveData msw = mySineWaveData();
+    await msw.computeTidesForPainting();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  void getWeatherName() async {
+    setState(() {
+      _loading = true;
+    });
+    WeatherLocationService location = WeatherLocationService();
+    await location.getWeatherLocation();
     WeatherService weatherService = WeatherService();
     await weatherService.getMarineData();
     LocalWeatherService localWeatherService = LocalWeatherService();

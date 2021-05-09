@@ -46,7 +46,7 @@ class _TideTableScreenState extends State<TideTableScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: Colors.black),
+          icon: Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -95,7 +95,11 @@ class _TideTableScreenState extends State<TideTableScreen> {
                     Container(
                       alignment: Alignment.center,
                       height: ScreenSize.small ? 50 : 200,
-                      child: Text('Today\'s Tides',
+                      child: Text(
+                          'Today\'s Tides\n' +
+                              globalWeather.city +
+                              "," +
+                              globalWeather.country,
                           style: kTableTitleTextStyle,
                           textAlign: TextAlign.center),
                     ),

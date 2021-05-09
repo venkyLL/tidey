@@ -8,6 +8,7 @@ import 'package:iphone_has_notch/iphone_has_notch.dart';
 import 'package:package_info/package_info.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/marineWeather.dart';
+import 'package:tidey/services/weatherLocation.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 String globalLatitude;
@@ -43,6 +44,7 @@ double currentDirection = 193;
 int globalNumberOfDaysOfWeatherData = 1;
 String destinationURL = "https://abacosun.com/2019/11/24/whatsopeninabaco/";
 MarineWeather weatherData = MarineWeather();
+WeatherLocation weatherLocation = WeatherLocation();
 LocalWeather localWeather = LocalWeather();
 String marqueeString;
 //gauge constants
@@ -84,6 +86,10 @@ class UserSettings {
   bool useCurrentPosition = true;
   final keyUseCurrentPosition = "userCurrentPosition";
   double manualLat = 26.7747;
+  bool useCity = false;
+  final keyUseCity = "useCity";
+  String cityString = "";
+  final keyCityString = "cityString";
   final keyManualLat = "manualLat";
   double manualLong = -77.3296;
   final keyManualLong = "manualLong";
@@ -112,6 +118,7 @@ class TideyWeather {
   DateTime loadDate;
   String loadDateString = '';
   String city = "not Found";
+  String region = "not Found";
   String country = "not Found";
   bool tideAPIError = false;
   bool weatherAPIError = false;

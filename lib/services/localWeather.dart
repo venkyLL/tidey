@@ -714,7 +714,8 @@ class LocalWeatherService {
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';
     }
-
+    String q = userSettings.useCity ? userSettings.cityString : latLong;
+    print("Location q is $q");
     /*
     https://api.worldweatheronline.com/premium/v1/weather.ashx
     ?key=51503debb4b34526a33181926211204&q=26.69 ,-77.29&
@@ -790,6 +791,7 @@ class LocalWeatherService {
     globalWeather.dailyWeather = [];
     globalWeather.loadDate = DateTime.now();
     globalWeather.city = localWeather.data.nearestArea[0].areaName[0].value;
+    globalWeather.region = localWeather.data.nearestArea[0].region[0].value;
     globalWeather.country = localWeather.data.nearestArea[0].country[0].value;
     globalWeather.loadDateString =
         DateFormat('MMMd').format(localWeather.data.weather[0].date);

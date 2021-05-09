@@ -457,7 +457,8 @@ class WeatherService {
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';
     }
-
+//    String q = userSettings.useCity ? userSettings.cityString : latLong;
+//    print("Location q is $q");
     try {
       Response response =
           await Dio().get(weatherServerURL + 'marine.ashx', queryParameters: {

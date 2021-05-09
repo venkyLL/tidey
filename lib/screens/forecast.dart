@@ -43,7 +43,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: Colors.black),
+          icon: Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () {
             ted.cancel;
             Navigator.of(context).pop();
@@ -89,8 +89,13 @@ class _ForecastScreenState extends State<ForecastScreen> {
                     Container(
                       alignment: Alignment.center,
                       height: ScreenSize.small ? 50 : 200,
-                      child:
-                          Text('Weekly Forecast', style: kTableTitleTextStyle),
+                      child: Text(
+                          'Weekly Forecast\n' +
+                              globalWeather.city +
+                              "," +
+                              globalWeather.country,
+                          style: kTableTitleTextStyle,
+                          textAlign: TextAlign.center),
                     ),
                     Expanded(
                       child: Padding(

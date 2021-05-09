@@ -43,7 +43,7 @@ class _TodayScreenState extends State<TodayScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: Colors.black),
+          icon: Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -91,9 +91,13 @@ class _TodayScreenState extends State<TodayScreen> {
                     ),
                     Container(
                       alignment: Alignment.center,
-                      height: ScreenSize.small ? 50 : 200,
+                      // height: ScreenSize.small ? 50 : 200,
                       child: Text(
-                          'Today\'s Weather\n' +
+                          'Today\'s Weather \n' +
+                              globalWeather.city +
+                              "," +
+                              globalWeather.country +
+                              "\n" +
                               globalWeather.dailyWeather[di].hourly[0]
                                   .weatherConditionDesc,
                           style: kTableTitleTextStyle,
