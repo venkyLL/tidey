@@ -141,17 +141,20 @@ class _SplashScreenState extends State<SplashScreen> {
         content: Text('Yay! Tide data found! '),
         duration: const Duration(milliseconds: 1500));
     final tideySnackbar = SnackBar(
-        content: Text('Yay! Calculated Tidey Ring! '),
+        content: Text('Data Succesfully Loaded! '),
         duration: const Duration(milliseconds: 1500));
     final noNetworkSnackbar = SnackBar(
-        content: Text('Network not available no weather data colleted! '),
-        duration: const Duration(milliseconds: 1500));
+        backgroundColor: (Colors.red),
+        content: Text(
+          'Network not available no weather data colleted ',
+        ),
+        duration: const Duration(milliseconds: 2000));
 
     await checkConnectivity();
-    var networkSnackBar = SnackBar(
-        content: Text('Yay! Network Found! $_networkStatus1'),
-        duration: const Duration(milliseconds: 1500));
-    ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
+//    var networkSnackBar = SnackBar(
+//        content: Text('Yay! Network Found! $_networkStatus1'),
+//        duration: const Duration(milliseconds: 1500));
+//    ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
     await getProfileData();
 //    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
 //      print("Location Service Enabled");
@@ -160,18 +163,19 @@ class _SplashScreenState extends State<SplashScreen> {
       if (userSettings.useCurrentPosition) {
         print("Using Current Position");
         await location.getCurrentLocation();
-        var locationSnackBar = SnackBar(
-            content:
-                Text('Yay! Location Found! $globalLatitude $globalLongitude '),
-            duration: const Duration(milliseconds: 1500));
-        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+//        var locationSnackBar = SnackBar(
+//            content: Text(
+//                'Getting Weather for:  ($globalLatitude $globalLongitude) '),
+//            duration: const Duration(milliseconds: 1500));
+//        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
       } else {
         globalLatitude = userSettings.manualLat.toString();
         globalLongitude = userSettings.manualLong.toString();
         var defaultLocationSnackBar = SnackBar(
-            content:
-                Text('Using saved Location! $globalLatitude $globalLongitude'),
-            duration: const Duration(milliseconds: 1500));
+          backgroundColor: (Colors.blue),
+          content: Text('Location Services disabled using default location, '),
+          duration: const Duration(milliseconds: 3000),
+        );
         ScaffoldMessenger.of(context).showSnackBar(defaultLocationSnackBar);
       }
     } else {
@@ -194,15 +198,46 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (_networkStatus1 != "None") {
       WeatherService weatherService = WeatherService();
-      await weatherService.getMarineData();
-      ScaffoldMessenger.of(context).showSnackBar(weather1Snackbar);
+      String ans = await weatherService.getMarineData();
+      print("Back from Local Weather baby $ans");
+      if (ans != "True") {
+        globalNetworkAvailable = false;
+        globalNeworkErrorMessage =
+            "Error connecting to weather service \nPlease restart Tidey and try again later.";
+        var WErrorSnackBar = SnackBar(
+            backgroundColor: (Colors.red),
+            content: Text('Error connecting to Marine weather service! '),
+            duration: const Duration(milliseconds: 3000));
+        ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+      }
 
       LocalWeatherService localWeatherService = LocalWeatherService();
       await localWeatherService.getLocalWeatherData();
-      ScaffoldMessenger.of(context).showSnackBar(tideSnackbar);
-      mySineWaveData msw = mySineWaveData();
-      await msw.computeTidesForPainting();
-      globalWeather.weatherAPIError = true;
+      print("Back from Marine  baby $ans");
+      if (ans != "True") {
+//        ScaffoldMessenger.of(context).showSnackBar(tideSnackbar);
+//      } else {
+        globalNetworkAvailable = false;
+        globalNeworkErrorMessage =
+            "Error connecting to weather service \nPlease restart Tidey and try again later.";
+        var WErrorSnackBar = SnackBar(
+            backgroundColor: (Colors.red),
+            content: Text(
+              'Error connecting to local weather service! ',
+            ),
+            duration: const Duration(milliseconds: 3000));
+        ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+      }
+      if (globalNetworkAvailable) {
+        var locationSnackBar = SnackBar(
+            content: Text(
+                'Weather Data Retrieved for :  ($globalLatitude $globalLongitude) '),
+            duration: const Duration(milliseconds: 2000));
+        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+        mySineWaveData msw = mySineWaveData();
+        await msw.computeTidesForPainting();
+        globalWeather.weatherAPIError = false;
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(noNetworkSnackbar);
     }
@@ -214,7 +249,6 @@ class _SplashScreenState extends State<SplashScreen> {
       print(notification.audioId);
       return true;
     });
-    ScaffoldMessenger.of(context).showSnackBar(tideySnackbar);
 
     Future.delayed(const Duration(milliseconds: 2000), () {
 // Here you can write your code
@@ -237,6 +271,8 @@ class _SplashScreenState extends State<SplashScreen> {
     var conn = getConnectionValue(connectivityResult);
     if (connectivityResult == ConnectivityResult.none) {
       globalNetworkAvailable = false;
+      globalNeworkErrorMessage =
+          "To get current weather data \nPlease restart Tidey when there is a network connection avilable.";
     } else {
       globalNetworkAvailable = true;
     }

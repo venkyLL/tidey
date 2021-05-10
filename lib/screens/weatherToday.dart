@@ -34,7 +34,9 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   void dispose() {
     super.dispose();
-    ted.cancel();
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   @override

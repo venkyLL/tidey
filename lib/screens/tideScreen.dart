@@ -357,7 +357,9 @@ class _LandscapeViewState extends State<LandscapeView> {
   @override
   void dispose() {
     super.dispose();
-    timer.cancel();
+    if (timer.isActive) {
+      timer.cancel();
+    }
   }
 
   _bobX(Timer timer) {
@@ -863,7 +865,9 @@ class _VenkySwapState extends State<VenkySwap> {
 
   _bobX(Timer timer) {
     if (currentTransitionTime != userSettings.transitionTime) {
-      myTimer.cancel();
+      if (myTimer.isActive) {
+        myTimer.cancel();
+      }
       currentTransitionTime = userSettings.transitionTime;
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
@@ -873,8 +877,12 @@ class _VenkySwapState extends State<VenkySwap> {
   @override
   void dispose() {
     super.dispose();
-    myTimer.cancel();
-    ted.cancel();
+    if (myTimer.isActive) {
+      myTimer.cancel();
+    }
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   void _updateData(Timer timer) {
@@ -973,7 +981,9 @@ class _VenkySwapStateP extends State<VenkySwapP> {
 
   _bobX(Timer timer) {
     if (currentTransitionTime != userSettings.transitionTime) {
-      myTimer.cancel();
+      if (myTimer.isActive) {
+        myTimer.cancel();
+      }
       currentTransitionTime = userSettings.transitionTime;
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
@@ -983,8 +993,12 @@ class _VenkySwapStateP extends State<VenkySwapP> {
   @override
   void dispose() {
     super.dispose();
-    myTimer.cancel();
-    ted.cancel();
+    if (myTimer.isActive) {
+      myTimer.cancel();
+    }
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   void _updateData(Timer timer) {
@@ -1051,7 +1065,9 @@ class _PortraitModeState extends State<PortraitMode> {
   _bobX(Timer timer) {
     // print("In Timer");
     if (!globalWeather.weatherAPIError) {
-      ted.cancel();
+      if (ted.isActive) {
+        ted.cancel();
+      }
       print("Now have data");
       setState(() {
         _APIError = false;

@@ -14,6 +14,8 @@ import 'package:weather_icons/weather_icons.dart';
 String globalLatitude;
 String globalLongitude;
 bool globalNetworkAvailable = false;
+String globalNeworkErrorMessage =
+    "To get current weather data \nPlease restart Tidey when there is a network connection avilable.";
 int di =
     0; // Day Index this will be increased at midnight if we have not recevied new weather data and decreased when we do.
 // Print debugger
@@ -50,7 +52,7 @@ LocalWeather localWeather = LocalWeather();
 String marqueeString =
     "Welcome to Tidey Weather Clock.  Please connect to the network to get the latest weather";
 //gauge constants
-double globalCompassDirection;
+double globalCompassDirection = 270;
 DateTime globalCompassValueLastReadAt;
 
 UserSettings userSettings = UserSettings();
@@ -58,6 +60,15 @@ UserSettings userSettings = UserSettings();
 const kDefaultTransitionTime = 10;
 
 var daysSinceDataLoad = 0;
+//class Data {
+//  Data({
+//    this.request,
+//    this.nearestArea,
+//    this.currentCondition,
+//    this.weather,
+//    this.climateAverages,
+//    this.alerts,
+//  });
 
 class UserSettings {
   bool chimeOn;

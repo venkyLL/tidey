@@ -70,7 +70,9 @@ class _settingsScreenState extends State<SettingsScreen> {
     // widget tree.
     // myController.dispose();
     super.dispose();
-    ted.cancel();
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   void openPerfs() async {
@@ -146,7 +148,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                     Visibility(
                       visible: !globalNetworkAvailable,
                       child: Text(
-                        "To get current weather data \nPlease restart Tidey when there is a network connection avilable.",
+                        globalNeworkErrorMessage,
                         style: TextStyle(
                             fontSize: kTextSettingSize, color: Colors.yellow),
                         textAlign: TextAlign.center,
@@ -770,7 +772,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                       onPrimary: Colors.white, // foreground
                                     ),
                                     onPressed: () {
-                                      ted.cancel();
+                                      if (ted.isActive) {
+                                        ted.cancel();
+                                      }
                                       setState(() {
                                         _countDownTimeRemaining = 0;
                                         userSettings
@@ -811,7 +815,9 @@ class _settingsScreenState extends State<SettingsScreen> {
                                     : ElevatedButton(
                                         onPressed: () {
                                           userSettings.countDownStart = false;
-                                          ted.cancel();
+                                          if (ted.isActive) {
+                                            ted.cancel();
+                                          }
                                           setState(() {
                                             _countDownStart = false;
                                           });
@@ -1125,7 +1131,9 @@ class _settingsScreenState extends State<SettingsScreen> {
       });
     }
     if (_countDownTimeRemaining == 0) {
-      ted.cancel();
+      if (ted.isActive) {
+        ted.cancel();
+      }
     }
   }
 

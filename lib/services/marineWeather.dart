@@ -504,15 +504,16 @@ class WeatherService {
 //        print(myTide.toJson());
 //      }
 
-      return;
+      return ('True');
     } catch (e) {
-      print("error found");
+      print("Marine error found");
       globalWeather.marineWeatherExists = false;
       globalWeather.marineHourlyExists = false;
       globalWeather.tideDataExists = false;
       globalWeather.marineAstronomyExists = false;
       globalWeather.tideAPIError = true;
       print(e);
+      return (e.toString());
     }
   }
 }
