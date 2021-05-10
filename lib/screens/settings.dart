@@ -116,66 +116,84 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: ScreenSize.hasNotch ? 60 : 0,
                       width: ScreenSize.hasNotch ? 60 : 0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: !globalWeather.weatherAPIError
-                          ? Text(
-                              "Most Recent Weather Report From\n" +
-                                  _city +
-                                  ", " +
-                                  globalWeather.region +
-                                  " " +
-                                  globalWeather.country +
-                                  "\n" +
-                                  globalWeather.loadDateString,
-                              style: kTextSettingsStyle,
-                              textAlign: TextAlign.center,
-                            )
-                          : Text(
-                              "Weather data could not be loaded.\n"
-                              "Please check network or change location.",
-                              style: TextStyle(
-                                  fontSize: kTextSettingSize,
-                                  color: Colors.yellow),
-                              textAlign: TextAlign.center,
-                            ),
+                    Visibility(
+                      visible: globalNetworkAvailable,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: !globalWeather.weatherAPIError
+                            ? Text(
+                                "Most Recent Weather Report From\n" +
+                                    _city +
+                                    ", " +
+                                    globalWeather.region +
+                                    " " +
+                                    globalWeather.country +
+                                    "\n" +
+                                    globalWeather.loadDateString,
+                                style: kTextSettingsStyle,
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                "Weather data could not be loaded.\n"
+                                "Please check network or change location.",
+                                style: TextStyle(
+                                    fontSize: kTextSettingSize,
+                                    color: Colors.yellow),
+                                textAlign: TextAlign.center,
+                              ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !globalNetworkAvailable,
+                      child: Text(
+                        "To get current weather data \nPlease restart Tidey when there is a network connection avilable.",
+                        style: TextStyle(
+                            fontSize: kTextSettingSize, color: Colors.yellow),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     Divider(
                       height: 10,
                       thickness: 5,
                     ),
-                    MenuListTile(
-                      title: "Refresh Weather Data ",
-                      icon: Icons.refresh,
-                      onTap: () => {getWeather()},
+                    Visibility(
+                      visible: globalNetworkAvailable,
+                      child: MenuListTile(
+                        title: "Refresh Weather Data ",
+                        icon: Icons.refresh,
+                        onTap: () => {getWeather()},
+                      ),
                     ),
                     Divider(
                       height: 10,
                       thickness: 5,
                     ),
 
-                    MenuListTileWithSwitch(
-                        title: (userSettings.useCurrentPosition)
-                            ? "Use Current Location (Enabled)"
-                            : "Use Current Location (Disabled)",
-                        value: userSettings.useCurrentPosition,
-                        icon: Icons.location_on,
-                        onTap: () {
-                          setState(() {
-                            userSettings.useCurrentPosition =
-                                !userSettings.useCurrentPosition;
-                            _useCurrentPosition =
-                                userSettings.useCurrentPosition;
-                            prefs.setBool(userSettings.keyUseCurrentPosition,
-                                userSettings.useCurrentPosition);
-                            prefs.setBool(userSettings.keyUseCity, false);
-                            if (userSettings.useCurrentPosition) {
-                              getWeather();
-                              globalWeather.weatherAPIError = true;
-                            }
-                            ;
-                          });
-                        }),
+                    Visibility(
+                      visible: globalNetworkAvailable,
+                      child: MenuListTileWithSwitch(
+                          title: (userSettings.useCurrentPosition)
+                              ? "Use Current Location (Enabled)"
+                              : "Use Current Location (Disabled)",
+                          value: userSettings.useCurrentPosition,
+                          icon: Icons.location_on,
+                          onTap: () {
+                            setState(() {
+                              userSettings.useCurrentPosition =
+                                  !userSettings.useCurrentPosition;
+                              _useCurrentPosition =
+                                  userSettings.useCurrentPosition;
+                              prefs.setBool(userSettings.keyUseCurrentPosition,
+                                  userSettings.useCurrentPosition);
+                              prefs.setBool(userSettings.keyUseCity, false);
+                              if (userSettings.useCurrentPosition) {
+                                getWeather();
+                                // globalWeather.weatherAPIError = true;
+                              }
+                              ;
+                            });
+                          }),
+                    ),
                     Visibility(
                       visible: !_useCurrentPosition,
                       child: Form(
@@ -1228,17 +1246,26 @@ class _settingsScreenState extends State<SettingsScreen> {
     setState(() {
       _loading = true;
     });
+    print("zzGetting Location Data1");
     Location location = Location();
     await location.getCurrentLocation();
+    print("zzGetting Location Data2");
     WeatherService weatherService = WeatherService();
     await weatherService.getMarineData();
+    print("zzGetting Location Data3");
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
+    print("zzGetting Location Data4");
     setState(() {
       _city = globalWeather.city;
     });
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
+    print("zzGetting Location Data5");
+    if (!globalWeather.localWeatherExists) {
+      //weatherAPIError
+      globalWeather.weatherAPIError = false;
+    }
     setState(() {
       _loading = false;
     });
@@ -1248,17 +1275,22 @@ class _settingsScreenState extends State<SettingsScreen> {
     setState(() {
       _loading = true;
     });
+    print("Getting Location Data1");
     WeatherLocationService location = WeatherLocationService();
     await location.getWeatherLocation();
     WeatherService weatherService = WeatherService();
+    print("Getting Weather Data 1");
     await weatherService.getMarineData();
+    print("Getting Weather Data2");
     LocalWeatherService localWeatherService = LocalWeatherService();
     await localWeatherService.getLocalWeatherData();
+    print("Add Done");
     setState(() {
       _city = globalWeather.city;
     });
     mySineWaveData msw = mySineWaveData();
     await msw.computeTidesForPainting();
+    print("Sine Done");
     setState(() {
       _loading = false;
     });

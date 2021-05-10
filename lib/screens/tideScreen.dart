@@ -400,8 +400,9 @@ class _LandscapeViewState extends State<LandscapeView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _APIError ? landscapeErrorStack() : landscapeStack(),
-//        !marqueeCompleted && !_APIError
+        !globalNetworkAvailable ? landscapeErrorStack() : landscapeStack(),
+        // _APIError ? landscapeErrorStack() : landscapeStack(),
+//        !marqueeCompleted
 //            ? Container(
 //                color: marqueeColor,
 //                width: ScreenSize.safeBlockHorizontal * 100,
@@ -414,41 +415,71 @@ class _LandscapeViewState extends State<LandscapeView> {
 //                  ].map(_wrapWithStuff).toList(),
 //                ),
 //              )
-//            : Container(
-//                color: Colors.transparent,
-//                width: ScreenSize.safeBlockHorizontal * 100,
-//                height: ScreenSize.marqueeHeight),
+//            :
+//        Container(
+//            color: Colors.transparent,
+//            width: ScreenSize.safeBlockHorizontal * 100,
+//            height: ScreenSize.marqueeHeight),
       ],
     );
   }
 
-  Stack landscapeStack() {
-    return Stack(
+  Column landscapeStack() {
+    return Column(
       children: [
-        VenkySwap(),
-        // LandscapeTimerWidget(),
-        ClockRow(),
+        Stack(
+          children: [
+            VenkySwap(),
+            // LandscapeTimerWidget(),
+            ClockRow(),
+          ],
+        ),
+        !marqueeCompleted
+            ? Container(
+                color: marqueeColor,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight,
+                child: ListView(
+                  padding: EdgeInsets.only(top: 50.0),
+                  children: [
+                    buildMarquee(),
+                    // _buildComplexMarquee(),
+                  ].map(_wrapWithStuff).toList(),
+                ),
+              )
+            : Container(
+                color: Colors.transparent,
+                width: ScreenSize.safeBlockHorizontal * 100,
+                height: ScreenSize.marqueeHeight),
       ],
     );
   }
 
-  Stack landscapeErrorStack() {
-    return Stack(children: [
-      DialRow(
-          gaugeType1: ImageGaugeNew(
-            imageName: "boat1.jpg",
-          ),
-          gaugeType2: ImageGaugeNew(
-            imageName: "boat2.jpg",
-          )),
-      // LandscapeTimerWidget(),
-      Row(
-        children: [
-          gaugeColumn(),
-          clockColumn(clockType: zeClock()),
-        ],
-      )
-    ]);
+  Column landscapeErrorStack() {
+    return Column(
+      children: [
+        Stack(children: [
+          DialRow(
+              gaugeType1: ImageGaugeNew(
+                imageName: "boat1.jpg",
+              ),
+              gaugeType2: ImageGaugeNew(
+                imageName: "boat2.jpg",
+              )),
+          // LandscapeTimerWidget(),
+          Row(
+            children: [
+              gaugeColumn(),
+              clockColumn(clockType: zeClock()),
+            ],
+          )
+        ]),
+        Container(
+            color: Colors.transparent,
+            width: ScreenSize.safeBlockHorizontal * 100,
+            height: ScreenSize.marqueeHeight),
+      ],
+    );
   }
 
   //pollForChanges() {}
@@ -1050,7 +1081,8 @@ class _PortraitModeState extends State<PortraitMode> {
           SizedBox(
             height: ScreenSize.hasNotch ? 25 : 0,
           ),
-          (_APIError) ? errorStack() : portraitStack(),
+          // (_APIError) ? errorStack() : portraitStack(),
+          (!globalNetworkAvailable) ? errorStack() : portraitStack(),
         ],
       ),
     );

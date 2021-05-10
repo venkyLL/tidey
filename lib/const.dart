@@ -13,6 +13,7 @@ import 'package:weather_icons/weather_icons.dart';
 
 String globalLatitude;
 String globalLongitude;
+bool globalNetworkAvailable = false;
 int di =
     0; // Day Index this will be increased at midnight if we have not recevied new weather data and decreased when we do.
 // Print debugger
@@ -46,7 +47,8 @@ String destinationURL = "https://abacosun.com/2019/11/24/whatsopeninabaco/";
 MarineWeather weatherData = MarineWeather();
 WeatherLocation weatherLocation = WeatherLocation();
 LocalWeather localWeather = LocalWeather();
-String marqueeString;
+String marqueeString =
+    "Welcome to Tidey Weather Clock.  Please connect to the network to get the latest weather";
 //gauge constants
 double globalCompassDirection;
 DateTime globalCompassValueLastReadAt;

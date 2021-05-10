@@ -163,13 +163,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var locationSnackBar = SnackBar(
             content:
                 Text('Yay! Location Found! $globalLatitude $globalLongitude '),
-            duration: const Duration(milliseconds: 1500)
-            //     action: SnackBarAction(
-//        label: 'Undo',
-//        onPressed: () {
-//          // Some code to undo the change.
-//        },
-            );
+            duration: const Duration(milliseconds: 1500));
         ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
       } else {
         globalLatitude = userSettings.manualLat.toString();
@@ -196,20 +190,23 @@ class _SplashScreenState extends State<SplashScreen> {
     print(packageInfo.version);
     print(packageInfo.packageName);
     globalWeather.weatherAPIError = true;
-//
+    // globalNetworkAvailable = false;
+
     if (_networkStatus1 != "None") {
       WeatherService weatherService = WeatherService();
       await weatherService.getMarineData();
       ScaffoldMessenger.of(context).showSnackBar(weather1Snackbar);
-// Note need to run weather service before local weather to correctly populate
+
       LocalWeatherService localWeatherService = LocalWeatherService();
       await localWeatherService.getLocalWeatherData();
       ScaffoldMessenger.of(context).showSnackBar(tideSnackbar);
       mySineWaveData msw = mySineWaveData();
       await msw.computeTidesForPainting();
+      globalWeather.weatherAPIError = true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(noNetworkSnackbar);
     }
+
     MyCompass theCompass = MyCompass();
     theCompass.init();
     // start audio player service
@@ -238,6 +235,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkConnectivity() async {
     var connectivityResult = await connectivity.checkConnectivity();
     var conn = getConnectionValue(connectivityResult);
+    if (connectivityResult == ConnectivityResult.none) {
+      globalNetworkAvailable = false;
+    } else {
+      globalNetworkAvailable = true;
+    }
     setState(() {
       _networkStatus1 = conn;
       print('Check Connection:: ' + _networkStatus1);

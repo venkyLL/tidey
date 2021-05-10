@@ -452,7 +452,7 @@ class WeatherService {
   String latLong = '26.7747,-77.3296';
 
   getMarineData() async {
-    globalWeather.tideAPIError = false;
+    //  globalWeather.tideAPIError = false;
     print("Hello Weather, $globalLatitude, $globalLongitude");
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';

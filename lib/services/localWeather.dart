@@ -765,6 +765,7 @@ class LocalWeatherService {
 
         if (localWeather.data.weather[0].hourly.length != 0) {
           globalWeather.localHourlyExists = true;
+          //   globalWeather.weatherAPIError = false;
         }
       }
       print("Map complete");
