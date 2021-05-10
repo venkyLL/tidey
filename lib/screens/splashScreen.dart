@@ -4,9 +4,10 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-// import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
+// import 'package:permission_handler/permission_handler.dart';
+import 'package:tidey/screens/onBoard.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/compass.dart';
 import 'package:tidey/services/cronServices.dart';
@@ -115,16 +116,19 @@ class _SplashScreenState extends State<SplashScreen> {
     bool valueRead;
     valueRead = prefs.getBool(settingKey);
     if (valueRead == null) {
+      firstTime = true;
       print(" $settingKey not found");
       prefs.setBool(settingKey, defaultValue);
       return defaultValue;
     } else {
+      firstTime = false;
       print("$settingKey Found $valueRead.ttoString()");
       return valueRead;
       // globalChimeOn = chimeOn;
     }
   }
 
+  bool firstTime = false;
   void initAll() async {
     var noLocationSnackBar = SnackBar(
         content: Text('Location Services off using default location!'),
@@ -219,7 +223,9 @@ class _SplashScreenState extends State<SplashScreen> {
 // Here you can write your code
 
       setState(() {
-        Navigator.pushReplacementNamed(context, TideScreen.id);
+        firstTime
+            ? Navigator.pushReplacementNamed(context, OnBoardingPage.id)
+            : Navigator.pushReplacementNamed(context, TideScreen.id);
       });
     });
 

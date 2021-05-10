@@ -37,11 +37,11 @@ class TideScreen extends StatefulWidget {
   _TideScreenState createState() => _TideScreenState();
 }
 
-List<String> ringOptions = <String>[
-  chimeTypeEnumtoString[ChimeType.single],
-  chimeTypeEnumtoString[ChimeType.hourly],
-  chimeTypeEnumtoString[ChimeType.nautical],
-];
+//List<String> ringOptions = <String>[
+//  chimeTypeEnumtoString[ChimeType.single],
+//  chimeTypeEnumtoString[ChimeType.hourly],
+//  chimeTypeEnumtoString[ChimeType.nautical],
+//];
 
 class _TideScreenState extends State<TideScreen> {
   @override

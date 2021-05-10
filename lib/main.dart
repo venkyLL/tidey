@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tidey/screens/forecast.dart';
 import 'package:tidey/screens/help.dart';
+import 'package:tidey/screens/onBoard.dart';
 import 'package:tidey/screens/settings.dart';
 import 'package:tidey/screens/splashScreen.dart';
 import 'package:tidey/screens/tideScreen.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           TodayScreen.id: (context) => TodayScreen(),
           HelpScreen.id: (context) => HelpScreen(),
           TideTableScreen.id: (context) => TideTableScreen(),
+          OnBoardingPage.id: (context) => OnBoardingPage(),
         });
   }
 }
