@@ -15,12 +15,6 @@ calcTideHeightArray() {
       weatherData.data.weather[0].tides[0].tideData[0].tideHeightMt));
 }
 
-// void main() => runApp(
-//       MaterialApp(
-//         home: PathExample(),
-//       ),
-//     );
-
 class DirectionAndSpeedPainter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -92,19 +86,19 @@ class CurvePainter extends CustomPainter {
     double _clockBezelThickness = 2;
     double _tidePaddingInner = 6;
     double _tidePaddingOuter = 6;
-    double _highTideRadius = _clockBezelRadius - _tidePaddingOuter;
+    double _highTideRadius =
+        _clockBezelRadius - _clockBezelThickness - _tidePaddingOuter;
     double _clockRimThickness = 2;
     double _clockRimRadius = _clockBezelRadius * 0.8;
-    double _lowTideRadius =
-        _clockRimRadius + _tidePaddingInner + _clockRimThickness;
+    double _lowTideRadius = _clockRimRadius + _tidePaddingInner;
     double centerX = ScreenSize.clockSize / 2;
     double centerY = ScreenSize.clockSize / 2;
-    double _slackTideThickness = 5;
-    double _slackTideRadius = _clockRimRadius - _slackTideThickness;
+    double _slackTideThickness = 10;
+    double _slackTideRadius = _clockRimRadius - _clockRimThickness;
     double _clockFaceRadius = _clockRimRadius;
 
-    if (globalDebugPrint)
-      print("Radii  - $_clockFaceRadius, $_slackTideRadius");
+    // if (globalDebugPrint)
+    //   print("Radii  - $_clockFaceRadius, $_slackTideRadius");
 
     var paintClockBezel = Paint();
     paintClockBezel.color = Color(0xFF999999);
@@ -138,9 +132,9 @@ class CurvePainter extends CustomPainter {
               2 *
               _sineWaveScaleDownFactor;
 
-      if (globalDebugPrint)
-        print(
-            "Outer circle in realSineTidey, $i, $t, $radius, $radius1, $_lowTideRadius, $_highTideRadius");
+      // if (globalDebugPrint)
+      //   print(
+      //       "Outer circle in realSineTidey, $i, $t, $radius, $radius1, $_lowTideRadius, $_highTideRadius");
       path.lineTo(sin(degToRad(i)) * radius1 + centerX,
           centerY - cos(degToRad(i)) * radius1);
     }
@@ -150,63 +144,29 @@ class CurvePainter extends CustomPainter {
     for (var i = 360; i >= 0; i--) {
       path.lineTo(sin(degToRad(i)) * radius + centerX,
           centerY - cos(degToRad(i)) * radius);
-      if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
+      // if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
     }
     canvas.drawPath(path, paint);
-    globalDebugPrint = false;
-    paintSlackTides(
-        centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
-    if (globalDebugPrint)
-      print("calling slackTides with Radius $_slackTideRadius");
+    // globalDebugPrint = false;
+    // if (globalDebugPrint)
+    //   print(
+    //       "calling slackTides with Radius $_slackTideRadius, $_slackTideThickness");
+
+    // Draw clock rim (inner) and clock Bezel (outer)
     myDraw.drawRing(centerX, centerY, _clockFaceRadius, _clockRimThickness,
         paintClockRim, canvas);
 
     myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2),
         _clockBezelThickness, paintClockBezel, canvas);
-
-    //drawRing(
-    //  centerX, centerY, (ScreenSize.clockSize / 2), paintClockRim, canvas);
+    // globalDebugPrint = false;
+    paintSlackTides(
+        centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
-}
-
-void drawRing(centerX, centerY, inputRadius, myPaint, canvas) {
-  double radius = inputRadius * 0.8; // 80% per sync clock setting
-  // print("myRingRadius is $radius, $inputRadius");
-  double width = 3;
-  double radius1 = radius + width;
-  var myPath = Path();
-  int startAngle = 0;
-  int myAngle = 0;
-  int i;
-  num degToRad(num deg) => deg * (3.14159 / 180.0);
-
-  // print("in draw ring with $centerX,$centerY,$radius, $myPaint, $canvas");
-
-  myPath.moveTo(sin(degToRad(startAngle)) * radius + centerX,
-      centerY - cos(degToRad(startAngle)) * radius);
-
-  for (i = 0; i <= 360; i++) {
-    myAngle = i;
-    myPath.lineTo(sin(degToRad(myAngle)) * radius + centerX,
-        centerY - cos(degToRad(myAngle)) * radius);
-  }
-  myPath.moveTo(sin(degToRad(myAngle)) * radius1 + centerX,
-      centerY - cos(degToRad(myAngle)) * radius1);
-
-  for (i = 0; i <= 360; i++) {
-    myAngle = 360 - i;
-    myPath.lineTo(sin(degToRad(myAngle)) * radius1 + centerX,
-        centerY - cos(degToRad(myAngle)) * radius1);
-  }
-  myPath.lineTo(sin(degToRad(startAngle)) * radius + centerX,
-      centerY - cos(degToRad(startAngle)) * radius);
-
-  canvas.drawPath(myPath, myPaint);
 }
 
 void paintSlackTides(centerX, centerY, radius, _slackTideThickness, canvas) {
@@ -240,8 +200,9 @@ void paintSlackTides(centerX, centerY, radius, _slackTideThickness, canvas) {
   pathLow.moveTo(sin(degToRad(startAngleLow)) * radius + centerX,
       centerY - cos(degToRad(startAngleLow)) * radius);
 
-  radius1 = radius + _slackTideThickness;
-  //print("se angle is $startAngle, $endAngle");
+  radius1 = radius - _slackTideThickness;
+//  print("in slack tides: $radius1, $radius, $_slackTideThickness");
+  //  radius1 = radius - 20;
   for (i = 0; i <= 60; i++) {
     myAngleHigh = startAngleHigh + i;
     myAngleLow = startAngleLow + i;
@@ -459,7 +420,7 @@ class DrawTideCurvePainter extends CustomPainter {
 
     double radius = centerY - 35.0 * _deviceScalingFactor;
     double radius2 = (ScreenSize.clockSize / 2);
-    if (globalDebugPrint) print("My Radius is, $innerRadius, $outerRadius");
+//    if (globalDebugPrint) print("My Radius is, $innerRadius, $outerRadius");
 
     radius = innerRadius + 1;
 
@@ -483,10 +444,10 @@ class DrawTideCurvePainter extends CustomPainter {
     for (var i = 360; i >= 0; i--) {
       path.lineTo(sin(degToRad(i)) * radius + centerX,
           centerY - cos(degToRad(i)) * radius);
-      if (globalDebugPrint) print("point values inner $i, $radius");
+      // if (globalDebugPrint) print("point values inner $i, $radius");
     }
     canvas.drawPath(path, myPaint);
-    globalDebugPrint = false;
+//    globalDebugPrint = false;
   }
 
   @override
