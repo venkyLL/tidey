@@ -34,7 +34,9 @@ class _ForecastScreenState extends State<ForecastScreen> {
   @override
   void dispose() {
     super.dispose();
-    ted.cancel;
+    if (ted.isActive) {
+      ted.cancel;
+    }
   }
 
   @override

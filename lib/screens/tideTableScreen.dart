@@ -37,7 +37,9 @@ class _TideTableScreenState extends State<TideTableScreen> {
   @override
   void dispose() {
     super.dispose();
-    ted.cancel();
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   @override

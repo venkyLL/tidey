@@ -57,7 +57,11 @@ class _zeClockSyncState extends State<zeClockSync> {
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
       _value = DateTime.now();
-      _curDir = globalCompassDirection; // (_curDir + 10) % 360; //
+      if (globalCompassDirection != null) {
+        _curDir = globalCompassDirection;
+      } else {
+        _curDir = 270;
+      }
     });
     if (userSettings.alarmOn) {
       if ((TimeOfDay.now().hour ==

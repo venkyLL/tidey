@@ -765,6 +765,7 @@ class LocalWeatherService {
 
         if (localWeather.data.weather[0].hourly.length != 0) {
           globalWeather.localHourlyExists = true;
+          //   globalWeather.weatherAPIError = false;
         }
       }
       print("Map complete");
@@ -775,15 +776,17 @@ class LocalWeatherService {
 //        print(weatherDesc.toJson());
 //      }
 
-      return;
+      return ('True');
     } catch (e) {
       globalWeather.localWeatherExists = false;
       globalWeather.localHourlyExists = false;
       globalWeather.weatherAPIError = true;
       marqueeString =
           "Weather Data Not Loaded Please Check Network Settings or Change Location";
-      print("error found");
+      print("Local Weather error found");
       print(e);
+
+      return (e.toString());
     }
   }
 

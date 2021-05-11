@@ -452,7 +452,7 @@ class WeatherService {
   String latLong = '26.7747,-77.3296';
 
   getMarineData() async {
-    globalWeather.tideAPIError = false;
+    //  globalWeather.tideAPIError = false;
     print("Hello Weather, $globalLatitude, $globalLongitude");
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';
@@ -504,15 +504,16 @@ class WeatherService {
 //        print(myTide.toJson());
 //      }
 
-      return;
+      return ('True');
     } catch (e) {
-      print("error found");
+      print("Marine error found");
       globalWeather.marineWeatherExists = false;
       globalWeather.marineHourlyExists = false;
       globalWeather.tideDataExists = false;
       globalWeather.marineAstronomyExists = false;
       globalWeather.tideAPIError = true;
       print(e);
+      return (e.toString());
     }
   }
 }
