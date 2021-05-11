@@ -120,6 +120,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               children: <Widget>[
 //            CurvePainter(),
             TideServicesPainter(),
+//            GenericTideCurveWidget(),
             _buildMyClock(),
           ])),
     );
@@ -261,7 +262,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               markerHeight: 20,
               markerWidth: 20,
               markerType: MarkerType.text,
-              markerOffset: -40,
+              markerOffset: -70,
               value: globalNextLowTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
@@ -284,7 +285,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               markerHeight: 20,
               markerWidth: 20,
               markerType: MarkerType.text,
-              markerOffset: -40,
+              markerOffset: -70,
               value: globalNextHighTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,

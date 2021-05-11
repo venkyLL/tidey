@@ -11,6 +11,7 @@ import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/weatherLocation.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+bool globalDebugPrint = true;
 String globalLatitude;
 String globalLongitude;
 int di =
