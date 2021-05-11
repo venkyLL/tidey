@@ -98,9 +98,6 @@ class CurvePainter extends CustomPainter {
     double _slackTideRadius = _clockRimRadius - _clockRimThickness;
     double _clockFaceRadius = _clockRimRadius;
 
-    // if (globalDebugPrint)
-    //   print("Radii  - $_clockFaceRadius, $_slackTideRadius");
-
     var paintClockBezel = Paint();
     paintClockBezel.color = Color(0xFF999999);
     paintClockBezel.style = PaintingStyle.fill;
@@ -155,18 +152,13 @@ class CurvePainter extends CustomPainter {
       }
       canvas.drawPath(path, paint);
     }
-    // globalDebugPrint = false;
-    // if (globalDebugPrint)
-    //   print(
-    //       "calling slackTides with Radius $_slackTideRadius, $_slackTideThickness");
 
-    // Draw clock rim (inner) and clock Bezel (outer)
     myDraw.drawRing(centerX, centerY, _clockFaceRadius, _clockRimThickness,
         paintClockRim, canvas);
 
     myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2),
         _clockBezelThickness, paintClockBezel, canvas);
-    // globalDebugPrint = false;
+
     if (!TideyWeather().tideAPIError)
       paintSlackTides(
           centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
@@ -285,8 +277,6 @@ class mySineWaveData {
     }
 
     print('my tide data');
-    // find exactly 2 tides
-    // first find the high tide;
     for (var i = 0; i < todayTomorrowTideData.length; i++) {
       current_tide = todayTomorrowTideData[i];
       print("Current tide: $current_tide");
@@ -382,85 +372,6 @@ class mySineWaveData {
         (myHour * 60.0 * 60.0 + myMinute * 60.0 + mySecond) /
             (12.0 * 60.0 * 60.0);
     myRadians = fractionalTime * 2 * pi;
-//    print("myRadians is $myRadians, $fractionalTime");
     return myRadians;
-  }
-}
-
-class GenericTideCurveWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: DrawTideCurvePainter(),
-    );
-  }
-}
-
-class DrawTideCurvePainter extends CustomPainter {
-  int numberOfSecondsInTwelveHours = 12 * 60 * 60;
-  DrawingTools myDraw = DrawingTools();
-  double _deviceScalingFactor =
-      ScreenSize.clockSize / 564.0; // based on 14 inch ipad
-
-  @override
-  void paint(Canvas canvas, Size containerSize) {
-    var myPaint = Paint();
-    myPaint.color = Colors.blueAccent;
-    myPaint.style = PaintingStyle.fill; // Change this to fill
-    num degToRad(num deg) => deg * (3.14159 / 180.0);
-    var path = Path();
-    // double centerX = 100.0;
-    // double centerY = 100.0;
-    // double ringRadius = 150.0;
-
-    double centerX = ScreenSize.clockSize / 2;
-    double centerY = ScreenSize.clockSize / 2;
-    double ringRadius = ScreenSize.clockSize / 2 - 50.0;
-    //double radius = ringRadius;
-
-    // myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2) * 0.8, 5.0,
-    //     paintClockRim, canvas);
-    //
-    // myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2), 1.0,
-    //     paintClockBezel, canvas);
-
-    double innerRadius = ScreenSize.clockSize / 2 * 0.8 + 8;
-    double outerRadius = ScreenSize.clockSize / 2;
-
-    double radius = centerY - 35.0 * _deviceScalingFactor;
-    double radius2 = (ScreenSize.clockSize / 2);
-//    if (globalDebugPrint) print("My Radius is, $innerRadius, $outerRadius");
-
-    radius = innerRadius + 1;
-
-    //    double _scaling_factor = _sineWaveScalingFactor * _deviceScalingFactor;
-
-    path.moveTo(centerX, centerY - radius);
-    for (int i = 0; i <= 360; i++) {
-      double t = i / 360 * 2 * 3.14159 - 3.14159 / 4;
-      double radius1 =
-          radius + ((outerRadius - 5 - innerRadius) / 2 * (sin(t) + 1));
-      path.lineTo(sin(degToRad(i)) * radius1 + centerX,
-          centerY - cos(degToRad(i)) * radius1);
-      if (globalDebugPrint) print("point values outer $i,$t, $radius1");
-    }
-
-    // //    radius -= (ScreenSize.clockSize / 2) * 0.8;
-    radius = innerRadius;
-
-    path.lineTo(centerX, centerY - radius);
-
-    for (var i = 360; i >= 0; i--) {
-      path.lineTo(sin(degToRad(i)) * radius + centerX,
-          centerY - cos(degToRad(i)) * radius);
-      // if (globalDebugPrint) print("point values inner $i, $radius");
-    }
-    canvas.drawPath(path, myPaint);
-//    globalDebugPrint = false;
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
   }
 }
