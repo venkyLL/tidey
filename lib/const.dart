@@ -134,7 +134,7 @@ class TideyWeather {
   String city = "not Found";
   String region = "not Found";
   String country = "not Found";
-  bool tideAPIError = true;
+  bool tideAPIError = false;
   bool weatherAPIError = false;
 }
 

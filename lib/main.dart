@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:tidey/screens/forecast.dart';
 import 'package:tidey/screens/help.dart';
 import 'package:tidey/screens/onBoard.dart';
@@ -11,6 +13,10 @@ import 'package:tidey/screens/weatherToday.dart';
 import 'package:tidey/screens/webWeather.dart';
 
 void main() async {
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('googleFonts/LICENSE.txt');
+    yield LicenseEntryWithLineBreaks(['googleFonts'], license);
+  });
   // imageCache.clear();
   WidgetsFlutterBinding.ensureInitialized();
   print("before FB initialization, ${DateTime.now()}");
