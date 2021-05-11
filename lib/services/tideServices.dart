@@ -80,6 +80,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size containerSize) {
+    double _failedTideyRingThickness = 20;
     double _minThicknessSineWave = 5;
     double _sineWaveScaleDownFactor = 0.75;
     double _clockBezelRadius = ScreenSize.clockSize / 2;
@@ -123,30 +124,37 @@ class CurvePainter extends CustomPainter {
         centerX, centerY, _clockBezelRadius, paintClockFace, canvas);
     double radius = _lowTideRadius;
     path.moveTo(centerX, centerY - radius);
-    for (var i = 0; i <= 360; i++) {
-      double t = i / 360 * numberOfSecondsInTwelveHours;
-      double radius1 = radius +
-          _minThicknessSineWave +
-          (sin(globalOmega * t + globalAlpha) + 1) *
-              (_highTideRadius - _lowTideRadius) /
-              2 *
-              _sineWaveScaleDownFactor;
+    if (TideyWeather().tideAPIError) {
+      double _ringWidth = (_highTideRadius - _lowTideRadius) / 3.0;
+      myDraw.drawRing(centerX, centerY, _lowTideRadius + 2 * _ringWidth,
+          _ringWidth, paint, canvas);
+    } else {
+      // we have tide data - draw tide.
+      for (var i = 0; i <= 360; i++) {
+        double t = i / 360 * numberOfSecondsInTwelveHours;
+        double radius1 = radius +
+            _minThicknessSineWave +
+            (sin(globalOmega * t + globalAlpha) + 1) *
+                (_highTideRadius - _lowTideRadius) /
+                2 *
+                _sineWaveScaleDownFactor;
 
-      // if (globalDebugPrint)
-      //   print(
-      //       "Outer circle in realSineTidey, $i, $t, $radius, $radius1, $_lowTideRadius, $_highTideRadius");
-      path.lineTo(sin(degToRad(i)) * radius1 + centerX,
-          centerY - cos(degToRad(i)) * radius1);
-    }
-    radius = _lowTideRadius;
-    path.lineTo(centerX, centerY - radius);
+        // if (globalDebugPrint)
+        //   print(
+        //       "Outer circle in realSineTidey, $i, $t, $radius, $radius1, $_lowTideRadius, $_highTideRadius");
+        path.lineTo(sin(degToRad(i)) * radius1 + centerX,
+            centerY - cos(degToRad(i)) * radius1);
+      }
+      radius = _lowTideRadius;
+      path.lineTo(centerX, centerY - radius);
 
-    for (var i = 360; i >= 0; i--) {
-      path.lineTo(sin(degToRad(i)) * radius + centerX,
-          centerY - cos(degToRad(i)) * radius);
-      // if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
+      for (var i = 360; i >= 0; i--) {
+        path.lineTo(sin(degToRad(i)) * radius + centerX,
+            centerY - cos(degToRad(i)) * radius);
+        // if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
+      }
+      canvas.drawPath(path, paint);
     }
-    canvas.drawPath(path, paint);
     // globalDebugPrint = false;
     // if (globalDebugPrint)
     //   print(
@@ -159,8 +167,9 @@ class CurvePainter extends CustomPainter {
     myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2),
         _clockBezelThickness, paintClockBezel, canvas);
     // globalDebugPrint = false;
-    paintSlackTides(
-        centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
+    if (!TideyWeather().tideAPIError)
+      paintSlackTides(
+          centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
   }
 
   @override

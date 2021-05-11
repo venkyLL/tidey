@@ -253,8 +253,8 @@ class _zeClockSyncState extends State<zeClockSync> {
           ],
           pointers: <GaugePointer>[
             MarkerPointer(
-              markerHeight: 20,
-              markerWidth: 20,
+              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
+              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
               markerType: MarkerType.triangle,
               markerOffset: 20,
               value: globalNextLowTidePointerValue,
@@ -263,21 +263,23 @@ class _zeClockSyncState extends State<zeClockSync> {
               color: Colors.red,
             ),
             MarkerPointer(
-              markerHeight: 20,
-              markerWidth: 20,
+              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
+              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
               markerType: MarkerType.text,
               markerOffset: -70,
               value: globalNextLowTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
-              text: globalNextLowTideHeightInFeet > 1000
-                  ? "DataFailure"
-                  : (globalNextLowTideHeightInFeet > 0
-                      ? "+" +
-                          globalNextLowTideHeightInFeet.toStringAsFixed(1) +
-                          " ft"
-                      : globalNextLowTideHeightInFeet.toStringAsFixed(1) +
-                          " ft"),
+              text: TideyWeather().tideAPIError
+                  ? ""
+                  : globalNextLowTideHeightInFeet > 1000
+                      ? "DataFailure"
+                      : (globalNextLowTideHeightInFeet > 0
+                          ? "+" +
+                              globalNextLowTideHeightInFeet.toStringAsFixed(1) +
+                              " ft"
+                          : globalNextLowTideHeightInFeet.toStringAsFixed(1) +
+                              " ft"),
               textStyle: GaugeTextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -293,14 +295,17 @@ class _zeClockSyncState extends State<zeClockSync> {
               value: globalNextHighTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
-              text: globalNextHighTideHeightInFeet > 1000
-                  ? "DataFailure"
-                  : (globalNextHighTideHeightInFeet > 0
-                      ? "+" +
-                          globalNextHighTideHeightInFeet.toStringAsFixed(1) +
-                          " ft"
-                      : globalNextHighTideHeightInFeet.toStringAsFixed(1) +
-                          " ft"),
+              text: TideyWeather().tideAPIError
+                  ? ""
+                  : globalNextHighTideHeightInFeet > 1000
+                      ? "DataFailure"
+                      : (globalNextHighTideHeightInFeet > 0
+                          ? "+" +
+                              globalNextHighTideHeightInFeet
+                                  .toStringAsFixed(1) +
+                              " ft"
+                          : globalNextHighTideHeightInFeet.toStringAsFixed(1) +
+                              " ft"),
               textStyle: GaugeTextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -310,8 +315,8 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                  color: Colors.red),
 
             MarkerPointer(
-              markerHeight: 20,
-              markerWidth: 20,
+              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
+              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
               markerType: MarkerType.triangle,
               markerOffset: 20,
               value: globalNextHighTidePointerValue,
