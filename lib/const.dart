@@ -33,10 +33,10 @@ PackageInfo _packageInfo = PackageInfo(
 );
 
 //globals for the sinewave function y = A sin (omega * t + alpha) + C
-double globalA;
-double globalC;
-double globalOmega;
-double globalAlpha;
+double globalA = 1;
+double globalC = 1;
+double globalOmega = 1;
+double globalAlpha = 1;
 
 //
 double globalNextHighTidePointerValue = 10;

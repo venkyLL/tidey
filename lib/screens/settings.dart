@@ -119,7 +119,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       width: ScreenSize.hasNotch ? 60 : 0,
                     ),
                     Visibility(
-                      visible: globalNetworkAvailable,
+                      visible: true, // globalNetworkAvailable,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: !globalWeather.weatherAPIError
@@ -146,7 +146,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: !globalNetworkAvailable,
+                      visible: false, // !globalNetworkAvailable,
                       child: Text(
                         globalNeworkErrorMessage,
                         style: TextStyle(
@@ -159,7 +159,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       thickness: 5,
                     ),
                     Visibility(
-                      visible: globalNetworkAvailable,
+                      visible: true, // globalNetworkAvailable
                       child: MenuListTile(
                         title: "Refresh Weather Data ",
                         icon: Icons.refresh,
@@ -172,7 +172,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                     ),
 
                     Visibility(
-                      visible: globalNetworkAvailable,
+                      visible: true, // globalNetworkAvailable
                       child: MenuListTileWithSwitch(
                           title: (userSettings.useCurrentPosition)
                               ? "Use Current Location (Enabled)"
@@ -1267,13 +1267,34 @@ class _settingsScreenState extends State<SettingsScreen> {
     setState(() {
       _city = globalWeather.city;
     });
-    mySineWaveData msw = mySineWaveData();
-    await msw.computeTidesForPainting();
-    print("zzGetting Location Data5");
-    if (!globalWeather.localWeatherExists) {
+
+    if (globalWeather.localWeatherExists) {
       //weatherAPIError
+      print("Found local weather data");
       globalWeather.weatherAPIError = false;
+
+      if (globalWeather.tideDataExists) {
+        print("Found Tide Data");
+        globalWeather.tideAPIError = false;
+        mySineWaveData msw = mySineWaveData();
+        await msw.computeTidesForPainting();
+        // globalNetworkAvailable = true;
+      } else {
+        const WE2rrorSnackBar = SnackBar(
+            backgroundColor: (Colors.red),
+            content: Text('No Tide data found for this location '),
+            duration: const Duration(milliseconds: 3000));
+        ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
+        globalWeather.tideAPIError = true;
+      }
+    } else {
+      const WErrorSnackBar = SnackBar(
+          backgroundColor: (Colors.red),
+          content: Text('No Weather data found for this location '),
+          duration: const Duration(milliseconds: 3000));
+      ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
     }
+
     setState(() {
       _loading = false;
     });
@@ -1285,20 +1306,50 @@ class _settingsScreenState extends State<SettingsScreen> {
     });
     print("Getting Location Data1");
     WeatherLocationService location = WeatherLocationService();
-    await location.getWeatherLocation();
-    WeatherService weatherService = WeatherService();
-    print("Getting Weather Data 1");
-    await weatherService.getMarineData();
-    print("Getting Weather Data2");
-    LocalWeatherService localWeatherService = LocalWeatherService();
-    await localWeatherService.getLocalWeatherData();
-    print("Add Done");
-    setState(() {
-      _city = globalWeather.city;
-    });
-    mySineWaveData msw = mySineWaveData();
-    await msw.computeTidesForPainting();
-    print("Sine Done");
+    if (!await location.getWeatherLocation()) {
+      var WErrorSnackBar = SnackBar(
+          backgroundColor: (Colors.red),
+          content: Text('Error no weather data found for this location '),
+          duration: const Duration(milliseconds: 3000));
+      ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+    } else {
+      WeatherService weatherService = WeatherService();
+      print("Getting Weather Data 1");
+      await weatherService.getMarineData();
+      print("Getting Weather Data2");
+      LocalWeatherService localWeatherService = LocalWeatherService();
+      await localWeatherService.getLocalWeatherData();
+      print("Add Done");
+      setState(() {
+        _city = globalWeather.city;
+      });
+
+      if (globalWeather.localWeatherExists) {
+        //weatherAPIError
+        print("Found local weather data");
+        globalWeather.weatherAPIError = false;
+        if (globalWeather.tideDataExists) {
+          print("Found Tide Data");
+          globalWeather.tideAPIError = false;
+          mySineWaveData msw = mySineWaveData();
+          await msw.computeTidesForPainting();
+          // globalNetworkAvailable = true;
+        } else {
+          const WErrorSnackBar = SnackBar(
+              backgroundColor: (Colors.red),
+              content: Text('No Tide data found for this location '),
+              duration: const Duration(milliseconds: 3000));
+          ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+          globalWeather.tideAPIError = true;
+        }
+      } else {
+        const WErrorSnackBar = SnackBar(
+            backgroundColor: (Colors.red),
+            content: Text('No Weather data found for this location '),
+            duration: const Duration(milliseconds: 3000));
+        ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+      }
+    }
     setState(() {
       _loading = false;
     });

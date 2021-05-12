@@ -709,7 +709,7 @@ class LocalWeatherService {
   String latLong = '26.7747,-77.3296';
   String testLatLong = "29.6516, -82.3248";
   getLocalWeatherData() async {
-    globalWeather.weatherAPIError = false;
+    // globalWeather.weatherAPIError = false;
     print("Hello Local Weather, $globalLatitude, $globalLongitude");
     if ((globalLatitude != null) && (globalLongitude != null)) {
       latLong = '$globalLatitude, $globalLongitude';
@@ -761,6 +761,7 @@ class LocalWeatherService {
 
       if (localWeather.data.weather.length != 0) {
         globalWeather.localWeatherExists = true;
+        print("XX Local Weather Exists");
         populateGlobalWeather();
 
         if (localWeather.data.weather[0].hourly.length != 0) {
@@ -886,6 +887,7 @@ class LocalWeatherService {
       }
       globalWeather.dailyWeather[i].highTemp =
           localWeather.data.weather[i].maxtempF;
+
       globalWeather.dailyWeather[i].lowTemp =
           localWeather.data.weather[i].mintempF;
 
@@ -920,10 +922,14 @@ class LocalWeatherService {
             localWeather.data.weather[i].hourly[0].cloudcover;
         globalWeather.dailyWeather[i].visibility =
             localWeather.data.weather[i].hourly[0].visibilityMiles;
+        print("All still good?");
+        print('Hello' + globalWeather.dailyWeather[i].dayString);
         globalWeather.dailyWeather[i].marquee =
             getWeatherLine(globalWeather.dailyWeather[i].dayString, i);
+
         //   print("MadeAMarquee =\n$globalWeather.dailyWeather[i].marquee");
       } //  The 0 element in hourly array is dayly summary
+      print("Not So good?");
       for (var j = 1; j < localWeather.data.weather[i].hourly.length; j++) {
         print("HourAdd $j");
         globalWeather.dailyWeather[i].hourly.add(HourlyWeather());
@@ -961,8 +967,9 @@ class LocalWeatherService {
             localWeather.data.weather[i].hourly[j].cloudcover;
         globalWeather.dailyWeather[i].hourly[j - 1].visibility =
             localWeather.data.weather[i].hourly[j].visibilityMiles;
-
-        if (globalWeather.marineHourlyExists && i == 0) {
+        print("All local good");
+        if (!globalWeather.tideAPIError && i == 0) {
+          print("Should not behere");
           globalWeather.dailyWeather[0].hourly[j - 1].waveHt =
               weatherData.data.weather[0].hourly[j - 1].swellHeightFt;
           globalWeather.dailyWeather[i].hourly[j - 1].waveDirection =
@@ -970,8 +977,9 @@ class LocalWeatherService {
         }
       }
     }
+    print("Lets do some more tide stuff");
     String tides = "";
-    if (globalWeather.tideDataExists) {
+    if (!globalWeather.tideDataExists) {
       tides = globalWeather.dailyWeather[0].tideMarquee;
 
       String weather = "";
@@ -989,6 +997,8 @@ class LocalWeatherService {
   }
 
   getWeatherLine(String stringDay, int day) {
+    print("iequals $day");
+    // return (stringDay);
     return ("     " +
         stringDay +
         " Weather:    " +
@@ -999,7 +1009,7 @@ class LocalWeatherService {
         "\u00B0F" + //\u2109
         marqueeSpacer +
         "High " +
-        weatherData.data.weather[day].maxtempF +
+        localWeather.data.weather[day].maxtempF +
         "\u00B0F" +
         marqueeSpacer +
         "Humidity " +

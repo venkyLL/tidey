@@ -121,7 +121,7 @@ class CurvePainter extends CustomPainter {
         centerX, centerY, _clockBezelRadius, paintClockFace, canvas);
     double radius = _lowTideRadius;
     path.moveTo(centerX, centerY - radius);
-    if (TideyWeather().tideAPIError) {
+    if (globalWeather.tideAPIError) {
       double _ringWidth = (_highTideRadius - _lowTideRadius) / 3.0;
       myDraw.drawRing(centerX, centerY, _lowTideRadius + 2 * _ringWidth,
           _ringWidth, paint, canvas);
@@ -159,7 +159,7 @@ class CurvePainter extends CustomPainter {
     myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2),
         _clockBezelThickness, paintClockBezel, canvas);
 
-    if (!TideyWeather().tideAPIError)
+    if (!globalWeather.tideAPIError)
       paintSlackTides(
           centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
   }
