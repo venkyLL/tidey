@@ -39,10 +39,15 @@ double globalOmega;
 double globalAlpha;
 
 //
+
+bool globalShowHighTidePointer = true;
+bool globalShowLowTidePointer = true;
 double globalNextHighTidePointerValue = 10;
 double globalNextLowTidePointerValue = 6;
 double globalNextHighTideHeightInFeet = 99999;
 double globalNextLowTideHeightInFeet = 999999;
+DateTime globalNextHighTideTimeStamp = DateTime.now();
+DateTime globalNextLowTideTimeStamp = DateTime.now();
 double currentDirection = 193;
 
 int globalNumberOfDaysOfWeatherData = 1;

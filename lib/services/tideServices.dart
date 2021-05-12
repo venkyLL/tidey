@@ -127,25 +127,40 @@ class CurvePainter extends CustomPainter {
           _ringWidth, paint, canvas);
     } else {
       // we have tide data - draw tide.
-      for (var i = 0; i <= 360; i++) {
-        double t = i / 360 * numberOfSecondsInTwelveHours;
+
+      TideSineDrawingParams myTSDP = TideSineDrawingParams();
+      myTSDP.computeTideSineDrawingParams();
+      double _x = myTSDP.drawStartDegrees;
+      double _w = myTSDP.drawOmega;
+
+      //   bool _drawStartHigh = myTSDP.drawStartHigh;
+      //   bool _drawStartLow = myTSDP.drawStartLow;
+      bool _drawStartClock = myTSDP.drawStartClock;
+
+      path.moveTo(sin(degToRad(_x)) * radius + centerX,
+          centerY - cos(degToRad(_x)) * radius);
+      if (globalDebugPrint) print("_x  = $_x,  $globalOmega, $globalAlpha");
+      double _sineWaveScaler =
+          (_highTideRadius - _lowTideRadius) / 2 * _sineWaveScaleDownFactor;
+      if (globalDebugPrint)
+        print("globalHigh, low: $_highTideRadius ,$_lowTideRadius");
+      _x = 0;
+      for (var i = 0 + _x; i <= 350 + _x; i++) {
         double radius1 = radius +
             _minThicknessSineWave +
-            (sin(globalOmega * t + globalAlpha) + 1) *
-                (_highTideRadius - _lowTideRadius) /
-                2 *
-                _sineWaveScaleDownFactor;
+            (sin(_w * i + myTSDP.drawAlpha) + 1) * _sineWaveScaler;
 
-        // if (globalDebugPrint)
-        //   print(
-        //       "Outer circle in realSineTidey, $i, $t, $radius, $radius1, $_lowTideRadius, $_highTideRadius");
+        if (globalDebugPrint)
+          print("sinewave calcs, ${i.toInt()}, ${(radius1 - radius)}");
+
         path.lineTo(sin(degToRad(i)) * radius1 + centerX,
             centerY - cos(degToRad(i)) * radius1);
       }
+      globalDebugPrint = false;
       radius = _lowTideRadius;
-      path.lineTo(centerX, centerY - radius);
+//      path.lineTo(centerX, centerY - radius);
 
-      for (var i = 360; i >= 0; i--) {
+      for (var i = 350 + _x; i >= 0 + _x; i--) {
         path.lineTo(sin(degToRad(i)) * radius + centerX,
             centerY - cos(degToRad(i)) * radius);
         // if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
@@ -228,13 +243,22 @@ void paintSlackTides(centerX, centerY, radius, _slackTideThickness, canvas) {
     pathLow.lineTo(sin(degToRad(myAngleLow)) * radius1 + centerX,
         centerY - cos(degToRad(myAngleLow)) * radius1);
   }
+
   pathHigh.lineTo(sin(degToRad(myAngleHigh)) * radius + centerX,
       centerY - cos(degToRad(myAngleHigh)) * radius);
   pathLow.lineTo(sin(degToRad(myAngleLow)) * radius + centerX,
       centerY - cos(degToRad(myAngleLow)) * radius);
 
-  canvas.drawPath(pathHigh, paintHigh);
-  canvas.drawPath(pathLow, paintLow);
+  if (globalNextHighTideTimeStamp // don't paint slack tides that are more than 12 hours in the future.
+      .subtract(Duration(hours: 12))
+      .isBefore(DateTime.now())) {
+    canvas.drawPath(pathHigh, paintHigh);
+  }
+  if (globalNextLowTideTimeStamp
+      .subtract(Duration(hours: 12))
+      .isBefore(DateTime.now())) {
+    canvas.drawPath(pathLow, paintLow);
+  }
 }
 
 class mySineWaveData {
@@ -306,7 +330,8 @@ class mySineWaveData {
       }
     }
     print("lowtides: $_lowTideTime,$_lowTideFeet");
-
+    globalNextHighTideTimeStamp = _highTideTime;
+    globalNextLowTideTimeStamp = _lowTideTime;
     globalNextHighTidePointerValue = getPointerPosition(_highTideTime);
     globalNextLowTidePointerValue = getPointerPosition(_lowTideTime);
     globalNextHighTideHeightInFeet = _highTideFeet;
@@ -373,5 +398,73 @@ class mySineWaveData {
             (12.0 * 60.0 * 60.0);
     myRadians = fractionalTime * 2 * pi;
     return myRadians;
+  }
+
+  void checkWhetherToShowPointers() {
+    if (TideyWeather().tideAPIError) {
+      globalShowHighTidePointer = false;
+      globalShowLowTidePointer = false;
+      return;
+    }
+    if (globalNextHighTideTimeStamp
+        .subtract(Duration(hours: 12))
+        .isBefore(DateTime.now())) {
+      globalShowHighTidePointer = true;
+    } else {
+      globalShowHighTidePointer = false;
+    }
+    if (globalNextLowTideTimeStamp
+        .subtract(Duration(hours: 12))
+        .isBefore(DateTime.now())) {
+      globalShowLowTidePointer = true;
+    } else {
+      globalShowLowTidePointer = false;
+    }
+  }
+}
+
+class TideSineDrawingParams {
+  double drawStartDegrees;
+  double drawOmega;
+  double drawAlpha;
+  bool nextTideHigh = false;
+  bool nextTideLow = false;
+  bool drawStartClock = false;
+  int deltaT = 0;
+  void computeTideSineDrawingParams() {
+    DateTime _firstTide, _secondTide, _referenceTide;
+    if (globalNextHighTideTimeStamp.isAfter(globalNextLowTideTimeStamp)) {
+      _firstTide = globalNextLowTideTimeStamp;
+      _secondTide = globalNextHighTideTimeStamp;
+      nextTideLow = true;
+    } else {
+      _secondTide = globalNextLowTideTimeStamp;
+      _firstTide = globalNextHighTideTimeStamp;
+      nextTideHigh = true;
+    }
+    _referenceTide = _secondTide;
+    // if (_secondTide.subtract(Duration(hours: 13)).isAfter(DateTime.now())) {
+    //   _referenceTide = DateTime.now().subtract(Duration(minutes: 10));
+    //   drawStartClock = true;
+    // }
+    _referenceTide = DateTime.now().subtract(Duration(minutes: 10));
+    drawStartDegrees = mySineWaveData().getDegreesFromDateTime(_referenceTide);
+    drawOmega = globalOmega * 12 * 60 * 60 / 360;
+    if (nextTideHigh) {
+      deltaT = globalNextHighTideTimeStamp.hour * 60 * 60 +
+          globalNextHighTideTimeStamp.minute * 60 +
+          globalNextHighTideTimeStamp.second;
+      if (deltaT > 12 * 60 * 60) deltaT -= 12 * 60 * 60;
+      drawAlpha = 3.14159 / 2 - (deltaT / (12 * 60 * 60) * 360) * drawOmega;
+    } else {
+      deltaT = globalNextLowTideTimeStamp.hour * 60 * 60 +
+          globalNextLowTideTimeStamp.minute * 60 +
+          globalNextLowTideTimeStamp.second;
+      if (deltaT > 12 * 60 * 60) deltaT -= 12 * 60 * 60;
+      drawAlpha = 3 * 3.14159 / 2 - (deltaT / (12 * 60 * 60) * 360) * drawOmega;
+    }
+    if (globalDebugPrint)
+      print(
+          "globalNextHighTideTimeStamp, $globalNextHighTideTimeStamp, $drawAlpha");
   }
 }

@@ -53,6 +53,9 @@ class _zeClockSyncState extends State<zeClockSync> {
   }
 
   void _updateData(Timer timer) {
+    mySineWaveData msw = mySineWaveData();
+    msw.checkWhetherToShowPointers(); // hide out of range tide pointers.
+
     //  print("global compass direction is $globalCompassDirection");
     if (userSettings.chimeOn) myHourlyBell.ringTheBellIfItIsTime();
     setState(() {
@@ -133,52 +136,7 @@ class _zeClockSyncState extends State<zeClockSync> {
   /// Returns the gauge clock
   SfRadialGauge _buildMyClock() {
     return SfRadialGauge(axes: <RadialAxis>[
-//      RadialAxis(
-//          startAngle: 270,
-//          endAngle: 270,
-//          radiusFactor: 0.3,
-//          minimum: 0,
-//          maximum: 360,
-//          pointers: <GaugePointer>[
-      //      MarkerPointer(
-//                    value: dirMap[gaugeDirection],
-//                    markerType: MarkerType.triangle,
-//                    markerWidth: 30,
-//                    markerHeight: 20,
-//                    markerOffset: 40,
-//                    color: Color(0xFFF67280)),
-      // This below is for Compass
-//            NeedlePointer(
-//              value: globalCompassDirection != null
-//                  ? globalCompassDirection * 80 / 360
-//                  : 270 * 80 / 360,
-//              lengthUnit: GaugeSizeUnit.factor,
-//              needleLength: 0.5,
-//              needleColor: Colors.grey.shade300,
-//              needleEndWidth: ScreenSize.small ? 5 : 10,
-//            )
-      //         ],
-//          axisLineStyle: AxisLineStyle(
-//              thicknessUnit: GaugeSizeUnit.factor,
-//              thickness: 0.05,
-//              color: Colors.grey.shade300), //kBezelColor),
-//          interval: 10,
-//          canRotateLabels: true,
-//          axisLabelStyle: GaugeTextStyle(
-//              fontSize: ScreenSize.small ? 8 : 10,
-//              fontWeight: FontWeight.bold,
-//              color: Colors.white),
-//          minorTicksPerInterval: 0,
-//          majorTickStyle: MajorTickStyle(
-//              thickness: 1.5, lengthUnit: GaugeSizeUnit.factor, length: 0.07),
-//          showLabels: true,
-//          labelOffset: 10,
-//          onLabelCreated: _handleLabelCreated),
-
-      /// Renders inner axis and positioned it using CenterX and
-      /// CenterY properties and reduce the radius using radiusFactor
       RadialAxis(
-//            backgroundImage: const AssetImage('assets/images/blackCircle.png'),
           startAngle: 270,
           endAngle: 270,
           minimum: 0,
@@ -253,8 +211,8 @@ class _zeClockSyncState extends State<zeClockSync> {
           ],
           pointers: <GaugePointer>[
             MarkerPointer(
-              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
-              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
+              markerHeight: globalShowLowTidePointer ? 20 : 0,
+              markerWidth: globalShowLowTidePointer ? 20 : 0,
               markerType: MarkerType.triangle,
               markerOffset: 20,
               value: globalNextLowTidePointerValue,
@@ -263,23 +221,23 @@ class _zeClockSyncState extends State<zeClockSync> {
               color: Colors.red,
             ),
             MarkerPointer(
-              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
-              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
+              markerHeight: 20,
+              markerWidth: 20,
               markerType: MarkerType.text,
               markerOffset: -70,
               value: globalNextLowTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
-              text: TideyWeather().tideAPIError
-                  ? ""
-                  : globalNextLowTideHeightInFeet > 1000
+              text: globalShowLowTidePointer
+                  ? globalNextLowTideHeightInFeet > 1000
                       ? "DataFailure"
                       : (globalNextLowTideHeightInFeet > 0
                           ? "+" +
                               globalNextLowTideHeightInFeet.toStringAsFixed(1) +
                               " ft"
                           : globalNextLowTideHeightInFeet.toStringAsFixed(1) +
-                              " ft"),
+                              " ft")
+                  : "",
               textStyle: GaugeTextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -295,9 +253,8 @@ class _zeClockSyncState extends State<zeClockSync> {
               value: globalNextHighTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
-              text: TideyWeather().tideAPIError
-                  ? ""
-                  : globalNextHighTideHeightInFeet > 1000
+              text: globalShowHighTidePointer
+                  ? globalNextHighTideHeightInFeet > 1000
                       ? "DataFailure"
                       : (globalNextHighTideHeightInFeet > 0
                           ? "+" +
@@ -305,7 +262,8 @@ class _zeClockSyncState extends State<zeClockSync> {
                                   .toStringAsFixed(1) +
                               " ft"
                           : globalNextHighTideHeightInFeet.toStringAsFixed(1) +
-                              " ft"),
+                              " ft")
+                  : "",
               textStyle: GaugeTextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -315,8 +273,8 @@ class _zeClockSyncState extends State<zeClockSync> {
 //                  color: Colors.red),
 
             MarkerPointer(
-              markerHeight: TideyWeather().tideAPIError ? 0 : 20,
-              markerWidth: TideyWeather().tideAPIError ? 0 : 20,
+              markerHeight: globalShowHighTidePointer ? 20 : 0,
+              markerWidth: globalShowHighTidePointer ? 20 : 0,
               markerType: MarkerType.triangle,
               markerOffset: 20,
               value: globalNextHighTidePointerValue,
