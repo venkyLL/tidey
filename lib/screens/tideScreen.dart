@@ -431,7 +431,7 @@ class _LandscapeViewState extends State<LandscapeView> {
       children: [
         Stack(
           children: [
-            VenkySwap(),
+            VenkySwapL(),
             // LandscapeTimerWidget(),
             ClockRow(),
           ],
@@ -896,8 +896,79 @@ List<Widget> gaugeSequenceList1 = [
         imageName: "boat2.jpg",
       ))
 ];
-
-List<Widget> gaugeSequenceListP1 = [
+List<Widget> gaugeSequenceListPNoTide = [
+  PortraitDialRow(
+      gaugeType1: ScreenSize.small
+          ? TempGauge2(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode])
+          : TempGauge2(
+              high: double.parse(globalWeather.dailyWeather[di].highTemp),
+              low: double.parse(globalWeather.dailyWeather[di].lowTemp),
+              conditionIcon: weatherDayIconMap[
+                  globalWeather.dailyWeather[di].hourly[0].weatherCode]),
+      gaugeType2: ScreenSize.small
+          ? Humidity2Gauge(
+              gaugeValue: double.parse(
+              globalWeather.dailyWeather[di].humidity,
+            ))
+          : HumidityGauge(
+              gaugeValue: double.parse(
+                globalWeather.dailyWeather[di].humidity,
+              ),
+            )),
+  PortraitDialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "sunset1.gif",
+        textLabel: globalWeather.dailyWeather[di].sunrise,
+        textBackgroundColor: Colors.transparent,
+        fontSize: 20,
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "sunset2.gif",
+        textLabel: globalWeather.dailyWeather[di].sunset,
+        textBackgroundColor: Colors.transparent,
+        fontSize: 20,
+      )),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeNew(
+      // moon23.png
+      imageName: globalWeather.dailyWeather[di].moonImageName,
+      innerLineColor: Colors.transparent,
+    ),
+//ImageGauge(imageName: "gaugeMoon.png", textLabel: ""),
+    gaugeType2: ImageGaugeNew(
+        imageName: "shootingStar.gif",
+        innerLineColor: Colors.transparent,
+        textLabel: globalWeather.dailyWeather[di].moonPhase +
+            "\nRise: " +
+            globalWeather.dailyWeather[di].moonrise +
+            "\nSet:" +
+            globalWeather.dailyWeather[di].moonset,
+        textPosition: 40,
+        textBackgroundColor: Colors.transparent,
+        fontSize: 20),
+  ),
+//  PortraitDialRow(
+//    gaugeType1: ImageGaugeNew(
+//      imageName: "water.gif",
+//    ),
+//    gaugeType2: BarometerGauge(
+//      current: double.parse(globalWeather.dailyWeather[di].hourly[0].pressure),
+//      change: getBarometerChange(),
+//    ),
+//  ),
+  PortraitDialRow(
+      gaugeType1: ImageGaugeNew(
+        imageName: "boat1.jpg",
+      ),
+      gaugeType2: ImageGaugeNew(
+        imageName: "boat2.jpg",
+      ))
+];
+List<Widget> gaugeSequenceListPNoData = [
   PortraitDialRow(
       gaugeType1: ImageGaugeNew(imageName: "sunset1.gif"),
       gaugeType2: ImageGaugeNew(imageName: "sunset2.gif")),
@@ -916,16 +987,16 @@ List<Widget> gaugeSequenceListP1 = [
   ),
 ];
 
-class VenkySwap extends StatefulWidget {
-  VenkySwap({Key key, this.title}) : super(key: key);
+class VenkySwapL extends StatefulWidget {
+  VenkySwapL({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _VenkySwapState createState() => _VenkySwapState();
+  _VenkySwapLState createState() => _VenkySwapLState();
 }
 
-class _VenkySwapState extends State<VenkySwap> {
+class _VenkySwapLState extends State<VenkySwapL> {
   int _counter = 0;
   bool animationSwitcher = false;
   Timer myTimer;
@@ -1033,31 +1104,32 @@ class _VenkySwapState extends State<VenkySwap> {
 }
 
 class VenkySwapP extends StatefulWidget {
-  List<Widget> gaugeSequence;
-  VenkySwapP({Key key, this.title, this.gaugeSequence}) : super(key: key);
+  VenkySwapP({
+    Key key,
+    this.title,
+  }) : super(key: key);
 
   final String title;
 
   @override
-  _VenkySwapStateP createState() => _VenkySwapStateP(gaugeSequence);
+  _VenkySwapStateP createState() => _VenkySwapStateP();
 }
 
 class _VenkySwapStateP extends State<VenkySwapP> {
-  List<Widget> gaugeSequence;
-  _VenkySwapStateP(this.gaugeSequence);
+  _VenkySwapStateP();
   int _counter = counter;
   bool animationSwitcher = false;
   Timer myTimer;
   Timer ted;
-  bool _error = globalWeather.weatherAPIError;
+  //bool _error = globalWeather.weatherAPIError;
   AnimationController controller;
   List<Widget> myWidgetList;
-  Widget myFirstWidget = gaugeSequenceListP1[0];
+  Widget myFirstWidget = gaugeSequenceListP[0];
 
 //  globalWeather.weatherAPIError
 //      ? gaugeSequenceListP[0]
 //      : gaugeSequenceListP1[0];
-  Widget mySecondWidget = gaugeSequenceListP1[1];
+  Widget mySecondWidget = gaugeSequenceListP[1];
 
 //  globalWeather.weatherAPIError
 //      ? gaugeSequenceListP[1]
@@ -1081,14 +1153,14 @@ class _VenkySwapStateP extends State<VenkySwapP> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-    if (globalWeather.weatherAPIError != _error) {
-      print("Error Cleared");
-      setState(() {
-        _error = !_error;
-        _counter = 0;
-        counter = 0;
-      });
-    }
+//    if (globalWeather.weatherAPIError != _error) {
+//      print("Error Cleared");
+//      setState(() {
+//        _error = !_error;
+//        _counter = 0;
+//        counter = 0;
+//      });
+//    }
   }
 
   @override
@@ -1104,24 +1176,20 @@ class _VenkySwapStateP extends State<VenkySwapP> {
 
   void _updateData(Timer timer) {
     if (!pauseGauge) {
-      counter = (counter + 1) % gaugeSequence.length;
+      counter = (counter + 1) % gaugeSequenceListP.length;
       _counter = counter;
-      //     (_error ? gaugeSequenceListP.length : gaugeSequenceListP1.length);
-      // counter = 0;
+
       setState(() {
         animationSwitcher = !animationSwitcher;
       });
 
       if (animationSwitcher) {
-        if (_error) {
-          print("so many errors");
-        }
         // you need this funky method because animationCrossFade goes back and forth between one image and the other
         // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
-        myFirstWidget = gaugeSequence[_counter];
+        myFirstWidget = gaugeSequenceListP[_counter];
         //   _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       } else {
-        mySecondWidget = gaugeSequence[_counter];
+        mySecondWidget = gaugeSequenceListP[_counter];
         //  _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       }
     }
@@ -1144,16 +1212,16 @@ class _VenkySwapStateP extends State<VenkySwapP> {
   }
 }
 
-class VenkySwapP1 extends StatefulWidget {
-  VenkySwapP1({Key key, this.title}) : super(key: key);
+class VenkySwapPNoData extends StatefulWidget {
+  VenkySwapPNoData({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _VenkySwapStateP1 createState() => _VenkySwapStateP1();
+  _VenkySwapStatePNoData createState() => _VenkySwapStatePNoData();
 }
 
-class _VenkySwapStateP1 extends State<VenkySwapP1> {
+class _VenkySwapStatePNoData extends State<VenkySwapPNoData> {
   // int _counter = 0;
   bool animationSwitcher = false;
   Timer myTimer;
@@ -1161,12 +1229,12 @@ class _VenkySwapStateP1 extends State<VenkySwapP1> {
 //  bool _error = globalWeather.weatherAPIError;
   AnimationController controller;
   List<Widget> myWidgetList;
-  Widget myFirstWidget = gaugeSequenceListP1[0];
+  Widget myFirstWidget = gaugeSequenceListPNoData[0];
 
 //  globalWeather.weatherAPIError
 //      ? gaugeSequenceListP[0]
 //      : gaugeSequenceListP1[0];
-  Widget mySecondWidget = gaugeSequenceListP1[1];
+  Widget mySecondWidget = gaugeSequenceListPNoData[1];
 
 //  globalWeather.weatherAPIError
 //      ? gaugeSequenceListP[1]
@@ -1211,7 +1279,7 @@ class _VenkySwapStateP1 extends State<VenkySwapP1> {
 
   void _updateData(Timer timer) {
     if (!pauseGauge) {
-      counter = (counter + 1) % gaugeSequenceListP1.length;
+      counter = (counter + 1) % gaugeSequenceListPNoData.length;
       //     (_error ? gaugeSequenceListP.length : gaugeSequenceListP1.length);
       // counter = 0;
       setState(() {
@@ -1221,10 +1289,113 @@ class _VenkySwapStateP1 extends State<VenkySwapP1> {
       if (animationSwitcher) {
         // you need this funky method because animationCrossFade goes back and forth between one image and the other
         // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
-        myFirstWidget = gaugeSequenceListP1[counter];
+        myFirstWidget = gaugeSequenceListPNoData[counter];
         //   _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP1[counter];
+        mySecondWidget = gaugeSequenceListPNoData[counter];
+        //  _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    return Center(
+      child: AnimatedCrossFade(
+        duration: const Duration(milliseconds: 1500),
+        firstChild: myFirstWidget,
+        secondChild: mySecondWidget,
+        crossFadeState: animationSwitcher
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+      ),
+    );
+  }
+}
+
+class VenkySwapPNoTide extends StatefulWidget {
+  VenkySwapPNoTide({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _VenkySwapPNoTide createState() => _VenkySwapPNoTide();
+}
+
+class _VenkySwapPNoTide extends State<VenkySwapPNoTide> {
+  // int _counter = 0;
+  bool animationSwitcher = false;
+  Timer myTimer;
+  Timer ted;
+//  bool _error = globalWeather.weatherAPIError;
+  AnimationController controller;
+  List<Widget> myWidgetList;
+  Widget myFirstWidget = gaugeSequenceListPNoTide[0];
+
+//  globalWeather.weatherAPIError
+//      ? gaugeSequenceListP[0]
+//      : gaugeSequenceListP1[0];
+  Widget mySecondWidget = gaugeSequenceListPNoTide[1];
+
+//  globalWeather.weatherAPIError
+//      ? gaugeSequenceListP[1]
+//      : gaugeSequenceListP1[1];
+  int currentTransitionTime = userSettings.transitionTime;
+
+  @override
+  void initState() {
+    super.initState();
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+    myTimer = Timer.periodic(
+        Duration(seconds: userSettings.transitionTime), _updateData);
+  }
+
+  _bobX(Timer timer) {
+    if (currentTransitionTime != userSettings.transitionTime) {
+      if (myTimer.isActive) {
+        myTimer.cancel();
+      }
+      currentTransitionTime = userSettings.transitionTime;
+      myTimer = Timer.periodic(
+          Duration(seconds: userSettings.transitionTime), _updateData);
+    }
+//    if (globalWeather.weatherAPIError != _error) {
+//      print("Error Cleared");
+//      setState(() {
+//        _error = !_error;
+//      });
+    //   }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (myTimer.isActive) {
+      myTimer.cancel();
+    }
+    if (ted.isActive) {
+      ted.cancel();
+    }
+  }
+
+  void _updateData(Timer timer) {
+    if (!pauseGauge) {
+      counter = (counter + 1) % gaugeSequenceListPNoTide.length;
+      //     (_error ? gaugeSequenceListP.length : gaugeSequenceListP1.length);
+      // counter = 0;
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        // you need this funky method because animationCrossFade goes back and forth between one image and the other
+        // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+        myFirstWidget = gaugeSequenceListPNoTide[counter];
+        //   _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListPNoTide[counter];
         //  _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       }
     }
@@ -1260,29 +1431,31 @@ class PortraitMode extends StatefulWidget {
 }
 
 Timer ted;
-bool _APIError = globalWeather.weatherAPIError;
+bool _weatherAPIError = globalWeather.weatherAPIError;
+bool _tideAPIError = globalWeather.tideAPIError;
 
 class _PortraitModeState extends State<PortraitMode> {
   @override
   void initState() {
     super.initState();
 
-    if (globalWeather.weatherAPIError) {
-      print("Starting Timer");
-      ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
-    }
+    ted = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
   }
 
 //
   _bobX(Timer timer) {
     // print("In Timer");
-    if (!globalWeather.weatherAPIError) {
-      if (ted.isActive) {
-        ted.cancel();
-      }
+
+    if (globalWeather.weatherAPIError != _weatherAPIError) {
       print("Now have data");
       setState(() {
-        _APIError = false;
+        _weatherAPIError = !_weatherAPIError;
+      });
+    }
+    if (globalWeather.tideAPIError != _tideAPIError) {
+      print("Now have data");
+      setState(() {
+        _tideAPIError = !_tideAPIError;
       });
     }
   }
@@ -1290,7 +1463,9 @@ class _PortraitModeState extends State<PortraitMode> {
   @override
   void dispose() {
     super.dispose();
-    // ted.cancel();
+    if (ted.isActive) {
+      ted.cancel();
+    }
   }
 
   @override
@@ -1311,25 +1486,47 @@ class _PortraitModeState extends State<PortraitMode> {
           ),
           // (_APIError) ? errorStack() : portraitStack(),
           // portraitStack(),  // shit take out tide
-          (_APIError) ? errorStack() : portraitStack(),
+          (_weatherAPIError)
+              ? PNoDataStack()
+              : _tideAPIError
+                  ? PNoTideStack()
+                  : portraitStack(),
           //(!globalNetworkAvailable) ? errorStack() : portraitStack(),
         ],
       ),
     );
   }
 
-  Stack errorStack() {
+  Stack PNoDataStack() {
     return Stack(
       children: [
-        VenkySwapP(gaugeSequence: gaugeSequenceListP1), // Used to be P1
-        // PortraitTimerWidget(),
-//        PortraitDialRow(
-//            gaugeType1: ImageGaugeNew(
-//              imageName: "boat1.jpg",
-//            ),
-//            gaugeType2: ImageGaugeNew(
-//              imageName: "boat2.jpg",
-//            )),
+        VenkySwapPNoData(), // Used to be P1
+
+        Column(children: [
+          SizedBox(height: ScreenSize.safeBlockVertical * 4),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          Container(
+              alignment: Alignment.center,
+              child: zeClockSync(),
+              width: ScreenSize.clockSize, // + 25,
+              height: ScreenSize.clockSize),
+          SizedBox(height: ScreenSize.safeBlockVertical * 2),
+          Container(
+              height:
+                  ScreenSize.gaugeSize - (ScreenSize.safeBlockVertical * 4)),
+        ]),
+      ],
+    );
+  }
+
+  Stack PNoTideStack() {
+    return Stack(
+      children: [
+        VenkySwapPNoTide(), // Used to be P1
+
         Column(children: [
           SizedBox(height: ScreenSize.safeBlockVertical * 4),
           Container(
@@ -1355,7 +1552,7 @@ class _PortraitModeState extends State<PortraitMode> {
     return Stack(
       children: [
         // PortraitTimerWidget(),
-        VenkySwapP(gaugeSequence: gaugeSequenceListP),
+        VenkySwapP(),
         Column(children: [
           SizedBox(height: ScreenSize.safeBlockVertical * 4),
           Container(

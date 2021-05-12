@@ -231,7 +231,7 @@ class _SplashScreenState extends State<SplashScreen> {
         mySineWaveData msw = mySineWaveData();
         await msw.computeTidesForPainting();
         // globalNetworkAvailable = false;
-        globalWeather.weatherAPIError = true;
+        // globalWeather.weatherAPIError = true;
       }
     } else {
       globalNetworkAvailable = false;
