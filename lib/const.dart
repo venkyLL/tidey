@@ -79,6 +79,8 @@ var daysSinceDataLoad = 0;
 class UserSettings {
   bool chimeOn;
   final keyChimeOn = "chimeOn";
+  bool adsOn;
+  final keyAdsOn = "adsOn";
   bool chimeDoNotDisturb;
   final keyChimeDoNotDisturb = "chimeDoNotDisturb";
   ChimeType chimeSelected;

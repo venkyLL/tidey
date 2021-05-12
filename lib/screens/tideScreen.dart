@@ -46,6 +46,9 @@ class _TideScreenState extends State<TideScreen> {
   @override
   void initState() {
     super.initState();
+    if (userSettings.adsOn) {
+      appendAds();
+    }
     ExpandableFab();
   }
 
@@ -1969,3 +1972,67 @@ List<Widget> gaugeSequenceListPNoData = [
     gaugeType2: ImageGaugeNew(imageName: "moon9.png"),
   ),
 ];
+
+void appendAds() {
+  if (userSettings.adsOn) {
+    gaugeSequenceListP.add(
+      PortraitDialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+
+    gaugeSequenceListPNoData.add(
+      PortraitDialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+
+    gaugeSequenceListPNoTide.add(
+      PortraitDialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+
+    gaugeSequenceListL.add(
+      DialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+
+    gaugeSequenceListLNoData.add(
+      DialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+
+    gaugeSequenceListLNoTide.add(
+      DialRow(
+          gaugeType1: ImageGaugeNew(
+            imageName: "CruiseAbaco1.png",
+          ),
+          gaugeType2: ImageGaugeNew(
+            imageName: "ACY1.png",
+          )),
+    );
+  }
+}

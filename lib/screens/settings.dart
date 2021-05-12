@@ -49,6 +49,11 @@ class _settingsScreenState extends State<SettingsScreen> {
   bool _loading = false;
   Timer ted;
   //var myController = TextEditingController();
+  final adsSnackBar = SnackBar(
+      // backgroundColor: (Colors.red),
+      content: Text(
+          'Changes saved. Exit and Restart Tidey to enable advertising change. '),
+      duration: const Duration(milliseconds: 3000));
 
   void initState() {
     // TODO: implement initState
@@ -921,8 +926,30 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
+                    MenuListTileWithSwitch(
+                        title: (userSettings.adsOn)
+                            ? "Disable Advertising "
+                            : "Enable Advertising",
+                        value: userSettings.adsOn,
+                        icon: Icons.photo,
+                        onTap: () {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(adsSnackBar);
+                          setState(() {
+                            userSettings.adsOn = !userSettings.adsOn;
+                            //    _chimeEnabled = userSettings.chimeOn;
+                            print(
+                                "Selected " + userSettings.chimeOn.toString());
+                            prefs.setBool(
+                                userSettings.keyAdsOn, userSettings.adsOn);
+                          });
+                        }),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
                     MenuListTile(
-                      title: "Local Information URL",
+                      title: "URL for More Information",
                       icon: Icons.info,
                     ),
                     Form(
@@ -1256,45 +1283,51 @@ class _settingsScreenState extends State<SettingsScreen> {
     });
     print("zzGetting Location Data1");
     Location location = Location();
-    await location.getCurrentLocation();
-    print("zzGetting Location Data2");
-    WeatherService weatherService = WeatherService();
-    await weatherService.getMarineData();
-    print("zzGetting Location Data3");
-    LocalWeatherService localWeatherService = LocalWeatherService();
-    await localWeatherService.getLocalWeatherData();
-    print("zzGetting Location Data4");
-    setState(() {
-      _city = globalWeather.city;
-    });
+    if (await location.getCurrentLocation()) {
+      WeatherService weatherService = WeatherService();
+      await weatherService.getMarineData();
+      print("zzGetting Location Data3");
+      LocalWeatherService localWeatherService = LocalWeatherService();
+      await localWeatherService.getLocalWeatherData();
+      print("zzGetting Location Data4");
+      setState(() {
+        _city = globalWeather.city;
+      });
 
-    if (globalWeather.localWeatherExists) {
-      //weatherAPIError
-      print("Found local weather data");
-      globalWeather.weatherAPIError = false;
+      if (globalWeather.localWeatherExists) {
+        //weatherAPIError
+        print("Found local weather data");
+        globalWeather.weatherAPIError = false;
 
-      if (globalWeather.tideDataExists) {
-        print("Found Tide Data");
-        globalWeather.tideAPIError = false;
-        mySineWaveData msw = mySineWaveData();
-        await msw.computeTidesForPainting();
-        // globalNetworkAvailable = true;
+        if (globalWeather.tideDataExists) {
+          print("Found Tide Data");
+          globalWeather.tideAPIError = false;
+          mySineWaveData msw = mySineWaveData();
+          await msw.computeTidesForPainting();
+          // globalNetworkAvailable = true;
+        } else {
+          const WE2rrorSnackBar = SnackBar(
+              backgroundColor: (Colors.red),
+              content: Text('No Tide data found for this location '),
+              duration: const Duration(milliseconds: 3000));
+          ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
+          globalWeather.tideAPIError = true;
+        }
       } else {
-        const WE2rrorSnackBar = SnackBar(
+        const WErrorSnackBar = SnackBar(
             backgroundColor: (Colors.red),
-            content: Text('No Tide data found for this location '),
+            content: Text('No Weather data found for this location '),
             duration: const Duration(milliseconds: 3000));
-        ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
-        globalWeather.tideAPIError = true;
+        ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
       }
     } else {
-      const WErrorSnackBar = SnackBar(
+      const WE2rrorSnackBar = SnackBar(
           backgroundColor: (Colors.red),
-          content: Text('No Weather data found for this location '),
+          content: Text(
+              'Current Location Not available, please enable location services '),
           duration: const Duration(milliseconds: 3000));
-      ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
     }
-
     setState(() {
       _loading = false;
     });
