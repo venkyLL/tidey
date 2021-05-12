@@ -219,14 +219,14 @@ class WeatherLocationService {
       prefs.setDouble(userSettings.keyManualLat, userSettings.manualLat);
       prefs.setDouble(userSettings.keyManualLong, userSettings.manualLong);
       print("DDDouble Convert End");
-      return;
+      return true;
     } catch (e) {
-      globalLongitude = "0";
-      globalLatitude = "0";
-      print("error found");
-      globalWeather.weatherAPIError = true;
-
+//      globalLongitude = "0";
+//      globalLatitude = "0";
+      print("error No Location Found");
+      // globalWeather.weatherAPIError = true;
       print(e);
+      return false;
     }
   }
 }

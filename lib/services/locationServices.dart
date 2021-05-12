@@ -5,7 +5,7 @@ class Location {
   double latitude;
   double longitude;
 
-  Future<void> getCurrentLocation() async {
+  Future<bool> getCurrentLocation() async {
     print("in getCurrentLocation , useCurrent Location = " +
         userSettings.useCurrentPosition.toString());
     if (userSettings.useCurrentPosition) {
@@ -21,7 +21,9 @@ class Location {
         globalLatitude = position.latitude.toString();
         globalLongitude = position.longitude.toString();
         print("returning latitude is $globalLatitude");
+        return (true);
       } catch (e) {
+        return (false);
         print("my getCurrentLocation error is $e");
       }
     }

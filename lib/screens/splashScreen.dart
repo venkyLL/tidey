@@ -2,11 +2,11 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
-// import 'package:permission_handler/permission_handler.dart';
 import 'package:tidey/screens/onBoard.dart';
 import 'package:tidey/screens/tideScreen.dart';
 import 'package:tidey/services/compass.dart';
@@ -14,6 +14,7 @@ import 'package:tidey/services/cronServices.dart';
 import 'package:tidey/services/localWeather.dart';
 import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:tidey/services/tideServices.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -158,21 +159,16 @@ class _SplashScreenState extends State<SplashScreen> {
     await getProfileData();
 //    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
 //      print("Location Service Enabled");
-    if (_networkStatus1 != "None") {
-      Location location = Location();
-      if (userSettings.useCurrentPosition) {
-        print("Using Current Position");
-        await location.getCurrentLocation();
-//        var locationSnackBar = SnackBar(
-//            content: Text(
-//                'Getting Weather for:  ($globalLatitude $globalLongitude) '),
-//            duration: const Duration(milliseconds: 1500));
-//        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
-      } else {
+
+    Location location = Location();
+    if (userSettings.useCurrentPosition) {
+      print("Using Current Position");
+      //   bool success = await location.getCurrentLocation();
+      if (!await location.getCurrentLocation()) {
         globalLatitude = userSettings.manualLat.toString();
         globalLongitude = userSettings.manualLong.toString();
         var defaultLocationSnackBar = SnackBar(
-          backgroundColor: (Colors.blue),
+          //  backgroundColor: (Colors.blue),
           content: Text('Location Services disabled using default location, '),
           duration: const Duration(milliseconds: 3000),
         );
@@ -181,7 +177,6 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       globalLatitude = userSettings.manualLat.toString();
       globalLongitude = userSettings.manualLong.toString();
-      ScaffoldMessenger.of(context).showSnackBar(noLocationSnackBar);
     }
 
     CronJobs myCronJobs = CronJobs();
@@ -194,32 +189,31 @@ class _SplashScreenState extends State<SplashScreen> {
     print(packageInfo.version);
     print(packageInfo.packageName);
     globalWeather.weatherAPIError = true;
-    // globalNetworkAvailable = false;
+
+    globalWeather.weatherAPIError = false;
+    globalWeather.tideAPIError = false;
 
     if (_networkStatus1 != "None") {
+      globalNetworkAvailable = true;
       WeatherService weatherService = WeatherService();
       String ans = await weatherService.getMarineData();
       print("Back from Local Weather baby $ans");
       if (ans != "True") {
-        globalNetworkAvailable = false;
-        globalNeworkErrorMessage =
-            "Error connecting to weather service \nPlease restart Tidey and try again later.";
+        globalWeather.tideAPIError = true;
+
         var WErrorSnackBar = SnackBar(
             backgroundColor: (Colors.red),
-            content: Text('Error connecting to Marine weather service! '),
+            content: Text('Error connecting to tide service! '),
             duration: const Duration(milliseconds: 3000));
         ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
       }
 
       LocalWeatherService localWeatherService = LocalWeatherService();
-      await localWeatherService.getLocalWeatherData();
-      print("Back from Marine  baby $ans");
+      ans = await localWeatherService.getLocalWeatherData();
+      print("Back from local weathe baby $ans");
       if (ans != "True") {
-//        ScaffoldMessenger.of(context).showSnackBar(tideSnackbar);
-//      } else {
-        globalNetworkAvailable = false;
-        globalNeworkErrorMessage =
-            "Error connecting to weather service \nPlease restart Tidey and try again later.";
+        globalWeather.weatherAPIError = true;
+
         var WErrorSnackBar = SnackBar(
             backgroundColor: (Colors.red),
             content: Text(
@@ -228,17 +222,19 @@ class _SplashScreenState extends State<SplashScreen> {
             duration: const Duration(milliseconds: 3000));
         ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
       }
-      if (globalNetworkAvailable) {
-        var locationSnackBar = SnackBar(
-            content: Text(
-                'Weather Data Retrieved for :  ($globalLatitude $globalLongitude) '),
-            duration: const Duration(milliseconds: 2000));
-        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+      var locationSnackBar = SnackBar(
+          content: Text(
+              'Weather Data Retrieved for :  ($globalLatitude $globalLongitude) '),
+          duration: const Duration(milliseconds: 2000));
+      ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+      if (!globalWeather.tideAPIError) {
         mySineWaveData msw = mySineWaveData();
         await msw.computeTidesForPainting();
-        globalWeather.weatherAPIError = false;
+        // globalNetworkAvailable = false;
+        globalWeather.weatherAPIError = true;
       }
     } else {
+      globalNetworkAvailable = false;
       ScaffoldMessenger.of(context).showSnackBar(noNetworkSnackbar);
     }
 
@@ -252,7 +248,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(milliseconds: 2000), () {
 // Here you can write your code
-
+      print("zzErrors  " +
+          globalWeather.weatherAPIError.toString() +
+          " " +
+          globalWeather.tideAPIError.toString());
       setState(() {
         firstTime
             ? Navigator.pushReplacementNamed(context, OnBoardingPage.id)
