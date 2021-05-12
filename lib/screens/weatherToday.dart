@@ -76,7 +76,7 @@ class _TodayScreenState extends State<TodayScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: (!globalWeather.marineHourlyExists)
+          child: (globalWeather.weatherAPIError)
               ? Container(
                   alignment: Alignment.center,
                   height: ScreenSize.small ? 50 : 200,

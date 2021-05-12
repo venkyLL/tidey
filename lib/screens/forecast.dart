@@ -73,7 +73,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: (!globalWeather.localHourlyExists)
+          child: (globalWeather.weatherAPIError)
               ? Container(
                   alignment: Alignment.center,
                   height: 200,

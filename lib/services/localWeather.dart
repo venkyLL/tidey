@@ -987,6 +987,7 @@ class LocalWeatherService {
         print("Yea Yo");
         weather = weather = globalWeather.dailyWeather[i].marquee;
       }
+      print("About to set up Marquee String");
       marqueeString =
           "                                                                     " +
               "                                                             " +

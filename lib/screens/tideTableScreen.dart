@@ -79,14 +79,12 @@ class _TideTableScreenState extends State<TideTableScreen> {
             ),
           ),
           constraints: BoxConstraints.expand(),
-          child: (!globalWeather.marineHourlyExists)
+          child: (globalWeather.tideAPIError)
               ? Container(
                   alignment: Alignment.center,
                   height: ScreenSize.small ? 50 : 200,
-                  child: Text(
-                      'Local Weather Not Available\nPlease Check Network Connections',
-                      style: kTableTitleTextStyle,
-                      textAlign: TextAlign.center),
+                  child: Text('Tide Data Not Available For this Area',
+                      style: kTableTitleTextStyle, textAlign: TextAlign.center),
                 )
               : Column(
                   children: [
