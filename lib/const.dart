@@ -503,6 +503,7 @@ class ScreenSize {
   static bool hasNotch;
   static bool isAndroid;
   static bool isIOS;
+  static double clockPointerTextOffset;
 
   void init(BuildContext context) {
     isTablet = Device.get().isTablet;
@@ -545,6 +546,10 @@ class ScreenSize {
 
     small = (min(safeBlockHorizontal, safeBlockVertical) < 5.00);
     small ? fs = .7 : fs = 1.0;
+
+    clockPointerTextOffset =
+        max(Device.screenHeight, Device.screenWidth) / 748 * 40.0 * -1;
+
     print(_mediaQueryData.orientation);
     print("Total height = ${safeBlockVertical * 100}");
     print("Total width = ${safeBlockHorizontal * 100}");

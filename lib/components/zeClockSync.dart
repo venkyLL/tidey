@@ -224,7 +224,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               markerHeight: 20,
               markerWidth: 20,
               markerType: MarkerType.text,
-              markerOffset: -70,
+              markerOffset: ScreenSize.clockPointerTextOffset,
               value: globalNextLowTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
@@ -239,7 +239,7 @@ class _zeClockSyncState extends State<zeClockSync> {
                               " ft")
                   : "",
               textStyle: GaugeTextStyle(
-                  fontSize: 15,
+                  fontSize: ScreenSize.small ? 15 : 20,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                   color: Colors.red),
@@ -249,7 +249,7 @@ class _zeClockSyncState extends State<zeClockSync> {
               markerHeight: 20,
               markerWidth: 20,
               markerType: MarkerType.text,
-              markerOffset: -70,
+              markerOffset: ScreenSize.clockPointerTextOffset,
               value: globalNextHighTidePointerValue,
               enableAnimation: true,
               animationType: AnimationType.linear,
@@ -265,7 +265,7 @@ class _zeClockSyncState extends State<zeClockSync> {
                               " ft")
                   : "",
               textStyle: GaugeTextStyle(
-                  fontSize: 16,
+                  fontSize: ScreenSize.small ? 15 : 20,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                   color: Colors.green),
