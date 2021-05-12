@@ -99,7 +99,7 @@ class _zeClockSyncState extends State<zeClockSync> {
 
   void _kickOffTideComputation(Timer timer) {
     mySineWaveData msw = mySineWaveData();
-    if (!TideyWeather().tideAPIError) msw.computeTidesForPainting();
+    if (!globalWeather.tideAPIError) msw.computeTidesForPainting();
   }
 
   // void _kickOffClockTesting(Timer timer) {

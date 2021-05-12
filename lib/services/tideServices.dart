@@ -121,7 +121,7 @@ class CurvePainter extends CustomPainter {
         centerX, centerY, _clockBezelRadius, paintClockFace, canvas);
     double radius = _lowTideRadius;
     path.moveTo(centerX, centerY - radius);
-    if (TideyWeather().tideAPIError) {
+    if (globalWeather.tideAPIError) {
       double _ringWidth = (_highTideRadius - _lowTideRadius) / 3.0;
       myDraw.drawRing(centerX, centerY, _lowTideRadius + 2 * _ringWidth,
           _ringWidth, paint, canvas);
@@ -130,37 +130,25 @@ class CurvePainter extends CustomPainter {
 
       TideSineDrawingParams myTSDP = TideSineDrawingParams();
       myTSDP.computeTideSineDrawingParams();
-      double _x = myTSDP.drawStartDegrees;
       double _w = myTSDP.drawOmega;
-
-      //   bool _drawStartHigh = myTSDP.drawStartHigh;
-      //   bool _drawStartLow = myTSDP.drawStartLow;
-      bool _drawStartClock = myTSDP.drawStartClock;
-
-      path.moveTo(sin(degToRad(_x)) * radius + centerX,
-          centerY - cos(degToRad(_x)) * radius);
-      if (globalDebugPrint) print("_x  = $_x,  $globalOmega, $globalAlpha");
       double _sineWaveScaler =
           (_highTideRadius - _lowTideRadius) / 2 * _sineWaveScaleDownFactor;
       if (globalDebugPrint)
         print("globalHigh, low: $_highTideRadius ,$_lowTideRadius");
-      _x = 0;
-      for (var i = 0 + _x; i <= 350 + _x; i++) {
+
+      for (var i = 0; i <= 350; i++) {
         double radius1 = radius +
             _minThicknessSineWave +
             (sin(_w * i + myTSDP.drawAlpha) + 1) * _sineWaveScaler;
-
-        if (globalDebugPrint)
-          print("sinewave calcs, ${i.toInt()}, ${(radius1 - radius)}");
-
+        // if (globalDebugPrint)
+        //   print("sinewave calcs, ${i.toInt()}, ${(radius1 - radius)}");
         path.lineTo(sin(degToRad(i)) * radius1 + centerX,
             centerY - cos(degToRad(i)) * radius1);
       }
       globalDebugPrint = false;
       radius = _lowTideRadius;
 //      path.lineTo(centerX, centerY - radius);
-
-      for (var i = 350 + _x; i >= 0 + _x; i--) {
+      for (var i = 350; i >= 0; i--) {
         path.lineTo(sin(degToRad(i)) * radius + centerX,
             centerY - cos(degToRad(i)) * radius);
         // if (globalDebugPrint) print("Inner circle in realSineTidey, $i, $radius");
@@ -174,7 +162,7 @@ class CurvePainter extends CustomPainter {
     myDraw.drawRing(centerX, centerY, (ScreenSize.clockSize / 2),
         _clockBezelThickness, paintClockBezel, canvas);
 
-    if (!TideyWeather().tideAPIError)
+    if (!globalWeather.tideAPIError)
       paintSlackTides(
           centerX, centerY, _slackTideRadius, _slackTideThickness, canvas);
   }
@@ -217,8 +205,6 @@ void paintSlackTides(centerX, centerY, radius, _slackTideThickness, canvas) {
       centerY - cos(degToRad(startAngleLow)) * radius);
 
   radius1 = radius - _slackTideThickness;
-//  print("in slack tides: $radius1, $radius, $_slackTideThickness");
-  //  radius1 = radius - 20;
   for (i = 0; i <= 60; i++) {
     myAngleHigh = startAngleHigh + i;
     myAngleLow = startAngleLow + i;
@@ -401,7 +387,7 @@ class mySineWaveData {
   }
 
   void checkWhetherToShowPointers() {
-    if (TideyWeather().tideAPIError) {
+    if (globalWeather.tideAPIError) {
       globalShowHighTidePointer = false;
       globalShowLowTidePointer = false;
       return;
@@ -443,10 +429,7 @@ class TideSineDrawingParams {
       nextTideHigh = true;
     }
     _referenceTide = _secondTide;
-    // if (_secondTide.subtract(Duration(hours: 13)).isAfter(DateTime.now())) {
-    //   _referenceTide = DateTime.now().subtract(Duration(minutes: 10));
-    //   drawStartClock = true;
-    // }
+
     _referenceTide = DateTime.now().subtract(Duration(minutes: 10));
     drawStartDegrees = mySineWaveData().getDegreesFromDateTime(_referenceTide);
     drawOmega = globalOmega * 12 * 60 * 60 / 360;
