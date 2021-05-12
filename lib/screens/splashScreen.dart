@@ -178,18 +178,6 @@ class _SplashScreenState extends State<SplashScreen> {
       globalLatitude = userSettings.manualLat.toString();
       globalLongitude = userSettings.manualLong.toString();
     }
-
-    CronJobs myCronJobs = CronJobs();
-    myCronJobs.init();
-
-    packageInfo = await PackageInfo.fromPlatform();
-
-    print(packageInfo.appName);
-    print(packageInfo.buildNumber);
-    print(packageInfo.version);
-    print(packageInfo.packageName);
-    globalWeather.weatherAPIError = true;
-
     globalWeather.weatherAPIError = false;
     globalWeather.tideAPIError = false;
 
@@ -197,7 +185,7 @@ class _SplashScreenState extends State<SplashScreen> {
       globalNetworkAvailable = true;
       WeatherService weatherService = WeatherService();
       String ans = await weatherService.getMarineData();
-      print("Back from Local Weather baby $ans");
+      print("Back from Marine Weather baby $ans");
       if (ans != "True") {
         globalWeather.tideAPIError = true;
 
@@ -213,7 +201,7 @@ class _SplashScreenState extends State<SplashScreen> {
       print("Back from local weathe baby $ans");
       if (ans != "True") {
         globalWeather.weatherAPIError = true;
-
+        print("Print we got no data man..");
         var WErrorSnackBar = SnackBar(
             backgroundColor: (Colors.red),
             content: Text(
@@ -221,22 +209,36 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             duration: const Duration(milliseconds: 3000));
         ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
-      }
-      var locationSnackBar = SnackBar(
-          content: Text(
-              'Weather Data Retrieved for :  ($globalLatitude $globalLongitude) '),
-          duration: const Duration(milliseconds: 2000));
-      ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
-      if (!globalWeather.tideAPIError) {
-        mySineWaveData msw = mySineWaveData();
-        await msw.computeTidesForPainting();
-        // globalNetworkAvailable = false;
-        // globalWeather.weatherAPIError = true;
+      } else {
+        var locationSnackBar = SnackBar(
+            content: Text(
+                'Weather Data Retrieved for :  ($globalLatitude $globalLongitude) '),
+            duration: const Duration(milliseconds: 2000));
+        ScaffoldMessenger.of(context).showSnackBar(locationSnackBar);
+        if (!globalWeather.tideAPIError) {
+          mySineWaveData msw = mySineWaveData();
+          await msw.computeTidesForPainting();
+          // globalNetworkAvailable = false;
+          // globalWeather.weatherAPIError = true;
+        }
       }
     } else {
+      print("Can't be her dat a problem");
       globalNetworkAvailable = false;
+      globalWeather.tideAPIError = true;
+      globalWeather.weatherAPIError = true;
       ScaffoldMessenger.of(context).showSnackBar(noNetworkSnackbar);
     }
+
+    CronJobs myCronJobs = CronJobs();
+    myCronJobs.init();
+
+    packageInfo = await PackageInfo.fromPlatform();
+
+    print(packageInfo.appName);
+    print(packageInfo.buildNumber);
+    print(packageInfo.version);
+    print(packageInfo.packageName);
 
     MyCompass theCompass = MyCompass();
     theCompass.init();

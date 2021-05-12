@@ -5,6 +5,8 @@ import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 import 'package:tidey/services/tideServices.dart';
 
+bool pollingError = false;
+
 class CronJobs {
   final cron = Cron();
   init() {
@@ -20,33 +22,60 @@ class CronJobs {
       LocalWeatherService localWeatherService = LocalWeatherService();
       await localWeatherService.getLocalWeatherData();
 
-      if (globalWeather.tideAPIError) {
-        di += 1;
-        print(
-            'getting nightly weather data failed - checking again every 15 minutes');
+      if (!globalWeather.localWeatherExists) {
+        pollingError = true;
+        globalWeather.tideAPIError =
+            true; // if no weather data who cares about tide
+        if (di < globalWeather.dailyWeather.length - 1) {
+          //there is still data in array
+          di += 1;
+        } else {
+          globalWeather.weatherAPIError = true;
+        }
+      } else if (!globalWeather.tideDataExists) {
+        pollingError = false;
+        globalWeather.tideAPIError = true;
+        globalWeather.weatherAPIError = false;
+        di = 0;
       } else {
+        // All is good
+        globalWeather.tideAPIError = false;
+        globalWeather.weatherAPIError = false;
+        pollingError = false;
+        di = 0;
         mySineWaveData msw = mySineWaveData();
         await msw.computeTidesForPainting();
-        print('nightly weather data updated successfully');
-        di = 0;
       }
     });
+
     cron.schedule(Schedule.parse('*/15 * * * *'), () async {
-      if ((globalWeather.tideAPIError) || (globalWeather.weatherAPIError)) {
+      //   if ((globalWeather.tideAPIError) || (globalWeather.weatherAPIError)) {
+      if (pollingError) {
         Location location = Location();
         await location.getCurrentLocation();
         WeatherService weatherService = WeatherService();
         await weatherService.getMarineData();
         LocalWeatherService localWeatherService = LocalWeatherService();
         await localWeatherService.getLocalWeatherData();
-        if (globalWeather.tideAPIError) {
-          print(
-              'getting nightly weather data failed - checking again every 15 minutes');
+
+        if (!globalWeather.localWeatherExists) {
+          pollingError = true;
+          globalWeather.tideAPIError =
+              true; // if no weather data who cares about tide
+
+        } else if (!globalWeather.tideDataExists) {
+          pollingError = false;
+          globalWeather.tideAPIError = true;
+          globalWeather.weatherAPIError = false;
+          di = 0;
         } else {
+          // All is good
+          globalWeather.tideAPIError = false;
+          globalWeather.weatherAPIError = false;
+          pollingError = false;
           di = 0;
           mySineWaveData msw = mySineWaveData();
           await msw.computeTidesForPainting();
-          print('nightly weather data updated successfully');
         }
       }
     });
