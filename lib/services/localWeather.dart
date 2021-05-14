@@ -35,7 +35,7 @@ class Data {
     this.nearestArea,
     this.currentCondition,
     this.weather,
-    this.climateAverages,
+    // this.climateAverages,
     this.alerts,
   });
 
@@ -43,7 +43,7 @@ class Data {
   List<NearestArea> nearestArea;
   List<CurrentCondition> currentCondition;
   List<Weather> weather;
-  List<ClimateAverage> climateAverages;
+//  List<ClimateAverage> climateAverages;
   Alerts alerts;
 
   factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
@@ -59,9 +59,9 @@ class Data {
             json["current_condition"].map((x) => CurrentCondition.fromJson(x))),
         weather:
             List<Weather>.from(json["weather"].map((x) => Weather.fromJson(x))),
-        climateAverages: List<ClimateAverage>.from(
-            json["ClimateAverages"].map((x) => ClimateAverage.fromJson(x))),
-        alerts: Alerts.fromJson(json["alerts"]),
+        //    climateAverages: List<ClimateAverage>.from(
+        //        json["ClimateAverages"].map((x) => ClimateAverage.fromJson(x))),
+        //   alerts: Alerts.fromJson(json["alerts"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,8 +70,8 @@ class Data {
         "current_condition":
             List<dynamic>.from(currentCondition.map((x) => x.toJson())),
         "weather": List<dynamic>.from(weather.map((x) => x.toJson())),
-        "ClimateAverages":
-            List<dynamic>.from(climateAverages.map((x) => x.toJson())),
+        //    "ClimateAverages":
+        //        List<dynamic>.from(climateAverages.map((x) => x.toJson())),
         "alerts": alerts.toJson(),
       };
 }
@@ -732,7 +732,8 @@ class LocalWeatherService {
     try {
       Response response =
           await Dio().get(weatherServerURL + 'weather.ashx', queryParameters: {
-        'key': '51503debb4b34526a33181926211204',
+        // 'key': '51503debb4b34526a33181926211204',
+        'key': '9b23b5d70e994b63b08172457211305',
         'q': latLong,
         'format': 'json',
         'tp': '3',
@@ -979,22 +980,26 @@ class LocalWeatherService {
     }
     print("Lets do some more tide stuff");
     String tides = "";
-    if (!globalWeather.tideDataExists) {
+    if (!globalWeather.tideAPIError) {
       tides = globalWeather.dailyWeather[0].tideMarquee;
-
-      String weather = "";
+    }
+    String weather = "";
+    if (!globalWeather.weatherAPIError) {
       for (var i = 0; i < globalWeather.dailyWeather.length && i < 5; i++) {
         print("Yea Yo");
         weather = weather = globalWeather.dailyWeather[i].marquee;
       }
-      print("About to set up Marquee String");
-      marqueeString =
-          "                                                                     " +
-              "                                                             " +
-              tides +
-              weather +
-              "  ";
+    } else {
+      weather =
+          "Welcome to Tidey Weather Clock.  Please connect to the network to get the latest weather";
     }
+    print("About to set up Marquee String");
+    marqueeString =
+        "                                                                     " +
+            "                                                             " +
+            tides +
+            weather +
+            "  ";
   }
 
   getWeatherLine(String stringDay, int day) {

@@ -462,7 +462,8 @@ class WeatherService {
     try {
       Response response =
           await Dio().get(weatherServerURL + 'marine.ashx', queryParameters: {
-        'key': '51503debb4b34526a33181926211204',
+        // 'key': '51503debb4b34526a33181926211204',
+        'key': '9b23b5d70e994b63b08172457211305',
         'q': latLong,
         'format': 'json',
         'tide': 'yes',

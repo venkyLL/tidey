@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     userSettings.chimeOn =
         readBoolFromLocal(prefs, userSettings.keyChimeOn, true);
-    userSettings.adsOn = readBoolFromLocal(prefs, userSettings.keyAdsOn, true);
+    userSettings.adsOn = readBoolFromLocal(prefs, userSettings.keyAdsOn, false);
     userSettings.chimeDoNotDisturb =
         readBoolFromLocal(prefs, userSettings.keyChimeDoNotDisturb, true);
     userSettings.imperialUnits =
@@ -69,8 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
         readDoubleFromLocal(prefs, userSettings.keyManualLong, -77.3296);
     userSettings.localInfoURL = readStringFromLocal(
         prefs, userSettings.keyLocalInfoURL, "https://cruiseabaco.com");
-
-
   }
 
   String readStringFromLocal(

@@ -1333,6 +1333,62 @@ class _settingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  void getWeatherSaved() async {
+    setState(() {
+      _loading = true;
+    });
+    print("zzGetting Location Data1");
+    Location location = Location();
+    if (await location.getCurrentLocation()) {
+      WeatherService weatherService = WeatherService();
+      await weatherService.getMarineData();
+      print("zzGetting Location Data3");
+      LocalWeatherService localWeatherService = LocalWeatherService();
+      await localWeatherService.getLocalWeatherData();
+      print("zzGetting Location Data4");
+      setState(() {
+        _city = globalWeather.city;
+      });
+
+      if (globalWeather.localWeatherExists) {
+        //weatherAPIError
+        print("Found local weather data");
+        globalWeather.weatherAPIError = false;
+
+        if (globalWeather.tideDataExists) {
+          print("Found Tide Data");
+          globalWeather.tideAPIError = false;
+          mySineWaveData msw = mySineWaveData();
+          await msw.computeTidesForPainting();
+          // globalNetworkAvailable = true;
+        } else {
+          const WE2rrorSnackBar = SnackBar(
+              backgroundColor: (Colors.red),
+              content: Text('No Tide data found for this location '),
+              duration: const Duration(milliseconds: 3000));
+          ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
+          globalWeather.tideAPIError = true;
+        }
+      } else {
+        const WErrorSnackBar = SnackBar(
+            backgroundColor: (Colors.red),
+            content: Text('No Weather data found for this location '),
+            duration: const Duration(milliseconds: 3000));
+        ScaffoldMessenger.of(context).showSnackBar(WErrorSnackBar);
+      }
+    } else {
+      const WE2rrorSnackBar = SnackBar(
+          backgroundColor: (Colors.red),
+          content: Text(
+              'Current Location Not available, please enable location services '),
+          duration: const Duration(milliseconds: 3000));
+      ScaffoldMessenger.of(context).showSnackBar(WE2rrorSnackBar);
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
   void getWeatherName() async {
     setState(() {
       _loading = true;

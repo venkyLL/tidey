@@ -48,36 +48,36 @@ class CronJobs {
       }
     });
 
-    cron.schedule(Schedule.parse('*/15 * * * *'), () async {
-      //   if ((globalWeather.tideAPIError) || (globalWeather.weatherAPIError)) {
-      if (pollingError) {
-        Location location = Location();
-        await location.getCurrentLocation();
-        WeatherService weatherService = WeatherService();
-        await weatherService.getMarineData();
-        LocalWeatherService localWeatherService = LocalWeatherService();
-        await localWeatherService.getLocalWeatherData();
-
-        if (!globalWeather.localWeatherExists) {
-          pollingError = true;
-          globalWeather.tideAPIError =
-              true; // if no weather data who cares about tide
-
-        } else if (!globalWeather.tideDataExists) {
-          pollingError = false;
-          globalWeather.tideAPIError = true;
-          globalWeather.weatherAPIError = false;
-          di = 0;
-        } else {
-          // All is good
-          globalWeather.tideAPIError = false;
-          globalWeather.weatherAPIError = false;
-          pollingError = false;
-          di = 0;
-          mySineWaveData msw = mySineWaveData();
-          await msw.computeTidesForPainting();
-        }
-      }
-    });
+//    cron.schedule(Schedule.parse('*/15 * * * *'), () async {
+//      //   if ((globalWeather.tideAPIError) || (globalWeather.weatherAPIError)) {
+//      if (pollingError) {
+//        Location location = Location();
+//        await location.getCurrentLocation();
+//        WeatherService weatherService = WeatherService();
+//        await weatherService.getMarineData();
+//        LocalWeatherService localWeatherService = LocalWeatherService();
+//        await localWeatherService.getLocalWeatherData();
+//
+//        if (!globalWeather.localWeatherExists) {
+//          pollingError = true;
+//          globalWeather.tideAPIError =
+//              true; // if no weather data who cares about tide
+//
+//        } else if (!globalWeather.tideDataExists) {
+//          pollingError = false;
+//          globalWeather.tideAPIError = true;
+//          globalWeather.weatherAPIError = false;
+//          di = 0;
+//        } else {
+//          // All is good
+//          globalWeather.tideAPIError = false;
+//          globalWeather.weatherAPIError = false;
+//          pollingError = false;
+//          di = 0;
+//          mySineWaveData msw = mySineWaveData();
+//          await msw.computeTidesForPainting();
+//        }
+//      }
+//    });
   }
 }

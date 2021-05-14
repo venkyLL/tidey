@@ -61,10 +61,10 @@ class _HelpScreenState extends State<HelpScreen> {
                       context,
                       "How do I read the Tidey Clock?",
                       "The green arrow points to the time of the next high tide." +
-                          "\nThe red arrow points to the time of the next low tide." +
-                          "\nThe blue curve indicates slack time," +
-                          "\nThe width of silver bezel is proportional to the amount the tide is above or below median low tide at that time." +
-                          "\nThe red and green numbers represent the tide at high or low tide in ft" +
+                          "\n\nThe red arrow points to the time of the next low tide." +
+                          "\n\nThe blue curve indicates slack tide." +
+                          "\n\nThe red and green numbers represent the tide height at high or low tide in ft" +
+                          "\n\nThe width of silver bezel is proportional to the amount the tide is above or below median low tide at that time." +
                           "\n\n All tide estimates are approximate.  Factors such as exact location, wind, pressure, and rain can affect tides."),
                   helpTile(
                       context,
@@ -82,7 +82,7 @@ class _HelpScreenState extends State<HelpScreen> {
                   helpTile(
                       context,
                       "How can I change the location used for displaying weather and tide data?",
-                      "Go to settings and turn on or off Use Current Location.  If it is off you will be required to enter a latitude and longitude for the location you wish to receive weather data."),
+                      "Go to settings and turn on or off Use Current Location.  If it is off you will be required to enter a city,state,country for the location you wish to receive weather data."),
                   helpTile(context, "How can I see more detailed weather data?",
                       "Go to settings view current weather on web.  This requires an internet connection."),
                   helpTile(
@@ -91,7 +91,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       "To increase or decrease the time between gauges go to the settings screen and change Seconds between screens parameter"),
                   helpTile(context, "Why are gauges not changing?",
                       "Double tapping on the screen will stop the gauges from changing.  Double tap again to restart"),
-                  helpTile(context, "How can I freeze the gauges?",
+                  helpTile(context, "How can I prevent gauges from changing?",
                       "Double click on the main screen to stop the gauges from changing.  Double click again to restart"),
                   helpTile(context, "How do I turn off the ships bell?",
                       "Go to settings and disable Ships bell "),
@@ -100,7 +100,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       "How do I change what bell sequence is played on the hour/half hour?",
                       "Go To Settings Bell Ring Schedule"),
                   helpTile(context, "How do I turn the bells off at night?",
-                      "Go to Settings Sleep Mode?"),
+                      "Go to Settings Sleep Mode."),
                   helpTile(context, "How do I set an Alarm or Timer?",
                       "Go to Settings Alarm or Set a Timer"),
                   helpTile(
@@ -110,7 +110,8 @@ class _HelpScreenState extends State<HelpScreen> {
                           "\n     Traditional Schedule\n    4:00 8:00 12:00 = 8 Bells\n    4:30 8:30 12:30 = 1 Bell\n    5:00 9:00 1:00 = 2 Bells\n    5:30 9:30 1:30 = 3 Bells\n    6:00 10:00 2:00 = 4 Bells\n    6:30 10:30 2:30 = 5 Bells\n    7:00 11:00 3:00 = 6 Bells\n    7:30 11:30 3:30 = 7 Bells "),
                   helpTile(context, "Why does Tidey need my Location Data?",
                       "Tidey uses location data to get the local weather and tides.  Tidey does not store your location data."),
-                  helpTile(context, "Privacy Policy", " ")
+                  helpTile(context, "Privacy Policy",
+                      "Go to https://amberjacklabs.com/privacy.html to view our privacy policy.")
                 ],
               ),
             ],

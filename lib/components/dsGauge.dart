@@ -25,6 +25,7 @@ class DSGauge extends StatefulWidget {
       gaugeType: gaugeType,
       gaugeDirection: gaugeDirection,
       gaugeValue: gaugeValue,
+      gaugeUnit: gaugeUnit,
       gaugeMax: gaugeMax,
       gaugeInterval: gaugeInterval);
 }

@@ -194,7 +194,8 @@ class WeatherLocationService {
     try {
       Response response =
           await Dio().get(weatherServerURL + 'tz.ashx', queryParameters: {
-        'key': '51503debb4b34526a33181926211204',
+        // 'key': '51503debb4b34526a33181926211204',
+        'key': '9b23b5d70e994b63b08172457211305',
         'q': q,
         'format': 'json',
         'includeLocation': 'yes'

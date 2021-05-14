@@ -28,6 +28,22 @@ int counter = 6;
 bool pauseGauge = false;
 
 //enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+const pauseSnackBar = SnackBar(
+  //  backgroundColor: (Colors.blue),
+  content: Text('Gauge Rotation Paused. '),
+  duration: const Duration(milliseconds: 3000),
+);
+const restartSnackBar = SnackBar(
+  //  backgroundColor: (Colors.blue),
+  content: Text('Gauge Rotation Restarted. '),
+  duration: const Duration(milliseconds: 3000),
+);
+const tableSnackBar = SnackBar(
+  //  backgroundColor: (Colors.blue),
+  content: Text(
+      'Tables will be displayed for a few seconds and then you will be returned to Tidey Clock '),
+  duration: const Duration(milliseconds: 3000),
+);
 
 class TideScreen extends StatefulWidget {
   static const String id = 'TideScreen';
@@ -74,6 +90,7 @@ class _TideScreenState extends State<TideScreen> {
             Navigator.pushNamed(context, SettingsScreen.id);
           },
           onSwipeLeft: () {
+            ScaffoldMessenger.of(context).showSnackBar(tableSnackBar);
             Navigator.pushNamed(context, TodayScreen.id);
           },
           child: GestureDetector(
@@ -84,6 +101,11 @@ class _TideScreenState extends State<TideScreen> {
             onDoubleTap: () {
               print("Did a double tap");
               pauseGauge = !pauseGauge;
+              if (pauseGauge) {
+                ScaffoldMessenger.of(context).showSnackBar(pauseSnackBar);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(restartSnackBar);
+              }
             },
             child: Container(
               height: MediaQuery.of(context).size.height,
@@ -121,7 +143,10 @@ class FABMenu extends StatelessWidget {
           icon: const Icon(Icons.settings),
         ),
         ActionButton(
-          onPressed: () => Navigator.pushNamed(context, TodayScreen.id),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(tableSnackBar);
+            Navigator.pushNamed(context, TodayScreen.id);
+          },
           //   _showAction(context, 0),
           icon: const Icon(Icons.wb_sunny),
         ),
@@ -188,6 +213,7 @@ void _settingModalBottomSheet(context) {
                 title: Text('View Weather Table'),
                 onTap: () {
                   Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(restartSnackBar);
                   Navigator.pushNamed(context, TodayScreen.id);
                 },
               ),
