@@ -86,7 +86,7 @@ class _Humidity2GaugeState extends State<Humidity2Gauge> {
             pointers: <GaugePointer>[
               MarkerPointer(
                   color: const Color(0xFF3366CC),
-                  value: humidity,
+                  value: double.parse(globalWeather.dailyWeather[di].humidity),
                   markerOffset: isPortrait ? -20 : -10,
                   markerHeight: 15,
                   markerWidth: 15),

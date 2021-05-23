@@ -731,7 +731,7 @@ class LocalWeatherService {
 // &tp=3&alerts=yes&aqi=yes
     try {
       Response response =
-          await Dio().get(weatherServerURL + 'weather.ashx', queryParameters: {
+          await dio.get(weatherServerURL + 'weather.ashx', queryParameters: {
         // 'key': '51503debb4b34526a33181926211204',
         'key': '9b23b5d70e994b63b08172457211305',
         'q': latLong,
@@ -783,7 +783,7 @@ class LocalWeatherService {
       globalWeather.localWeatherExists = false;
       globalWeather.localHourlyExists = false;
       globalWeather.weatherAPIError = true;
-      marqueeString =
+      marqueeString = userSettings.marqueeText +
           "Weather Data Not Loaded Please Check Network Settings or Change Location";
       print("Local Weather error found");
       print(e);
@@ -866,9 +866,9 @@ class LocalWeatherService {
           globalWeather.dailyWeather[i].tides[k].tideTime =
               weatherData.data.weather[0].tides[0].tideData[k].tideDateTime;
 
-          String StartString = "Tides: First ";
+          String StartString = "First ";
           if (k > 1) {
-            StartString = "Tides: Second ";
+            StartString = "Second ";
           }
           globalWeather.dailyWeather[i].tideMarquee =
               globalWeather.dailyWeather[i].tideMarquee +
@@ -979,27 +979,34 @@ class LocalWeatherService {
       }
     }
     print("Lets do some more tide stuff");
-    String tides = "";
+    tideMarqueeString = "";
     if (!globalWeather.tideAPIError) {
-      tides = globalWeather.dailyWeather[0].tideMarquee;
+      tideMarqueeString = globalWeather.dailyWeather[0].tideMarquee;
     }
-    String weather = "";
+    weatherMarqueeString = "";
     if (!globalWeather.weatherAPIError) {
       for (var i = 0; i < globalWeather.dailyWeather.length && i < 5; i++) {
-        print("Yea Yo");
-        weather = weather = globalWeather.dailyWeather[i].marquee;
+        weatherMarqueeString =
+            weatherMarqueeString + globalWeather.dailyWeather[i].marquee;
       }
     } else {
-      weather =
+      weatherMarqueeString =
           "Welcome to Tidey Weather Clock.  Please connect to the network to get the latest weather";
     }
     print("About to set up Marquee String");
-    marqueeString =
-        "                                                                     " +
-            "                                                             " +
-            tides +
-            weather +
-            "  ";
+    marqueeString = userSettings.showWeather
+        ? "                                                                     " +
+            "                                                             Tidey by Amberjack Labs" +
+            marqueeSpacer +
+            userSettings.marqueeText +
+            marqueeSpacer +
+            tideMarqueeString +
+            weatherMarqueeString +
+            "  "
+        : "                                                                     " +
+            "                                                             Tidey by Amberjack Labs" +
+            marqueeSpacer +
+            userSettings.marqueeText;
   }
 
   getWeatherLine(String stringDay, int day) {

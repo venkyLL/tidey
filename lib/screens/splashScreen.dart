@@ -2,6 +2,7 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -34,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void getProfileData() async {
+    print("Getting profile Data");
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     userSettings.chimeOn =
@@ -50,6 +52,20 @@ class _SplashScreenState extends State<SplashScreen> {
     userSettings.chimeSelected = chimeTypeStringToEnum[chimeSelectedString];
     userSettings.alarmOn =
         readBoolFromLocal(prefs, userSettings.keyAlarmOn, false);
+    userSettings.showWeather =
+        readBoolFromLocal(prefs, userSettings.keyShowWeather, true);
+    userSettings.continuousMarquee =
+        readBoolFromLocal(prefs, userSettings.keyContinuousMarquee, false);
+    userSettings.marqueeText =
+        readStringFromLocal(prefs, userSettings.keyMarqueeText, "");
+    userSettings.filenames[0] =
+        readStringFromLocal(prefs, userSettings.keyFilename0, "");
+    userSettings.filenames[1] =
+        readStringFromLocal(prefs, userSettings.keyFilename1, "");
+    userSettings.filenames[2] =
+        readStringFromLocal(prefs, userSettings.keyFilename2, "");
+    userSettings.filenames[3] =
+        readStringFromLocal(prefs, userSettings.keyFilename3, "");
 
     int hour = readIntFromLocal(prefs, userSettings.keyAlarmTimeHour, 7);
     int min = readIntFromLocal(prefs, userSettings.keyAlarmTimeMin, 30);
@@ -152,6 +168,17 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         duration: const Duration(milliseconds: 2000));
 
+    if (dio == null) {
+      BaseOptions options = new BaseOptions(
+          baseUrl: "your base url",
+          receiveDataWhenStatusError: true,
+          connectTimeout: 30 * 1000, // 30 seconds
+          receiveTimeout: 30 * 1000 // 30 seconds
+          );
+
+      dio = new Dio(options);
+    }
+
     await checkConnectivity();
 //    var networkSnackBar = SnackBar(
 //        content: Text('Yay! Network Found! $_networkStatus1'),
@@ -160,7 +187,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await getProfileData();
 //    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
 //      print("Location Service Enabled");
-
+    print("About to get current locaiton");
     Location location = Location();
     if (userSettings.useCurrentPosition) {
       print("Using Current Position");

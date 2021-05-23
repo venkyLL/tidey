@@ -26,6 +26,8 @@ class Location {
         return (false);
         print("my getCurrentLocation error is $e");
       }
+    } else {
+      return (true);
     }
   }
 }

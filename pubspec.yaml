@@ -51,6 +51,9 @@ dependencies:
   google_fonts: ^2.0.0
   numberpicker:
   cron: ^0.3.0
+  path_provider:
+  path:
+  image_picker:
   string_validator:
   firebase_core: ^1.1.0
   flutter_device_type:

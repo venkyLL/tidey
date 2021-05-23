@@ -60,8 +60,11 @@ class _ForecastScreenState extends State<ForecastScreen> {
 //      Column  (
 //        children: [
           SwipeGestureRecognizer(
-        onSwipeLeft: () {
+        onSwipeRight: () {
           Navigator.of(context).pop();
+        },
+        onSwipeLeft: () {
+          Navigator.pushReplacementNamed(context, TideTableScreen.id);
         },
         child: Container(
           decoration: BoxDecoration(

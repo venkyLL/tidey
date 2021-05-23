@@ -61,7 +61,11 @@ class _zeClockSyncState extends State<zeClockSync> {
     setState(() {
       _value = DateTime.now();
       if (globalCompassDirection != null) {
-        _curDir = globalCompassDirection;
+        if (MediaQuery.of(context).orientation == Orientation.portrait) {
+          _curDir = globalCompassDirection;
+        } else {
+          _curDir = globalCompassDirection + 90;
+        }
       } else {
         _curDir = 270;
       }

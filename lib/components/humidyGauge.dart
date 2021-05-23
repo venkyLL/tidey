@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "package:google_fonts/google_fonts.dart";
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -145,7 +146,7 @@ class _HumidityGaugeState extends State<HumidityGauge> {
 //                  knobStyle: KnobStyle(knobRadius: 0),
 //                  animationType: AnimationType.ease),
             NeedlePointer(
-                value: gaugeValue,
+                value: double.parse(globalWeather.dailyWeather[di].humidity),
                 needleLength: .9,
                 lengthUnit: (GaugeSizeUnit.factor),
                 needleColor: Color(0xFFE20A22),

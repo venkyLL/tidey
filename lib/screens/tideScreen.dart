@@ -27,7 +27,6 @@ bool marqueeCompleted = false;
 int counter = 6;
 bool pauseGauge = false;
 
-//enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 const pauseSnackBar = SnackBar(
   //  backgroundColor: (Colors.blue),
   content: Text('Gauge Rotation Paused. '),
@@ -38,12 +37,25 @@ const restartSnackBar = SnackBar(
   content: Text('Gauge Rotation Restarted. '),
   duration: const Duration(milliseconds: 3000),
 );
+const skipSnackBar = SnackBar(
+  //  backgroundColor: (Colors.blue),
+  content: Text('Skiping to next gauge sequence'),
+  duration: const Duration(milliseconds: 1000),
+);
+const previousSnackBar = SnackBar(
+  //  backgroundColor: (Colors.blue),
+  content: Text('Going back to previous gauge sequence'),
+  duration: const Duration(milliseconds: 1000),
+);
+
 const tableSnackBar = SnackBar(
   //  backgroundColor: (Colors.blue),
   content: Text(
       'Tables will be displayed for a few seconds and then you will be returned to Tidey Clock '),
   duration: const Duration(milliseconds: 3000),
 );
+bool swipedLeft = false;
+bool swipedRight = false;
 
 class TideScreen extends StatefulWidget {
   static const String id = 'TideScreen';
@@ -59,6 +71,9 @@ class TideScreen extends StatefulWidget {
 //];
 
 class _TideScreenState extends State<TideScreen> {
+  Timer timer;
+  bool _rebuildView = true;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +81,20 @@ class _TideScreenState extends State<TideScreen> {
       appendAds();
     }
     ExpandableFab();
+
+    timer = Timer.periodic(const Duration(milliseconds: 1000), _bobX);
+  }
+
+  _bobX(Timer timer) {
+    //  print("In Timer");
+
+    if (rebuildView) {
+      print("Time to Rebuild");
+      rebuildView = false;
+      setState(() {
+        _rebuildView = !_rebuildView;
+      });
+    }
   }
 
   @override
@@ -87,11 +116,20 @@ class _TideScreenState extends State<TideScreen> {
 //
         body: SwipeGestureRecognizer(
           onSwipeRight: () {
+            swipedRight = true;
+            ScaffoldMessenger.of(context).showSnackBar(previousSnackBar);
+          },
+          onSwipeUp: () {
+            //  ScaffoldMessenger.of(context).showSnackBar(tableSnackBar);
             Navigator.pushNamed(context, SettingsScreen.id);
           },
-          onSwipeLeft: () {
+          onSwipeDown: () {
             ScaffoldMessenger.of(context).showSnackBar(tableSnackBar);
             Navigator.pushNamed(context, TodayScreen.id);
+          },
+          onSwipeLeft: () {
+            swipedLeft = true;
+            ScaffoldMessenger.of(context).showSnackBar(skipSnackBar);
           },
           child: GestureDetector(
             onTap: () {
@@ -114,10 +152,11 @@ class _TideScreenState extends State<TideScreen> {
                 builder: (context, orientation) {
                   //  if (MediaQuery.of(context).orientation == Orientation.landscape) {
 //         //   }
+
                   if (orientation == Orientation.portrait) {
-                    return PortraitMode();
+                    return _rebuildView ? PortraitMode() : PortraitMode();
                   } else {
-                    return LandScapeMode();
+                    return _rebuildView ? LandScapeMode() : LandScapeMode();
                   }
                 },
               ),
@@ -263,7 +302,7 @@ void _settingModalBottomSheet(context) {
               ),
               ListTile(
                 leading: Icon(Icons.view_day),
-                title: Text('Start Weather Marquee (Landscape Mode Only)'),
+                title: Text('Start Marquee (Landscape Mode Only)'),
                 enabled: (MediaQuery.of(context).orientation ==
                     Orientation.landscape),
                 onTap: () => {
@@ -405,10 +444,7 @@ class _LandscapeViewState extends State<LandscapeView> {
       setState(() {
         _tideAPIError = !_tideAPIError;
       });
-    }
-    /* Some shit here need to test */
-
-    else {
+    } else {
       DateTime.now().getMinutes.toString();
 
       if (DateTime.now().getMinutes == 00) {
@@ -416,7 +452,6 @@ class _LandscapeViewState extends State<LandscapeView> {
         DateTime myDate = bellLastRungDateTime.addMinutes(1);
         if (bellLastRungDateTime.addMinutes(1).isPast) {
           bellLastRungDateTime = DateTime.now();
-          print("Should be starting Marquee2");
           setState(() {
             marqueeCompleted = false;
             startMarquee = true;
@@ -431,7 +466,6 @@ class _LandscapeViewState extends State<LandscapeView> {
           });
         }
       }
-      ;
 
       // are we at the top of the hour
 
@@ -598,7 +632,7 @@ class _LandscapeViewState extends State<LandscapeView> {
         showFadingOnlyWhenScrolling: true,
         fadingEdgeStartFraction: 0.1,
         fadingEdgeEndFraction: 0.1,
-        numberOfRounds: 2,
+        numberOfRounds: userSettings.continuousMarquee ? null : 2,
         //  startPadding: 10.0,
         accelerationDuration: Duration(seconds: 1),
         accelerationCurve: Curves.linear,
@@ -762,7 +796,7 @@ class _PortraitModeState extends State<PortraitMode> {
             height: ScreenSize.hasNotch ? 25 : 0,
           ),
           // (_APIError) ? errorStack() : portraitStack(),
-          // portraitStack(),  // shit take out tide
+          // portraitStack(),  //
           (_weatherAPIError)
               ? PNoDataStack()
               : _tideAPIError
@@ -1024,7 +1058,7 @@ class VenkySwapP extends StatefulWidget {
 
 class _VenkySwapStateP extends State<VenkySwapP> {
   _VenkySwapStateP();
-  int _counter = counter;
+  // int _counter = counter;
   bool animationSwitcher = false;
   Timer myTimer;
   Timer ted;
@@ -1054,14 +1088,7 @@ class _VenkySwapStateP extends State<VenkySwapP> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//        _counter = 0;
-//        counter = 0;
-//      });
-//    }
+    _checkForSwipe();
   }
 
   @override
@@ -1075,10 +1102,19 @@ class _VenkySwapStateP extends State<VenkySwapP> {
     }
   }
 
-  void _updateData(Timer timer) {
-    if (!pauseGauge) {
-      counter = (counter + 1) % gaugeSequenceListP.length;
-      _counter = counter;
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+      // _counter = counter;
 
       setState(() {
         animationSwitcher = !animationSwitcher;
@@ -1087,10 +1123,32 @@ class _VenkySwapStateP extends State<VenkySwapP> {
       if (animationSwitcher) {
         // you need this funky method because animationCrossFade goes back and forth between one image and the other
         // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
-        myFirstWidget = gaugeSequenceListP[_counter];
+        myFirstWidget = gaugeSequenceListP[counter];
         //   _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[_counter];
+        mySecondWidget = gaugeSequenceListP[counter];
+        //  _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
+      }
+    }
+  }
+
+  void _updateData(Timer timer) {
+    //Timer timer
+    if (!pauseGauge) {
+      counter = (counter + 1) % gaugeSequenceListP.length;
+      // _counter = counter;
+
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        // you need this funky method because animationCrossFade goes back and forth between one image and the other
+        // so on each crossfade you have to update the image (and only that image) that you are bringing to foreground;
+        myFirstWidget = gaugeSequenceListP[counter];
+        //   _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
         //  _error ? gaugeSequenceListP[counter] : gaugeSequenceListP1[counter];
       }
     }
@@ -1157,14 +1215,31 @@ class _VenkySwapStateL extends State<VenkySwapL> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//        _counter = 0;
-//        counter = 0;
-//      });
-//    }
+    _checkForSwipe();
+  }
+
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+      _counter = counter;
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        myFirstWidget = gaugeSequenceListP[_counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[_counter];
+      }
+    }
   }
 
   @override
@@ -1234,14 +1309,8 @@ class _VenkySwapStatePNoData extends State<VenkySwapPNoData> {
   List<Widget> myWidgetList;
   Widget myFirstWidget = gaugeSequenceListPNoData[0];
 
-//  globalWeather.weatherAPIError
-//      ? gaugeSequenceListP[0]
-//      : gaugeSequenceListP1[0];
   Widget mySecondWidget = gaugeSequenceListPNoData[1];
 
-//  globalWeather.weatherAPIError
-//      ? gaugeSequenceListP[1]
-//      : gaugeSequenceListP1[1];
   int currentTransitionTime = userSettings.transitionTime;
 
   @override
@@ -1261,12 +1330,31 @@ class _VenkySwapStatePNoData extends State<VenkySwapPNoData> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//      });
-    //   }
+    _checkForSwipe();
+  }
+
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        myFirstWidget = gaugeSequenceListP[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
+      }
+    }
   }
 
   @override
@@ -1364,12 +1452,31 @@ class _VenkySwapStateLNoData extends State<VenkySwapLNoData> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//      });
-    //   }
+    _checkForSwipe();
+  }
+
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+      //_counter = counter;
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        myFirstWidget = gaugeSequenceListP[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
+      }
+    }
   }
 
   @override
@@ -1467,12 +1574,30 @@ class _VenkySwapPNoTide extends State<VenkySwapPNoTide> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//      });
-    //   }
+    _checkForSwipe();
+  }
+
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        myFirstWidget = gaugeSequenceListP[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
+      }
+    }
   }
 
   @override
@@ -1570,12 +1695,30 @@ class _VenkySwapLNoTide extends State<VenkySwapLNoTide> {
       myTimer = Timer.periodic(
           Duration(seconds: userSettings.transitionTime), _updateData);
     }
-//    if (globalWeather.weatherAPIError != _error) {
-//      print("Error Cleared");
-//      setState(() {
-//        _error = !_error;
-//      });
-    //   }
+    _checkForSwipe();
+  }
+
+  void _checkForSwipe() {
+    if (swipedLeft || swipedRight) {
+      print("Dude I swiped");
+      if (swipedLeft) {
+        counter = (counter + 1) % gaugeSequenceListP.length;
+      } else {
+        counter = (counter + gaugeSequenceListP.length - 1) %
+            gaugeSequenceListP.length;
+      }
+      swipedLeft = false;
+      swipedRight = false;
+      setState(() {
+        animationSwitcher = !animationSwitcher;
+      });
+
+      if (animationSwitcher) {
+        myFirstWidget = gaugeSequenceListP[counter];
+      } else {
+        mySecondWidget = gaugeSequenceListP[counter];
+      }
+    }
   }
 
   @override
@@ -1716,12 +1859,21 @@ List<Widget> gaugeSequenceListL = [
     ),
   ),
   DialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      ))
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
+  DialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 
 List<Widget> gaugeSequenceListLNoTide = [
@@ -1771,30 +1923,56 @@ List<Widget> gaugeSequenceListLNoTide = [
         fontSize: 20),
   ),
   DialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      ))
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
+  DialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 List<Widget> gaugeSequenceListLNoData = [
   DialRow(
       gaugeType1: ImageGaugeNew(imageName: "sunset1.gif"),
       gaugeType2: ImageGaugeNew(imageName: "sunset2.gif")),
   DialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      )),
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
   DialRow(
     gaugeType1: ImageGaugeNew(
       imageName: "water.gif",
     ),
     gaugeType2: ImageGaugeNew(imageName: "moon9.png"),
   ),
+  DialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
+  DialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 
 List<Widget> gaugeSequenceListP = [
@@ -1909,12 +2087,21 @@ List<Widget> gaugeSequenceListP = [
     ),
   ),
   PortraitDialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      ))
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 
 List<Widget> gaugeSequenceListPNoTide = [
@@ -1973,33 +2160,52 @@ List<Widget> gaugeSequenceListPNoTide = [
         fontSize: 20),
   ),
   PortraitDialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      ))
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 List<Widget> gaugeSequenceListPNoData = [
   PortraitDialRow(
       gaugeType1: ImageGaugeNew(imageName: "sunset1.gif"),
       gaugeType2: ImageGaugeNew(imageName: "sunset2.gif")),
   PortraitDialRow(
-      gaugeType1: ImageGaugeNew(
-        imageName: "boat1.jpg",
-      ),
-      gaugeType2: ImageGaugeNew(
-        imageName: "boat2.jpg",
-      )),
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(0),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(1),
+    ),
+  ),
   PortraitDialRow(
     gaugeType1: ImageGaugeNew(
       imageName: "water.gif",
     ),
     gaugeType2: ImageGaugeNew(imageName: "moon9.png"),
   ),
+  PortraitDialRow(
+    gaugeType1: ImageGaugeCustom(
+      myImage: getGaugeImage(2),
+    ),
+    gaugeType2: ImageGaugeCustom(
+      myImage: getGaugeImage(3),
+    ),
+  )
 ];
 
 void appendAds() {
+  /*
   if (userSettings.adsOn) {
     gaugeSequenceListP.add(
       PortraitDialRow(
@@ -2061,4 +2267,5 @@ void appendAds() {
           )),
     );
   }
+  */
 }

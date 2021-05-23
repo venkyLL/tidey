@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
@@ -31,7 +33,7 @@ PackageInfo _packageInfo = PackageInfo(
   version: 'Unknown',
   buildNumber: 'Unknown',
 );
-
+Dio dio;
 //globals for the sinewave function y = A sin (omega * t + alpha) + C
 double globalA = 1;
 double globalC = 1;
@@ -57,6 +59,10 @@ WeatherLocation weatherLocation = WeatherLocation();
 LocalWeather localWeather = LocalWeather();
 String marqueeString =
     "Welcome to Tidey Weather Clock.  Please connect to the network to get the latest weather";
+String tideMarqueeString = "";
+String weatherMarqueeString = "";
+bool rebuildView = false;
+
 //gauge constants
 double globalCompassDirection = 270;
 DateTime globalCompassValueLastReadAt;
@@ -116,6 +122,21 @@ class UserSettings {
   final keyManualLong = "manualLong";
   String localInfoURL = "https://abacosun.com/2019/11/24/whatsopeninabaco/";
   final keyLocalInfoURL = "localInfoURL";
+  bool continuousMarquee = true;
+  final keyContinuousMarquee = "continuousMarquee";
+  String marqueeText = "Tidey by Amberjack Labs.";
+  final keyMarqueeText = "marqueeText";
+  bool showWeather = true;
+  final keyShowWeather = "showWeather";
+  List filenames = ["", "", "", ""];
+  //String filename1 = null;
+  final keyFilename1 = "filename1";
+  //String filename2 = null;
+  final keyFilename2 = "filename2";
+  // String filename3 = null;
+  final keyFilename3 = "filename3";
+  // String filename0 = null;
+  final keyFilename0 = "filename0";
 }
 
 class BoolKey {
@@ -829,6 +850,34 @@ class MenuListTile extends StatelessWidget {
   }
 }
 
+class MenuAvatarListTile extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  final ImageProvider avatar;
+
+  const MenuAvatarListTile({Key key, this.title, this.onTap, this.avatar})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: avatar,
+      ),
+      title: Text(
+        title,
+        style: kTextSettingsStyle,
+      ),
+      trailing: const Icon(
+        Icons.chevron_right,
+        size: kIconSettingSize,
+        color: Colors.transparent,
+      ),
+      onTap: onTap,
+    );
+  }
+}
+
 class MenuListTileWithSwitch extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
@@ -867,5 +916,53 @@ class MenuListTileWithSwitch extends StatelessWidget {
       ),
       onTap: onTap,
     );
+  }
+}
+
+ImageProvider getGaugeImage(int gaugeNumber) {
+  switch (gaugeNumber) {
+    case 0:
+      {
+        if (userSettings.filenames[gaugeNumber] == "") {
+          print("USing default");
+          return (AssetImage("assets/images/boat1.jpg"));
+        } else {
+          print("Should be getting file");
+          return (FileImage(File(userSettings.filenames[gaugeNumber])));
+        }
+        break;
+      }
+    case 1:
+      {
+        if (userSettings.filenames[gaugeNumber] == "") {
+          return (AssetImage("assets/images/boat2.jpg"));
+        } else {
+          return (FileImage(File(userSettings.filenames[gaugeNumber])));
+        }
+        break;
+      }
+    case 2:
+      {
+        if (userSettings.filenames[gaugeNumber] == "") {
+          return (AssetImage("assets/images/CruiseAbaco1.png"));
+        } else {
+          return (FileImage(File(userSettings.filenames[gaugeNumber])));
+        }
+        break;
+      }
+    case 3:
+      {
+        if (userSettings.filenames[gaugeNumber] == "") {
+          return (AssetImage("assets/images/ACY1.png"));
+        } else {
+          return (FileImage(File(userSettings.filenames[gaugeNumber])));
+        }
+        break;
+      }
+    default:
+      {
+        return (AssetImage("assets/images/boat2.jpg"));
+      }
+      break;
   }
 }

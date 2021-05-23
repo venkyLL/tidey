@@ -1,5 +1,6 @@
 import 'dart:async';
 
+//import 'package:flutter/material.dart';
 import 'package:flutter_sensor_compass/flutter_sensor_compass.dart';
 import 'package:tidey/const.dart';
 
@@ -33,6 +34,7 @@ class MyCompass {
         .listen((value) {
       degrees = value;
       globalCompassDirection = value;
+
       //  print("compass heading: $globalCompassDirection, ${DateTime.now()}");
     });
   }

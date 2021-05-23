@@ -94,7 +94,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         PageViewModel(
           title: "Tap and Swipe",
           body:
-              "Tap the screen for a menu, swipe left for the weather table, swipe right for settings.",
+              "Tap the screen for a menu, swipe left to skip to next gauge, swipe right to go back to previous page, swipe down for the weather table.",
           image: _buildImage('OnBoard4.png'),
           decoration: pageDecoration,
         ),

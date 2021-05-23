@@ -60,10 +60,10 @@ class _TodayScreenState extends State<TodayScreen> {
 //      Column  (
 //        children: [
           SwipeGestureRecognizer(
-        onSwipeLeft: () {
+        onSwipeRight: () {
           Navigator.of(context).pop();
         },
-        onSwipeRight: () {
+        onSwipeLeft: () {
           Navigator.pushNamed(context, ForecastScreen.id);
         },
         child: Container(

@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:open_appstore/open_appstore.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
@@ -38,6 +42,11 @@ class _settingsScreenState extends State<SettingsScreen> {
   bool _sleepTimerEnabled = userSettings.chimeDoNotDisturb;
   bool _alarmOn = userSettings.alarmOn;
   bool _chimeDoNotDisturb = userSettings.chimeDoNotDisturb;
+  ImageProvider _image0;
+  ImageProvider _image1;
+  ImageProvider _image2;
+  ImageProvider _image3;
+
   TimeOfDay _sleepTime = userSettings.sleepTime;
   TimeOfDay _wakeTime = userSettings.wakeTime;
   TimeOfDay _alarmTime = userSettings.alarmTime;
@@ -46,6 +55,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
+  var myController = TextEditingController();
   bool _loading = false;
   Timer ted;
   //var myController = TextEditingController();
@@ -58,7 +68,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    myController = TextEditingController(text: userSettings.marqueeText);
     setState(() {
       _countDownTimeRemaining = userSettings.countDownTimerSecondsRemaining;
     });
@@ -67,13 +77,34 @@ class _settingsScreenState extends State<SettingsScreen> {
       // _countDownStart = true;
     }
     openPerfs();
+    _image0 = getGaugeImage(0);
+    _image1 = getGaugeImage(1);
+    _image2 = getGaugeImage(2);
+    _image3 = getGaugeImage(3);
   }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the
     // widget tree.
-    // myController.dispose();
+    print("She entered " + myController.text);
+    userSettings.marqueeText = myController.text;
+    marqueeString = userSettings.showWeather
+        ? "                                                                     " +
+            "                                                             Tidey by Amberjack Labs" +
+            marqueeSpacer +
+            userSettings.marqueeText +
+            marqueeSpacer +
+            tideMarqueeString +
+            weatherMarqueeString +
+            "  "
+        : "                                                                     " +
+            "                                                             Tidey by Amberjack Labs" +
+            marqueeSpacer +
+            userSettings.marqueeText;
+
+    prefs.setString(userSettings.keyMarqueeText, userSettings.marqueeText);
+    myController.dispose();
     super.dispose();
     if (ted.isActive) {
       ted.cancel();
@@ -102,6 +133,17 @@ class _settingsScreenState extends State<SettingsScreen> {
                 "Settings",
                 style: TextStyle(color: Colors.black),
               ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.help_outline,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, HelpScreen.id);
+                  },
+                )
+              ],
             ),
             body: Container(
               decoration: BoxDecoration(
@@ -542,146 +584,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
-
-//              ListTile(
-//                leading: Icon(
-//                  Icons.straighten,
-//                  size: kIconSettingSize,
-//                  color: Colors.white,
-//                ),
-//                title: Text(
-//                  "Select Untis",
-//                  style: kTextSettingsStyle,
-//                ),
-//                trailing: CupertinoSlidingSegmentedControl(
-//                    children: {
-//                      0: Text(
-//                        'Imperial',
-//                        style: TextStyle(fontSize: kTextSettingSize),
-//                      ),
-//                      1: Text(
-//                        'Metric',
-//                        style: TextStyle(fontSize: kTextSettingSize),
-//                      ),
-//                    },
-//                    backgroundColor: Colors.white30,
-//                    groupValue: _sliding,
-//                    onValueChanged: (newValue) {
-//                      setState(() {
-//                        _sliding = newValue;
-//                        _sliding == 0
-//                            ? userSettings.imperialUnits = true
-//                            : userSettings.imperialUnits = false;
-//                        prefs.setBool(
-//                            'imperialUnits', userSettings.imperialUnits);
-//                      });
-//                    }),
-//              ),
-//              Divider(
-//                height: 10,
-//                thickness: 5,
-//              ),
-                    MenuListTileWithSwitch(
-                        title: (userSettings.chimeOn)
-                            ? "Ship Bell (Enabled)"
-                            : "Ship Bell (Disabled)",
-                        value: userSettings.chimeOn,
-                        icon: Icons.notifications,
-                        onTap: () {
-                          setState(() {
-                            userSettings.chimeOn = !userSettings.chimeOn;
-                            _chimeEnabled = userSettings.chimeOn;
-                            print(
-                                "Selected " + userSettings.chimeOn.toString());
-                            prefs.setBool(
-                                userSettings.keyChimeOn, userSettings.chimeOn);
-                          });
-                        }),
-                    Visibility(
-                      visible: _chimeEnabled,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Column(
-                          children: [
-                            MenuListTileWithSwitch(
-                                title: (userSettings.chimeDoNotDisturb)
-                                    ? "Sleep Mode (Enabled)"
-                                    : "Sleep at Night",
-                                value: userSettings.chimeDoNotDisturb,
-                                icon: Icons.notifications_paused,
-                                onTap: () {
-                                  setState(() {
-                                    userSettings.chimeDoNotDisturb =
-                                        !userSettings.chimeDoNotDisturb;
-                                    _chimeDoNotDisturb =
-                                        userSettings.chimeDoNotDisturb;
-                                    print("Selected " +
-                                        userSettings.chimeDoNotDisturb
-                                            .toString());
-                                    prefs.setBool(
-                                        userSettings.keyChimeDoNotDisturb,
-                                        userSettings.chimeDoNotDisturb);
-                                  });
-                                }),
-                            Visibility(
-                              visible: _chimeDoNotDisturb,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: MenuListTile(
-                                  title: "Set Sleep Time (" +
-                                      _sleepTime.format(context) +
-                                      ")",
-                                  //  icon: Icons.alarm,
-                                  onTap: () => {_selectSleepTime()},
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: _chimeDoNotDisturb,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: MenuListTile(
-                                  title: "Wake Time (" +
-                                      _wakeTime.format(context) +
-                                      ")",
-                                  //  icon: Icons.alarm,
-                                  onTap: () => {_selectWakeTime()},
-                                ),
-                              ),
-                            ),
-                            MenuListTile(
-                              title: "Bell Ring Schedule (${selectedRingMode})",
-                              icon: Icons.notifications_active,
-                              onTap: () => {
-                                showMaterialScrollPicker(
-                                  headerColor: kAppBlueColor,
-                                  maxLongSide: 400,
-                                  context: context,
-                                  title: "Select Bell Ring Schedule",
-                                  items: ringOptions,
-                                  selectedValue: selectedRingMode,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedRingMode = value;
-                                    });
-                                    userSettings.chimeSelected =
-                                        chimeTypeStringToEnum[value];
-                                    print("Selected " +
-                                        userSettings.chimeSelected.toString());
-                                    prefs.setString(
-                                        userSettings.keyChimeSelected, value);
-                                  },
-                                )
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 10,
-                      thickness: 5,
-                    ),
+                    MenuHeading(title: "Alarms and Bells"),
 
                     MenuListTile(
                       title: "Start a timer",
@@ -876,10 +779,147 @@ class _settingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
 
+//              ListTile(
+//                leading: Icon(
+//                  Icons.straighten,
+//                  size: kIconSettingSize,
+//                  color: Colors.white,
+//                ),
+//                title: Text(
+//                  "Select Untis",
+//                  style: kTextSettingsStyle,
+//                ),
+//                trailing: CupertinoSlidingSegmentedControl(
+//                    children: {
+//                      0: Text(
+//                        'Imperial',
+//                        style: TextStyle(fontSize: kTextSettingSize),
+//                      ),
+//                      1: Text(
+//                        'Metric',
+//                        style: TextStyle(fontSize: kTextSettingSize),
+//                      ),
+//                    },
+//                    backgroundColor: Colors.white30,
+//                    groupValue: _sliding,
+//                    onValueChanged: (newValue) {
+//                      setState(() {
+//                        _sliding = newValue;
+//                        _sliding == 0
+//                            ? userSettings.imperialUnits = true
+//                            : userSettings.imperialUnits = false;
+//                        prefs.setBool(
+//                            'imperialUnits', userSettings.imperialUnits);
+//                      });
+//                    }),
+//              ),
+//              Divider(
+//                height: 10,
+//                thickness: 5,
+//              ),
+                    MenuListTileWithSwitch(
+                        title: (userSettings.chimeOn)
+                            ? "Ship Bell (Enabled)"
+                            : "Ship Bell (Disabled)",
+                        value: userSettings.chimeOn,
+                        icon: Icons.notifications,
+                        onTap: () {
+                          setState(() {
+                            userSettings.chimeOn = !userSettings.chimeOn;
+                            _chimeEnabled = userSettings.chimeOn;
+                            print(
+                                "Selected " + userSettings.chimeOn.toString());
+                            prefs.setBool(
+                                userSettings.keyChimeOn, userSettings.chimeOn);
+                          });
+                        }),
+                    Visibility(
+                      visible: _chimeEnabled,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Column(
+                          children: [
+                            MenuListTileWithSwitch(
+                                title: (userSettings.chimeDoNotDisturb)
+                                    ? "Sleep Mode (Enabled)"
+                                    : "Sleep at Night",
+                                value: userSettings.chimeDoNotDisturb,
+                                icon: Icons.notifications_paused,
+                                onTap: () {
+                                  setState(() {
+                                    userSettings.chimeDoNotDisturb =
+                                        !userSettings.chimeDoNotDisturb;
+                                    _chimeDoNotDisturb =
+                                        userSettings.chimeDoNotDisturb;
+                                    print("Selected " +
+                                        userSettings.chimeDoNotDisturb
+                                            .toString());
+                                    prefs.setBool(
+                                        userSettings.keyChimeDoNotDisturb,
+                                        userSettings.chimeDoNotDisturb);
+                                  });
+                                }),
+                            Visibility(
+                              visible: _chimeDoNotDisturb,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: MenuListTile(
+                                  title: "Set Sleep Time (" +
+                                      _sleepTime.format(context) +
+                                      ")",
+                                  //  icon: Icons.alarm,
+                                  onTap: () => {_selectSleepTime()},
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: _chimeDoNotDisturb,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: MenuListTile(
+                                  title: "Wake Time (" +
+                                      _wakeTime.format(context) +
+                                      ")",
+                                  //  icon: Icons.alarm,
+                                  onTap: () => {_selectWakeTime()},
+                                ),
+                              ),
+                            ),
+                            MenuListTile(
+                              title: "Bell Ring Schedule (${selectedRingMode})",
+                              icon: Icons.notifications_active,
+                              onTap: () => {
+                                showMaterialScrollPicker(
+                                  headerColor: kAppBlueColor,
+                                  maxLongSide: 400,
+                                  context: context,
+                                  title: "Select Bell Schedule",
+                                  items: ringOptions,
+                                  selectedValue: selectedRingMode,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRingMode = value;
+                                    });
+                                    userSettings.chimeSelected =
+                                        chimeTypeStringToEnum[value];
+                                    print("Selected " +
+                                        userSettings.chimeSelected.toString());
+                                    prefs.setString(
+                                        userSettings.keyChimeSelected, value);
+                                  },
+                                )
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
                     Divider(
                       height: 10,
                       thickness: 5,
                     ),
+                    MenuHeading(title: "Screen Settings"),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Row(
@@ -927,27 +967,153 @@ class _settingsScreenState extends State<SettingsScreen> {
                       thickness: 5,
                     ),
                     MenuListTileWithSwitch(
-                        title: (userSettings.adsOn)
-                            ? "Disable Advertising "
-                            : "Enable Advertising",
-                        value: userSettings.adsOn,
-                        icon: Icons.photo,
+                        title: (userSettings.continuousMarquee)
+                            ? "Continuous Marquee (Enabled) "
+                            : "Continuous Marquee (Disabled)",
+                        value: userSettings.continuousMarquee,
+                        icon: Icons.linear_scale,
                         onTap: () {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(adsSnackBar);
                           setState(() {
-                            userSettings.adsOn = !userSettings.adsOn;
-                            //    _chimeEnabled = userSettings.chimeOn;
-                            print(
-                                "Selected " + userSettings.chimeOn.toString());
-                            prefs.setBool(
-                                userSettings.keyAdsOn, userSettings.adsOn);
+                            userSettings.continuousMarquee =
+                                !userSettings.continuousMarquee;
+                            prefs.setBool(userSettings.keyContinuousMarquee,
+                                userSettings.continuousMarquee);
                           });
                         }),
                     Divider(
                       height: 10,
                       thickness: 5,
                     ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuListTileWithSwitch(
+                        title: (userSettings.showWeather)
+                            ? "Show Weather in Marquee (Enabled) "
+                            : "Show Weather in Maruqee (Disabled)",
+                        value: userSettings.showWeather,
+                        icon: Icons.wb_sunny_rounded,
+                        onTap: () {
+                          setState(() {
+                            userSettings.showWeather =
+                                !userSettings.showWeather;
+                            prefs.setBool(userSettings.keyShowWeather,
+                                userSettings.showWeather);
+                          });
+                        }),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          maxLines: 3,
+                          controller: myController,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 8.0),
+                              fillColor: Colors.grey[100],
+                              errorStyle: TextStyle(
+                                  color: Colors.red,
+                                  backgroundColor: Colors.white,
+                                  fontSize: 15),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 2.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 2.0),
+                              ),
+                              hoverColor: Colors.white,
+                              labelStyle: TextStyle(color: Colors.white),
+                              labelText: "  Enter Marquee Text:"),
+
+                          textAlign: TextAlign.center,
+
+//                            onChanged: (value) {
+//                              print("The value entered is : $value");
+//                            }
+                        ),
+                      ),
+                    ),
+//                    MenuListTileWithSwitch(
+//                        title: (userSettings.adsOn)
+//                            ? "Disable Advertising "
+//                            : "Enable Advertising",
+//                        value: userSettings.adsOn,
+//                        icon: Icons.photo,
+//                        onTap: () {
+//                          ScaffoldMessenger.of(context)
+//                              .showSnackBar(adsSnackBar);
+//                          setState(() {
+//                            userSettings.adsOn = !userSettings.adsOn;
+//                            //    _chimeEnabled = userSettings.chimeOn;
+//                            print(
+//                                "Selected " + userSettings.chimeOn.toString());
+//                            prefs.setBool(
+//                                userSettings.keyAdsOn, userSettings.adsOn);
+//                          });
+//                        }),
+//                    Divider(
+//                      height: 10,
+//                      thickness: 5,
+//                    ),
+                    MenuAvatarListTile(
+                      title: "First Gauge Image",
+                      avatar: _image0,
+                      onTap: () async {
+                        await _selectFile(
+                            context, userSettings.keyFilename0, 0);
+                      },
+                    ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuAvatarListTile(
+                      title: "Second Gauge Image",
+                      avatar: _image1,
+                      onTap: () async {
+                        await _selectFile(
+                            context, userSettings.keyFilename1, 1);
+                      },
+                    ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuAvatarListTile(
+                      title: "Third Gauge Image",
+                      avatar: _image2,
+                      onTap: () async {
+                        await _selectFile(
+                            context, userSettings.keyFilename2, 2);
+                      },
+                    ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+                    MenuAvatarListTile(
+                      title: "Fourth Gauge Image",
+                      avatar: _image3,
+                      onTap: () async {
+                        await _selectFile(
+                            context, userSettings.keyFilename3, 3);
+                      },
+                    ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
+
                     MenuListTile(
                       title: "URL for More Information",
                       icon: Icons.info,
@@ -967,40 +1133,34 @@ class _settingsScreenState extends State<SettingsScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(20.0),
                                       child: TextFormField(
-                                          style: TextStyle(color: Colors.black),
                                           initialValue:
                                               userSettings.localInfoURL,
+                                          style: TextStyle(color: Colors.white),
                                           decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 8.0),
-                                            // border: InputBorder.none,
-                                            filled: true,
-                                            fillColor: Colors.grey[200],
-                                            errorStyle: TextStyle(
-                                                color: Colors.red,
-                                                backgroundColor: Colors.white,
-                                                fontSize: 15),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: const BorderSide(
-                                                  color: Colors.white,
-                                                  width: 2.0),
-//                                              borderRadius:
-//                                                  BorderRadius.circular(25.0),
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: const BorderSide(
-                                                  color: Colors.white,
-                                                  width: 2.0),
-//                                              borderRadius:
-//                                                  BorderRadius.circular(25.0),
-                                            ),
-
-                                            hintText: 'https://www.google.com',
-                                            hoverColor: Colors.white,
-                                          ),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              fillColor: Colors.grey[100],
+                                              errorStyle: TextStyle(
+                                                  color: Colors.red,
+                                                  backgroundColor: Colors.white,
+                                                  fontSize: 15),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 2.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 2.0),
+                                              ),
+                                              hoverColor: Colors.white,
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white),
+                                              labelText:
+                                                  "  Enter URL for More Information:"),
                                           textAlign: TextAlign.center,
-                                          //  keyboardType: TextInputType.number,
                                           onSaved: (text) {
                                             userSettings.localInfoURL = (text);
                                             prefs.setString(
@@ -1035,6 +1195,8 @@ class _settingsScreenState extends State<SettingsScreen> {
                                 _formKey2.currentState.save();
                                 // TODO submit
                                 destinationURL = userSettings.localInfoURL;
+                                prefs.setString(userSettings.keyLocalInfoURL,
+                                    userSettings.localInfoURL);
                                 Navigator.pushNamed(context, WebWeather.id);
                               }
                             },
@@ -1045,22 +1207,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
 
-                    Container(
-                      height: ScreenSize.small ? 50 : 70,
-                      width: double.infinity,
-                      color: kHeadingColor,
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, bottom: 8),
-                          child: Text("Information",
-                              style: TextStyle(
-                                //   backgroundColor: Colors.grey,
-                                fontSize: kTextSettingSize,
-                              )),
-                        ),
-                      ),
-                    ),
+                    MenuHeading(title: "Information"),
                     MenuListTile(
                       title: "Tell a friend about Tidey",
                       icon: Icons.share,
@@ -1231,6 +1378,81 @@ class _settingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /*
+    showMenu(
+                            context: context,
+                            position: RelativeRect.fromLTRB(100, 100, 100, 100),
+                            items: [
+                              PopupMenuItem<int>(
+                                value: 0,
+                                child: Text('Working a lot harder'),
+                              ),
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: Text('Working a lot less'),
+                              ),
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: Text('Working a lot smarter'),
+                              ),
+                            ]);
+
+
+   */
+
+  Future _selectFile(
+      BuildContext ctx, String keyFilename, int fileNumber) async {
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => CupertinoActionSheet(
+              actions: [
+                CupertinoActionSheetAction(
+                    onPressed: () async {
+                      Navigator.of(ctx).pop();
+                      String myFile = await _getPicture();
+                      print("Yo My file is $myFile");
+                      print("YoYo my key is $keyFilename");
+                      prefs.setString(keyFilename, myFile);
+                      userSettings.filenames[fileNumber] = myFile;
+                      setState(() {
+                        print("seeting up Images");
+                        _image0 = getGaugeImage(0);
+                        _image1 = getGaugeImage(1);
+                        _image2 = getGaugeImage(2);
+                        _image3 = getGaugeImage(3);
+                      });
+                      rebuildView = true;
+                      print("I stored the file here $myFile");
+                    },
+                    child: Text('Select Photo From Gallery')),
+                CupertinoActionSheetAction(
+                    onPressed: () {
+                      prefs.setString(userSettings.keyFilename1, "");
+                      userSettings.filenames[fileNumber] = "";
+                      setState(() {
+                        _image1 = getGaugeImage(1);
+                        _image2 = getGaugeImage(2);
+                        _image3 = getGaugeImage(3);
+                        _image0 = getGaugeImage(0);
+                      });
+                      rebuildView = true;
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text('Use Default Photo')),
+              ],
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text('Cancel'),
+              ),
+            ));
+  }
+
+  void _close(BuildContext ctx) {
+    Navigator.of(ctx).pop();
+  }
+
+//
+
   AlertDialog buildAlertDialog(BuildContext context) {
     return AlertDialog(
       title: Text("Tidey Version 1.0"),
@@ -1389,6 +1611,34 @@ class _settingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  File _storedImage;
+  Future<String> _getPicture() async {
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 600,
+    );
+    if (pickedFile == null) {
+      return ("");
+    }
+    setState(() {
+      if (pickedFile != null) {
+        _storedImage = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+
+      // _storedImage = imageFile;
+    });
+    print("Selected Image " + path.basename(pickedFile.path));
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = path.basename(pickedFile.path);
+    final savedImage = await _storedImage.copy('${appDir.path}/$fileName');
+    //temp = FileImage(File('${appDir.path}/$fileName'));
+    return ('${appDir.path}/$fileName');
+  }
+
+  ImageProvider temp;
+
   void getWeatherName() async {
     setState(() {
       _loading = true;
@@ -1453,5 +1703,32 @@ class _settingsScreenState extends State<SettingsScreen> {
     } else {
       throw 'Could not launch email';
     }
+  }
+}
+
+class MenuHeading extends StatelessWidget {
+  String title;
+  MenuHeading({
+    this.title = "",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenSize.small ? 50 : 70,
+      width: double.infinity,
+      color: kHeadingColor,
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10.0, bottom: 8),
+          child: Text(title,
+              style: TextStyle(
+                //   backgroundColor: Colors.grey,
+                fontSize: kTextSettingSize,
+              )),
+        ),
+      ),
+    );
   }
 }
