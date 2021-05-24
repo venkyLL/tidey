@@ -1415,7 +1415,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       prefs.setString(keyFilename, myFile);
                       userSettings.filenames[fileNumber] = myFile;
                       setState(() {
-                        print("seeting up Images");
+                        print("setting up Images");
                         _image0 = getGaugeImage(0);
                         _image1 = getGaugeImage(1);
                         _image2 = getGaugeImage(2);
@@ -1427,7 +1427,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                     child: Text('Select Photo From Gallery')),
                 CupertinoActionSheetAction(
                     onPressed: () {
-                      prefs.setString(userSettings.keyFilename1, "");
+                      prefs.setString(keyFilename, "");
                       userSettings.filenames[fileNumber] = "";
                       setState(() {
                         _image1 = getGaugeImage(1);

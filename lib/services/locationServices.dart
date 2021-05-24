@@ -18,8 +18,8 @@ class Location {
 
         print(" after getCurrentLocation");
 
-        globalLatitude = position.latitude.toString();
-        globalLongitude = position.longitude.toString();
+        globalLatitude = position.latitude.toStringAsFixed(4);
+        globalLongitude = position.longitude.toStringAsFixed(4);
         print("returning latitude is $globalLatitude");
         return (true);
       } catch (e) {

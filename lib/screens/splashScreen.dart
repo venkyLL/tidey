@@ -3,6 +3,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
+//import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -147,6 +148,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   bool firstTime = false;
+  String currentVersionRaw;
+  String enforcedVersionRaw;
   void initAll() async {
     var noLocationSnackBar = SnackBar(
         content: Text('Location Services off using default location!'),
@@ -178,6 +181,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
       dio = new Dio(options);
     }
+    packageInfo = await PackageInfo.fromPlatform();
+    currentVersionRaw = packageInfo.version;
+    // enforcedVersionRaw = await enforcedVersion;
+    print("Enforced version is $enforcedVersionRaw");
+    print(packageInfo.appName);
+    print(packageInfo.buildNumber);
+    print(packageInfo.version);
+    print(packageInfo.packageName);
 
     await checkConnectivity();
 //    var networkSnackBar = SnackBar(
@@ -261,13 +272,6 @@ class _SplashScreenState extends State<SplashScreen> {
     CronJobs myCronJobs = CronJobs();
     myCronJobs.init();
 
-    packageInfo = await PackageInfo.fromPlatform();
-
-    print(packageInfo.appName);
-    print(packageInfo.buildNumber);
-    print(packageInfo.version);
-    print(packageInfo.packageName);
-
     MyCompass theCompass = MyCompass();
     theCompass.init();
     // start audio player service
@@ -290,6 +294,33 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
 //    AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell.mp3'));
+  }
+
+//  static Future<String> get enforcedVersion async {
+//    String _ENFORCED_VERSION_KEY = "VersionKey";
+//    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+//    await remoteConfig.fetch(
+//      expiration: Duration(
+//        seconds: 0,
+//      ),
+//    );
+//    await remoteConfig.activateFetched();
+//    return remoteConfig.getString(_ENFORCED_VERSION_KEY); // 'enforced_version'
+//  }
+
+  bool get needsUpdate {
+    final List<int> currentVersion = currentVersionRaw
+        .split('.')
+        .map((String number) => int.parse(number))
+        .toList();
+    final List<int> enforcedVersion = enforcedVersionRaw
+        .split('.')
+        .map((String number) => int.parse(number))
+        .toList();
+    for (int i = 0; i < 3; i++) {
+      if (enforcedVersion[i] > currentVersion[i]) return true;
+    }
+    return false;
   }
 
   Connectivity connectivity = Connectivity();
