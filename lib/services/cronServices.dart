@@ -23,11 +23,14 @@ class CronJobs {
       await localWeatherService.getLocalWeatherData();
 
       if (!globalWeather.localWeatherExists) {
+        print("No Tide Data Existed");
         pollingError = true;
         globalWeather.tideAPIError =
             true; // if no weather data who cares about tide
+        print("Di is $di days left is ");
         if (di < globalWeather.dailyWeather.length - 1) {
           //there is still data in array
+
           di += 1;
         } else {
           globalWeather.weatherAPIError = true;

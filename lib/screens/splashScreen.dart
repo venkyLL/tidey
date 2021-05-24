@@ -3,7 +3,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
-//import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -149,6 +149,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   bool firstTime = false;
   String currentVersionRaw;
+  String currentVersionT;
   String enforcedVersionRaw;
   void initAll() async {
     var noLocationSnackBar = SnackBar(
@@ -183,8 +184,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     packageInfo = await PackageInfo.fromPlatform();
     currentVersionRaw = packageInfo.version;
-    // enforcedVersionRaw = await enforcedVersion;
+    enforcedVersionRaw = await enforcedVersion;
+    currentVersionT = await currentVersion;
     print("Enforced version is $enforcedVersionRaw");
+    print("Current version is $currentVersionT");
     print(packageInfo.appName);
     print(packageInfo.buildNumber);
     print(packageInfo.version);
@@ -296,17 +299,30 @@ class _SplashScreenState extends State<SplashScreen> {
 //    AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell.mp3'));
   }
 
-//  static Future<String> get enforcedVersion async {
-//    String _ENFORCED_VERSION_KEY = "VersionKey";
-//    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-//    await remoteConfig.fetch(
-//      expiration: Duration(
-//        seconds: 0,
-//      ),
-//    );
-//    await remoteConfig.activateFetched();
-//    return remoteConfig.getString(_ENFORCED_VERSION_KEY); // 'enforced_version'
-//  }
+  static Future<String> get enforcedVersion async {
+    String _ENFORCED_VERSION_KEY = "EnforcedVersionKey";
+    String _Current_VERSION_KEY = "CurrentVersionKey";
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(
+      expiration: Duration(
+        seconds: 0,
+      ),
+    );
+    await remoteConfig.activateFetched();
+    return remoteConfig.getString(_ENFORCED_VERSION_KEY); // 'enforced_version'
+  }
+
+  static Future<String> get currentVersion async {
+    String _Current_VERSION_KEY = "CurrentVersionKey";
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(
+      expiration: Duration(
+        seconds: 0,
+      ),
+    );
+    await remoteConfig.activateFetched();
+    return remoteConfig.getString(_Current_VERSION_KEY); // 'enforced_version'
+  }
 
   bool get needsUpdate {
     final List<int> currentVersion = currentVersionRaw
