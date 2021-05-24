@@ -1222,10 +1222,10 @@ class _VenkySwapStateL extends State<VenkySwapL> {
     if (swipedLeft || swipedRight) {
       print("Dude I swiped");
       if (swipedLeft) {
-        counter = (counter + 1) % gaugeSequenceListP.length;
+        counter = (counter + 1) % gaugeSequenceListL.length;
       } else {
-        counter = (counter + gaugeSequenceListP.length - 1) %
-            gaugeSequenceListP.length;
+        counter = (counter + gaugeSequenceListL.length - 1) %
+            gaugeSequenceListL.length;
       }
       swipedLeft = false;
       swipedRight = false;
@@ -1235,9 +1235,9 @@ class _VenkySwapStateL extends State<VenkySwapL> {
       });
 
       if (animationSwitcher) {
-        myFirstWidget = gaugeSequenceListP[_counter];
+        myFirstWidget = gaugeSequenceListL[_counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[_counter];
+        mySecondWidget = gaugeSequenceListL[_counter];
       }
     }
   }
@@ -1337,10 +1337,10 @@ class _VenkySwapStatePNoData extends State<VenkySwapPNoData> {
     if (swipedLeft || swipedRight) {
       print("Dude I swiped");
       if (swipedLeft) {
-        counter = (counter + 1) % gaugeSequenceListP.length;
+        counter = (counter + 1) % gaugeSequenceListPNoData.length;
       } else {
-        counter = (counter + gaugeSequenceListP.length - 1) %
-            gaugeSequenceListP.length;
+        counter = (counter + gaugeSequenceListPNoData.length - 1) %
+            gaugeSequenceListPNoData.length;
       }
       swipedLeft = false;
       swipedRight = false;
@@ -1350,9 +1350,9 @@ class _VenkySwapStatePNoData extends State<VenkySwapPNoData> {
       });
 
       if (animationSwitcher) {
-        myFirstWidget = gaugeSequenceListP[counter];
+        myFirstWidget = gaugeSequenceListPNoData[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[counter];
+        mySecondWidget = gaugeSequenceListPNoData[counter];
       }
     }
   }
@@ -1459,10 +1459,10 @@ class _VenkySwapStateLNoData extends State<VenkySwapLNoData> {
     if (swipedLeft || swipedRight) {
       print("Dude I swiped");
       if (swipedLeft) {
-        counter = (counter + 1) % gaugeSequenceListP.length;
+        counter = (counter + 1) % gaugeSequenceListLNoData.length;
       } else {
-        counter = (counter + gaugeSequenceListP.length - 1) %
-            gaugeSequenceListP.length;
+        counter = (counter + gaugeSequenceListLNoData.length - 1) %
+            gaugeSequenceListLNoData.length;
       }
       swipedLeft = false;
       swipedRight = false;
@@ -1472,9 +1472,9 @@ class _VenkySwapStateLNoData extends State<VenkySwapLNoData> {
       });
 
       if (animationSwitcher) {
-        myFirstWidget = gaugeSequenceListP[counter];
+        myFirstWidget = gaugeSequenceListLNoData[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[counter];
+        mySecondWidget = gaugeSequenceListLNoData[counter];
       }
     }
   }
@@ -1581,10 +1581,10 @@ class _VenkySwapPNoTide extends State<VenkySwapPNoTide> {
     if (swipedLeft || swipedRight) {
       print("Dude I swiped");
       if (swipedLeft) {
-        counter = (counter + 1) % gaugeSequenceListP.length;
+        counter = (counter + 1) % gaugeSequenceListPNoTide.length;
       } else {
-        counter = (counter + gaugeSequenceListP.length - 1) %
-            gaugeSequenceListP.length;
+        counter = (counter + gaugeSequenceListPNoTide.length - 1) %
+            gaugeSequenceListPNoTide.length;
       }
       swipedLeft = false;
       swipedRight = false;
@@ -1593,9 +1593,9 @@ class _VenkySwapPNoTide extends State<VenkySwapPNoTide> {
       });
 
       if (animationSwitcher) {
-        myFirstWidget = gaugeSequenceListP[counter];
+        myFirstWidget = gaugeSequenceListPNoTide[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[counter];
+        mySecondWidget = gaugeSequenceListPNoTide[counter];
       }
     }
   }
@@ -1702,10 +1702,10 @@ class _VenkySwapLNoTide extends State<VenkySwapLNoTide> {
     if (swipedLeft || swipedRight) {
       print("Dude I swiped");
       if (swipedLeft) {
-        counter = (counter + 1) % gaugeSequenceListP.length;
+        counter = (counter + 1) % gaugeSequenceListLNoTide.length;
       } else {
-        counter = (counter + gaugeSequenceListP.length - 1) %
-            gaugeSequenceListP.length;
+        counter = (counter + gaugeSequenceListLNoTide.length - 1) %
+            gaugeSequenceListLNoTide.length;
       }
       swipedLeft = false;
       swipedRight = false;
@@ -1714,9 +1714,9 @@ class _VenkySwapLNoTide extends State<VenkySwapLNoTide> {
       });
 
       if (animationSwitcher) {
-        myFirstWidget = gaugeSequenceListP[counter];
+        myFirstWidget = gaugeSequenceListLNoTide[counter];
       } else {
-        mySecondWidget = gaugeSequenceListP[counter];
+        mySecondWidget = gaugeSequenceListLNoTide[counter];
       }
     }
   }
