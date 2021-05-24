@@ -1860,18 +1860,18 @@ List<Widget> gaugeSequenceListL = [
   ),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
+      myImage: 1,
     ),
   ),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];
@@ -1924,18 +1924,18 @@ List<Widget> gaugeSequenceListLNoTide = [
   ),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
+      myImage: 1,
     ),
   ),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];
@@ -1945,10 +1945,10 @@ List<Widget> gaugeSequenceListLNoData = [
       gaugeType2: ImageGaugeNew(imageName: "sunset2.gif")),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
+      myImage: 1,
     ),
   ),
   DialRow(
@@ -1959,18 +1959,10 @@ List<Widget> gaugeSequenceListLNoData = [
   ),
   DialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
-    ),
-  ),
-  DialRow(
-    gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
-    ),
-    gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];
@@ -2088,18 +2080,16 @@ List<Widget> gaugeSequenceListP = [
   ),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
-    gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
-    ),
+    gaugeType2: ImageGaugeCustom(myImage: 1),
   ),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];
@@ -2161,18 +2151,18 @@ List<Widget> gaugeSequenceListPNoTide = [
   ),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
+      myImage: 1,
     ),
   ),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];
@@ -2182,10 +2172,10 @@ List<Widget> gaugeSequenceListPNoData = [
       gaugeType2: ImageGaugeNew(imageName: "sunset2.gif")),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(0),
+      myImage: 0,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(1),
+      myImage: 1,
     ),
   ),
   PortraitDialRow(
@@ -2196,10 +2186,10 @@ List<Widget> gaugeSequenceListPNoData = [
   ),
   PortraitDialRow(
     gaugeType1: ImageGaugeCustom(
-      myImage: getGaugeImage(2),
+      myImage: 2,
     ),
     gaugeType2: ImageGaugeCustom(
-      myImage: getGaugeImage(3),
+      myImage: 3,
     ),
   )
 ];

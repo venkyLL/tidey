@@ -173,7 +173,7 @@ class ImageGaugeNew extends StatelessWidget {
 }
 
 class ImageGaugeCustom extends StatelessWidget {
-  final ImageProvider myImage;
+  final int myImage;
   final String textLabel;
   final Color textColor;
   final Color textBackgroundColor;
@@ -187,16 +187,16 @@ class ImageGaugeCustom extends StatelessWidget {
 
   ImageGaugeCustom(
       {this.myImage,
-        this.textLabel = "",
-        this.textColor = Colors.white,
-        this.textBackgroundColor = Colors.transparent,
-        this.fontSize = 24,
-        this.textPosition = 67,
-        this.backgroundColor = Colors.black,
-        this.bezelColor = kBezelColor, // = Color(0xFF999999),
-        this.bezelWidth = 5,
-        this.imageInset = 30,
-        this.innerLineColor = const Color(0xFF999999)});
+      this.textLabel = "",
+      this.textColor = Colors.white,
+      this.textBackgroundColor = Colors.transparent,
+      this.fontSize = 24,
+      this.textPosition = 67,
+      this.backgroundColor = Colors.black,
+      this.bezelColor = kBezelColor, // = Color(0xFF999999),
+      this.bezelWidth = 5,
+      this.imageInset = 30,
+      this.innerLineColor = const Color(0xFF999999)});
 
   @override
   Widget build(BuildContext context) {
@@ -250,9 +250,9 @@ class ImageGaugeCustom extends StatelessWidget {
               shape: BoxShape.circle,
               image: DecorationImage(
                 //  image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
-                  image: myImage,
-                  fit: BoxFit.fitHeight,
-                  ),
+                image: getGaugeImage(myImage),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
         ),
@@ -263,15 +263,15 @@ class ImageGaugeCustom extends StatelessWidget {
                 SizedBox(
                     height: (ScreenSize.small)
                         ? (MediaQuery.of(context).orientation ==
-                        Orientation.landscape)
-                        ? ScreenSize.gaugeSize * (textPosition / 100)
-                        : ScreenSize.gaugeSize *
-                        (textPosition / 100) *
-                        ScreenSize.fs
+                                Orientation.landscape)
+                            ? ScreenSize.gaugeSize * (textPosition / 100)
+                            : ScreenSize.gaugeSize *
+                                (textPosition / 100) *
+                                ScreenSize.fs
                         : (MediaQuery.of(context).orientation ==
-                        Orientation.landscape)
-                        ? ScreenSize.gaugeSize * (textPosition / 100)
-                        : ScreenSize.gaugeSize * (textPosition / 100) * .8),
+                                Orientation.landscape)
+                            ? ScreenSize.gaugeSize * (textPosition / 100)
+                            : ScreenSize.gaugeSize * (textPosition / 100) * .8),
                 Text(
                   textLabel,
                   textAlign: TextAlign.center,
