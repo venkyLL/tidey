@@ -139,6 +139,10 @@ class UserSettings {
   final keyFilename3 = "filename3";
   // String filename0 = null;
   final keyFilename0 = "filename0";
+  String deviceID = null;
+  final keyDeviceID = "deviceID";
+  bool retiredRelease = false;
+  final keyRetiredRelease = "retiredRelease";
 }
 
 class BoolKey {

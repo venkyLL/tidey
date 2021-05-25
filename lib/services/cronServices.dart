@@ -14,7 +14,6 @@ class CronJobs {
     LocalWeatherService localWeatherService = LocalWeatherService();
 
     cron.schedule(Schedule.parse('0 0 * * *'), () async {
-      print("Cron Running aaaaa");
       //this will run each midnight
       Location location = Location();
       await location.getCurrentLocation();

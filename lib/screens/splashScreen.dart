@@ -2,6 +2,7 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:tidey/services/marineWeather.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'package:tidey/services/tideServices.dart';
 import 'package:tidey/services/tideyParms.dart';
+import 'package:uuid/uuid.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -36,10 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
     // getProfileData();
   }
 
-  void getProfileData() async {
+  Future<void> getProfileData() async {
     print("Getting profile Data");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    userSettings.deviceID = await readDeviceIDFromLocal(prefs);
+    userSettings.retiredRelease =
+        readBoolFromLocal(prefs, userSettings.keyRetiredRelease, false);
     userSettings.chimeOn =
         readBoolFromLocal(prefs, userSettings.keyChimeOn, true);
     userSettings.adsOn = readBoolFromLocal(prefs, userSettings.keyAdsOn, false);
@@ -103,6 +107,32 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  Future<String> readDeviceIDFromLocal(SharedPreferences prefs) async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    String deviceID;
+    deviceID = prefs.getString(userSettings.keyDeviceID);
+    if (deviceID == null) {
+      print(" DeviceID not found");
+      if (ScreenSize.isAndroid) {
+        final info = await deviceInfoPlugin.androidInfo;
+        deviceID = info.androidId;
+      }
+      if (ScreenSize.isIOS) {
+        final info = await deviceInfoPlugin.iosInfo;
+        deviceID = info.identifierForVendor;
+      }
+      if (deviceID == null || deviceID.isEmpty) {
+        deviceID = Uuid().v1();
+      }
+
+      prefs.setString(userSettings.keyDeviceID, deviceID);
+      return deviceID;
+    } else {
+      print("DeviceID Found $deviceID");
+      return deviceID;
+    }
+  }
+
   double readDoubleFromLocal(
       SharedPreferences prefs, String settingKey, double defaultValue) {
     double valueRead;
@@ -126,7 +156,7 @@ class _SplashScreenState extends State<SplashScreen> {
       prefs.setInt(settingKey, defaultValue);
       return defaultValue;
     } else {
-      print("$settingKey Found $valueRead.ttoString()");
+      print("$settingKey Found $valueRead");
       return valueRead;
     }
   }
@@ -142,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> {
       return defaultValue;
     } else {
       firstTime = false;
-      print("$settingKey Found $valueRead.ttoString()");
+      print("$settingKey Found $valueRead");
       return valueRead;
       // globalChimeOn = chimeOn;
     }
@@ -200,12 +230,22 @@ class _SplashScreenState extends State<SplashScreen> {
       print("Did I return");
       if (tideyParms.needsUpdate) {
         print("Update Required");
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        userSettings.retiredRelease =
+            readBoolFromLocal(prefs, userSettings.keyRetiredRelease, true);
         await _updateRequiredAlert(context);
       } else {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        userSettings.retiredRelease =
+            readBoolFromLocal(prefs, userSettings.keyRetiredRelease, false);
         if (tideyParms.updateAvailable) {
           print("Update Available");
           await _updateAvailableAlert(context);
         }
+      }
+    } else {
+      if (userSettings.retiredRelease) {
+        await _updateRequiredAlert(context);
       }
     }
 
@@ -361,7 +401,7 @@ class _SplashScreenState extends State<SplashScreen> {
         title: Text("Tidey " + packageInfo.version + " is Retired"),
         content: Text("Release " +
             packageInfo.version +
-            " of Tidey has served you well, but has been retired, please download the latest version to continue."),
+            " of Tidey has served you well, but has been retired, please download the latest version to continue. Please make sure you are connected to the network the first time you open Tidey after the upgrade."),
 //        actions: <Widget>[
 //          TextButton(
 //            onPressed: () {
@@ -379,7 +419,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Connectivity connectivity = Connectivity();
   String _networkStatus1 = '';
 
-  void checkConnectivity() async {
+  Future<void> checkConnectivity() async {
     var connectivityResult = await connectivity.checkConnectivity();
     var conn = getConnectionValue(connectivityResult);
     if (connectivityResult == ConnectivityResult.none) {
@@ -418,7 +458,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     ScreenSize().init(context);
-
     return Scaffold(
       // backgroundColor: kSplashColor,
       body: Container(

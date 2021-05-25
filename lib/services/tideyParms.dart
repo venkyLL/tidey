@@ -39,7 +39,7 @@ class TideyParmsService {
   Future<bool> getTideyParmData() async {
     try {
       Response response = await dio.get(tideyParmsURL, queryParameters: {
-        'deviceID': '1234' // userSettings.deviceID,
+        'deviceID': userSettings.deviceID,
       });
 
       // Map nearbyLocationsMap = response.data;

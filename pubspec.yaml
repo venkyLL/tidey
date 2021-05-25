@@ -38,6 +38,7 @@ dependencies:
   dart_date: ^1.1.0
   intl:
   marquee:
+  device_info:
   webview_flutter:
   package_info: ^2.0.0
   swipe_gesture_recognizer:
