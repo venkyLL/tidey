@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -56,6 +57,7 @@ class _settingsScreenState extends State<SettingsScreen> {
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
   var myController = TextEditingController();
+  var durationController = TextEditingController();
   bool _loading = false;
   Timer ted;
   //var myController = TextEditingController();
@@ -69,6 +71,8 @@ class _settingsScreenState extends State<SettingsScreen> {
     // TODO: implement initState
     super.initState();
     myController = TextEditingController(text: userSettings.marqueeText);
+    durationController =
+        TextEditingController(text: userSettings.transitionTime.toString());
     setState(() {
       _countDownTimeRemaining = userSettings.countDownTimerSecondsRemaining;
     });
@@ -104,7 +108,11 @@ class _settingsScreenState extends State<SettingsScreen> {
             userSettings.marqueeText;
 
     prefs.setString(userSettings.keyMarqueeText, userSettings.marqueeText);
+    print("Transition Time set to " + durationController.text);
+    userSettings.transitionTime = int.parse(durationController.text);
+    prefs.setInt(userSettings.keyTransitionTime, userSettings.transitionTime);
     myController.dispose();
+    durationController.dispose();
     super.dispose();
     if (ted.isActive) {
       ted.cancel();
@@ -817,6 +825,10 @@ class _settingsScreenState extends State<SettingsScreen> {
 //                height: 10,
 //                thickness: 5,
 //              ),
+                    Divider(
+                      height: 10,
+                      thickness: 5,
+                    ),
                     MenuListTileWithSwitch(
                         title: (userSettings.chimeOn)
                             ? "Ship Bell (Enabled)"
@@ -919,7 +931,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                       height: 10,
                       thickness: 5,
                     ),
-                    MenuHeading(title: "Screen Settings"),
+                    MenuHeading(title: "Display Settings"),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Row(
@@ -930,14 +942,40 @@ class _settingsScreenState extends State<SettingsScreen> {
                             color: Colors.white,
                           ),
                           Text(
-                            " Seconds between Screens (" +
-                                _currentSliderValue.round().toString() +
-                                ")",
+                            " Seconds between Gauge Swap ",
                             style: kTextSettingsStyle,
                           ),
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 8.0, bottom: 8.0),
+                      child: NumberInputPrefabbed.squaredButtons(
+                        controller: durationController,
+                        min: 5,
+                        max: 60,
+                        initialValue: _currentSliderValue.toInt(),
+                        incIconColor: Colors.white,
+                        incDecBgColor: Colors.grey.shade200,
+                        decIconColor: Colors.white,
+                        style: TextStyle(color: Colors.white),
+                        widgetContainerDecoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onIncrement: (num newlyIncrementedValue) {
+                          print(
+                              'Newly incremented value is $newlyIncrementedValue');
+                        },
+                        onDecrement: (num newlyDecrementedValue) {
+                          print(
+                              'Newly decremented value is $newlyDecrementedValue');
+                        },
+                      ),
+                    ),
+                    /*
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: Row(
@@ -962,6 +1000,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
+                    */
                     Divider(
                       height: 10,
                       thickness: 5,
@@ -980,10 +1019,7 @@ class _settingsScreenState extends State<SettingsScreen> {
                                 userSettings.continuousMarquee);
                           });
                         }),
-                    Divider(
-                      height: 10,
-                      thickness: 5,
-                    ),
+
                     Divider(
                       height: 10,
                       thickness: 5,

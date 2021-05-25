@@ -14,6 +14,7 @@ class CronJobs {
     LocalWeatherService localWeatherService = LocalWeatherService();
 
     cron.schedule(Schedule.parse('0 0 * * *'), () async {
+      print("Cron Running aaaaa");
       //this will run each midnight
       Location location = Location();
       await location.getCurrentLocation();
@@ -27,15 +28,20 @@ class CronJobs {
         pollingError = true;
         globalWeather.tideAPIError =
             true; // if no weather data who cares about tide
-        print("Di is $di days left is ");
+        print("Di is $di days left is " +
+            globalWeather.dailyWeather.length.toString());
         if (di < globalWeather.dailyWeather.length - 1) {
           //there is still data in array
+          print("We still have data");
+          globalWeather.weatherAPIError = false;
 
           di += 1;
         } else {
+          print("At the end of the array");
           globalWeather.weatherAPIError = true;
         }
       } else if (!globalWeather.tideDataExists) {
+        ("Print all is good");
         pollingError = false;
         globalWeather.tideAPIError = true;
         globalWeather.weatherAPIError = false;

@@ -247,6 +247,13 @@ void _settingModalBottomSheet(context) {
                     Navigator.of(context).pop();
                     Navigator.pushNamed(context, SettingsScreen.id);
                   }),
+//              ListTile(
+//                  leading: Icon(Icons.settings),
+//                  title: Text('Start a timer'),
+//                  onTap: () {
+//                    Navigator.of(context).pop();
+//                    Navigator.pushNamed(context, TimerScreen.id);
+//                  }),
               ListTile(
                 leading: Icon(Icons.wb_sunny),
                 title: Text('View Weather Table'),

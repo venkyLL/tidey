@@ -3,9 +3,9 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:open_appstore/open_appstore.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tidey/const.dart';
@@ -18,6 +18,7 @@ import 'package:tidey/services/locationServices.dart';
 import 'package:tidey/services/marineWeather.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'package:tidey/services/tideServices.dart';
+import 'package:tidey/services/tideyParms.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splashScreen';
@@ -148,9 +149,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   bool firstTime = false;
-  String currentVersionRaw;
-  String currentVersionT;
-  String enforcedVersionRaw;
+//  String currentVersionRaw;
+//  String currentVersionT;
+//  String enforcedVersionRaw;
   void initAll() async {
     var noLocationSnackBar = SnackBar(
         content: Text('Location Services off using default location!'),
@@ -168,7 +169,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final noNetworkSnackbar = SnackBar(
         backgroundColor: (Colors.red),
         content: Text(
-          'Network not available no weather data colleted ',
+          'Network not available no weather data collected ',
         ),
         duration: const Duration(milliseconds: 2000));
 
@@ -182,23 +183,37 @@ class _SplashScreenState extends State<SplashScreen> {
 
       dio = new Dio(options);
     }
+    await getProfileData();
     packageInfo = await PackageInfo.fromPlatform();
-    currentVersionRaw = packageInfo.version;
-    enforcedVersionRaw = await enforcedVersion;
-    currentVersionT = await currentVersion;
-    print("Enforced version is $enforcedVersionRaw");
-    print("Current version is $currentVersionT");
+    await checkConnectivity();
+
+    //   enforcedVersionRaw = await enforcedVersion;
+    print("Printing Package Info");
     print(packageInfo.appName);
     print(packageInfo.buildNumber);
     print(packageInfo.version);
     print(packageInfo.packageName);
 
-    await checkConnectivity();
+    if (_networkStatus1 != "None") {
+      TideyParmsService tideyParms = TideyParmsService();
+      await tideyParms.getTideyParmData();
+      print("Did I return");
+      if (tideyParms.needsUpdate) {
+        print("Update Required");
+        await _updateRequiredAlert(context);
+      } else {
+        if (tideyParms.updateAvailable) {
+          print("Update Available");
+          await _updateAvailableAlert(context);
+        }
+      }
+    }
+
 //    var networkSnackBar = SnackBar(
 //        content: Text('Yay! Network Found! $_networkStatus1'),
 //        duration: const Duration(milliseconds: 1500));
 //    ScaffoldMessenger.of(context).showSnackBar(networkSnackBar);
-    await getProfileData();
+
 //    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
 //      print("Location Service Enabled");
     print("About to get current locaiton");
@@ -265,7 +280,6 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     } else {
-      print("Can't be her dat a problem");
       globalNetworkAvailable = false;
       globalWeather.tideAPIError = true;
       globalWeather.weatherAPIError = true;
@@ -298,45 +312,68 @@ class _SplashScreenState extends State<SplashScreen> {
 
 //    AssetsAudioPlayer.playAndForget(Audio('assets/audio/bell.mp3'));
   }
+// Removed Firebase Config
+//  static Future<String> get enforcedVersion async {
+//    String _ENFORCED_VERSION_KEY = "EnforcedVersionKey";
+//    String _Current_VERSION_KEY = "CurrentVersionKey";
+//    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+//    await remoteConfig.fetch(
+//      expiration: Duration(
+//        seconds: 0,
+//      ),
+//    );
+//    await remoteConfig.activateFetched();
+//    return remoteConfig.getString(_ENFORCED_VERSION_KEY); // 'enforced_version'
+//  }
 
-  static Future<String> get enforcedVersion async {
-    String _ENFORCED_VERSION_KEY = "EnforcedVersionKey";
-    String _Current_VERSION_KEY = "CurrentVersionKey";
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(
-      expiration: Duration(
-        seconds: 0,
+  Future _updateAvailableAlert(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Release Update Available"),
+        content: Text(
+            "This is a new release of Tidey Available, please update to take advantage of the latest and greatest features."),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+
+              OpenAppstore.launch(
+                  androidAppId: androidAppId, iOSAppId: iOSAppId);
+            },
+            child: Text("Upgrade Now"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: Text("Later"),
+          ),
+        ],
       ),
     );
-    await remoteConfig.activateFetched();
-    return remoteConfig.getString(_ENFORCED_VERSION_KEY); // 'enforced_version'
   }
 
-  static Future<String> get currentVersion async {
-    String _Current_VERSION_KEY = "CurrentVersionKey";
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(
-      expiration: Duration(
-        seconds: 0,
+  Future _updateRequiredAlert(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Tidey " + packageInfo.version + " is Retired"),
+        content: Text("Release " +
+            packageInfo.version +
+            " of Tidey has served you well, but has been retired, please download the latest version to continue."),
+//        actions: <Widget>[
+//          TextButton(
+//            onPressed: () {
+//              Navigator.of(ctx).pop();
+//              OpenAppstore.launch(
+//                  androidAppId: androidAppId, iOSAppId: iOSAppId);
+//            },
+//            child: Text("Upgrade Now"),
+//          ),
+//        ],
       ),
     );
-    await remoteConfig.activateFetched();
-    return remoteConfig.getString(_Current_VERSION_KEY); // 'enforced_version'
-  }
-
-  bool get needsUpdate {
-    final List<int> currentVersion = currentVersionRaw
-        .split('.')
-        .map((String number) => int.parse(number))
-        .toList();
-    final List<int> enforcedVersion = enforcedVersionRaw
-        .split('.')
-        .map((String number) => int.parse(number))
-        .toList();
-    for (int i = 0; i < 3; i++) {
-      if (enforcedVersion[i] > currentVersion[i]) return true;
-    }
-    return false;
   }
 
   Connectivity connectivity = Connectivity();

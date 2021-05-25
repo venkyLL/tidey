@@ -24,6 +24,8 @@ int di =
 // Print debugger
 bool globalMarineWeatherPrintDone = false;
 // int secondsBetweenTransition = 5;
+const iOSAppId = "1566159762";
+const androidAppId = "tbd";
 
 const metersToFeet = 3.28084;
 PackageInfo packageInfo = PackageInfo();
@@ -390,7 +392,7 @@ Map<String, IconData> weatherNightIconMap = {
   "116": WeatherIcons.night_alt_cloudy,
   "113": WeatherIcons.night_clear,
 };
-
+const tideyParmsURL = 'https://tideyparams.amberjacklabs.com';
 const prodServerURL = 'https://shoebox.veloxe.com/';
 const localServerURL = 'http://192.168.1.250:5000/';
 const serverURL = localServerURL;

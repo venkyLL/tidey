@@ -54,9 +54,10 @@ dependencies:
   path_provider:
   path:
   image_picker:
+  number_inc_dec:
   string_validator:
   firebase_core: ^1.1.0
-  firebase_remote_config:
+ # firebase_remote_config:
  # firebase_analytics:
   flutter_device_type:
   iphone_has_notch:
